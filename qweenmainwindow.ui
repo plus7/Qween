@@ -395,26 +395,41 @@
    </property>
   </action>
   <action name="action_S">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>ファイル保存(&amp;S)...</string>
    </property>
   </action>
   <action name="action_Q">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>新着通知(&amp;Q)</string>
    </property>
   </action>
   <action name="action_3">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>サウンド再生</string>
    </property>
   </action>
   <action name="action_L">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>新着時リスト固定(&amp;L)</string>
    </property>
   </action>
   <action name="action_M">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>発言欄複数行入力(&amp;M)</string>
    </property>
@@ -435,66 +450,105 @@
    </property>
   </action>
   <action name="action_F">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>検索(&amp;F)...</string>
    </property>
   </action>
   <action name="action_X_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>次を検索(&amp;X)</string>
    </property>
   </action>
   <action name="action_P">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>前を検索(&amp;P)</string>
    </property>
   </action>
   <action name="action_7">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>@返信(&amp;R)</string>
    </property>
   </action>
   <action name="action_ALL">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>@返信ALL</string>
    </property>
   </action>
   <action name="actionDM">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>DM送信</string>
    </property>
   </action>
   <action name="actionReTweet">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>ReTweet</string>
    </property>
   </action>
   <action name="actionReTweet_unofficial">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>ReTweet(unofficial)</string>
    </property>
   </action>
   <action name="actionFav_F">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Fav追加(&amp;F)</string>
    </property>
   </action>
   <action name="actionFav">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Fav削除</string>
    </property>
   </action>
   <action name="action_13">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>未読へジャンプ</string>
    </property>
   </action>
   <action name="action_A">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>全て選択(&amp;A)</string>
    </property>
   </action>
   <action name="action_D">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>削除(&amp;D)</string>
    </property>
@@ -508,41 +562,65 @@
    </property>
   </action>
   <action name="action_N">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>タブ作成(&amp;N)...</string>
    </property>
   </action>
   <action name="action_15">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>タブ名の変更</string>
    </property>
   </action>
   <action name="action_U_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>未読管理(&amp;U)</string>
    </property>
   </action>
   <action name="action_Q_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>新着通知表示(&amp;Q)</string>
    </property>
   </action>
   <action name="action_17">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>サウンド？</string>
    </property>
   </action>
   <action name="action_F_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>振り分けルール編集(&amp;F)...</string>
    </property>
   </action>
   <action name="action_20">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>このタブの発言をクリア</string>
    </property>
   </action>
   <action name="action_D_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>タブ削除(&amp;D)</string>
    </property>
@@ -553,26 +631,41 @@
    </property>
   </action>
   <action name="action_22">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>片思いユーザリスト取得</string>
    </property>
   </action>
   <action name="actionBlackFav">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>BlackFav</string>
    </property>
   </action>
   <action name="actionFollow_Command">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Follow Command</string>
    </property>
   </action>
   <action name="actionRemove_Command">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Remove Command</string>
    </property>
   </action>
   <action name="actionShow_Friendships">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Show Friendships</string>
    </property>
@@ -588,11 +681,17 @@
    </property>
   </action>
   <action name="actCheckUpdate">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>アップデートの確認(&amp;G)</string>
    </property>
   </action>
   <action name="action_26">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>解析キー情報更新</string>
    </property>
@@ -638,51 +737,81 @@
    </property>
   </action>
   <action name="action">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>ホームを開く</string>
    </property>
   </action>
   <action name="actionFav_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Favを開く</string>
    </property>
   </action>
   <action name="action_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>ステータスを開く</string>
    </property>
   </action>
   <action name="action_4">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>返信元ステータスを開く</string>
    </property>
   </action>
   <action name="action_5">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>ふぁぼられを開く</string>
    </property>
   </action>
   <action name="action_URI">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>発言内URIを開く</string>
    </property>
   </action>
   <action name="action_6">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>タブ振り分けルールを作成</string>
    </property>
   </action>
   <action name="actionID">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>ID振り分けルールを作成</string>
    </property>
   </action>
   <action name="action_8">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>未読にする</string>
    </property>
   </action>
   <action name="action_11">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>既読にする</string>
    </property>
