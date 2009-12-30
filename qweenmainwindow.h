@@ -2,7 +2,7 @@
 #define QWEENMAINWINDOW_H
 
 #include <QMainWindow>
-#include "qtwitlib.h"
+#include "QTwitLib.h"
 #include "twitter.h"
 namespace Ui {
     class QweenMainWindow;
