@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     iconmanager.cpp \
     qweenapplication.cpp \
     shorturi/urishortensvc.cpp \
-    shorturi/simpleurishortener.cpp
+    shorturi/simpleurishortener.cpp \
+    tweetforwarder.cpp
 HEADERS += qweenmainwindow.h \
     twitter.h \
     qweensettings.h \
@@ -54,7 +55,8 @@ HEADERS += qweenmainwindow.h \
     shorturi/twurl.h \
     iconmanager.h \
     qweenapplication.h \
-    shorturi/simpleurishortener.h
+    shorturi/simpleurishortener.h \
+    tweetforwarder.h
 FORMS += qweenmainwindow.ui \
     aboutdialog.ui \
     settingdialog.ui
