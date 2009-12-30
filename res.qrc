@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/busy.png</file>
+        <file>res/error.png</file>
+        <file>res/normal.png</file>
+        <file>res/offline.png</file>
+        <file>res/reply.png</file>
+        <file>res/unread.png</file>
+    </qresource>
+</RCC>

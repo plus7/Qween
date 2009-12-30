@@ -1,0 +1,8 @@
+ui_*.h
+*.Debug
+*.Release
+*~
+*.pdb
+debug
+release
+*.user
