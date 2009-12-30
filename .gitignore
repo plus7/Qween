@@ -6,3 +6,8 @@ ui_*.h
 debug
 release
 *.user
+.svn/*
+.svn/
+twitlib/DevGui/
+twitlib/generated/
+twitlib/intermediates/
