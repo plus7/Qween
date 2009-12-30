@@ -18,7 +18,6 @@ SOURCES += main.cpp \
     qweensettings.cpp \
     aboutdialog.cpp \
     settingdialog.cpp \
-    tabselectdialog.cpp \
     qweentabctrl.cpp \
     tabinfo.cpp \
     timelinelistview.cpp \
@@ -37,7 +36,6 @@ HEADERS += qweenmainwindow.h \
     qweensettings.h \
     aboutdialog.h \
     settingdialog.h \
-    tabselectdialog.h \
     qweentabctrl.h \
     tabinfo.h \
     timelinelistview.h \
@@ -59,7 +57,6 @@ HEADERS += qweenmainwindow.h \
     shorturi/simpleurishortener.h
 FORMS += qweenmainwindow.ui \
     aboutdialog.ui \
-    settingdialog.ui \
-    tabselectdialog.ui
+    settingdialog.ui
 OTHER_FILES += memo.txt
 RESOURCES += res.qrc

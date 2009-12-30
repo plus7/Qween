@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QweenMainWindow</class>
+ <widget class="QMainWindow" name="QweenMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>444</width>
+    <height>506</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Qween</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="margin">
+     <number>2</number>
+    </property>
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
+      </property>
+      <widget class="QFrame" name="postFrame">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetNoConstraint</enum>
+        </property>
+        <property name="margin">
+         <number>2</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QLabel" name="userIconLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>50</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QFrame" name="frame">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,1">
+             <property name="spacing">
+              <number>3</number>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <property name="spacing">
+                <number>3</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="lblNameId">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="scaledContents">
+                  <bool>true</bool>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                 <property name="textInteractionFlags">
+                  <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblUpdateDatetime">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QTextBrowser" name="textBrowser">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QweenInputBox" name="statusText">
+            <property name="focusPolicy">
+             <enum>Qt::StrongFocus</enum>
+            </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblStatusLength">
+            <property name="text">
+             <string>140</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="postButton">
+            <property name="focusPolicy">
+             <enum>Qt::ClickFocus</enum>
+            </property>
+            <property name="text">
+             <string>Post</string>
+            </property>
+            <property name="popupMode">
+             <enum>QToolButton::MenuButtonPopup</enum>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextOnly</enum>
+            </property>
+            <property name="autoRaise">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>444</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_F">
+    <property name="title">
+     <string>ファイル(&amp;F)</string>
+    </property>
+    <addaction name="actOptions"/>
+    <addaction name="separator"/>
+    <addaction name="action_S"/>
+    <addaction name="separator"/>
+    <addaction name="action_Q"/>
+    <addaction name="action_3"/>
+    <addaction name="action_L"/>
+    <addaction name="separator"/>
+    <addaction name="action_M"/>
+    <addaction name="separator"/>
+    <addaction name="actExit"/>
+   </widget>
+   <widget class="QMenu" name="menu_E">
+    <property name="title">
+     <string>編集(&amp;E)</string>
+    </property>
+    <addaction name="actCopyStot"/>
+    <addaction name="actCopyIdUri"/>
+    <addaction name="separator"/>
+    <addaction name="action_F"/>
+    <addaction name="action_X_2"/>
+    <addaction name="action_P"/>
+   </widget>
+   <widget class="QMenu" name="menu_O">
+    <property name="title">
+     <string>操作(&amp;O)</string>
+    </property>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string>開く</string>
+     </property>
+     <addaction name="action"/>
+     <addaction name="actionFav_2"/>
+     <addaction name="action_2"/>
+     <addaction name="action_4"/>
+     <addaction name="action_5"/>
+     <addaction name="action_URI"/>
+    </widget>
+    <widget class="QMenu" name="menu_2">
+     <property name="title">
+      <string>振り分けルール作成</string>
+     </property>
+     <addaction name="action_6"/>
+     <addaction name="actionID"/>
+    </widget>
+    <widget class="QMenu" name="menu_3">
+     <property name="title">
+      <string>未読状態変更</string>
+     </property>
+     <addaction name="action_8"/>
+     <addaction name="action_11"/>
+    </widget>
+    <addaction name="action_7"/>
+    <addaction name="action_ALL"/>
+    <addaction name="actionDM"/>
+    <addaction name="actionReTweet"/>
+    <addaction name="actionReTweet_unofficial"/>
+    <addaction name="separator"/>
+    <addaction name="actionFav_F"/>
+    <addaction name="actionFav"/>
+    <addaction name="menu"/>
+    <addaction name="menu_2"/>
+    <addaction name="separator"/>
+    <addaction name="menu_3"/>
+    <addaction name="action_13"/>
+    <addaction name="separator"/>
+    <addaction name="action_A"/>
+    <addaction name="action_D"/>
+    <addaction name="actUpdate"/>
+   </widget>
+   <widget class="QMenu" name="menu_T">
+    <property name="title">
+     <string>タブ(&amp;T)</string>
+    </property>
+    <addaction name="action_N"/>
+    <addaction name="action_15"/>
+    <addaction name="separator"/>
+    <addaction name="action_U_2"/>
+    <addaction name="action_Q_2"/>
+    <addaction name="action_17"/>
+    <addaction name="separator"/>
+    <addaction name="action_F_2"/>
+    <addaction name="separator"/>
+    <addaction name="action_20"/>
+    <addaction name="separator"/>
+    <addaction name="action_D_2"/>
+   </widget>
+   <widget class="QMenu" name="menu_C">
+    <property name="title">
+     <string>その他機能(&amp;C)</string>
+    </property>
+    <addaction name="actShortenUri"/>
+    <addaction name="action_22"/>
+    <addaction name="actionBlackFav"/>
+    <addaction name="separator"/>
+    <addaction name="actionFollow_Command"/>
+    <addaction name="actionRemove_Command"/>
+    <addaction name="actionShow_Friendships"/>
+    <addaction name="separator"/>
+    <addaction name="actShowUserStatus"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>ヘルプ(&amp;H)</string>
+    </property>
+    <widget class="QMenu" name="menu_D">
+     <property name="title">
+      <string>デバッグ(&amp;D)</string>
+     </property>
+     <addaction name="actExplosion"/>
+     <addaction name="actionTest_bitly"/>
+     <addaction name="actionTest_iconmanager"/>
+     <addaction name="actionTest_icon"/>
+    </widget>
+    <addaction name="actQweenHomepage"/>
+    <addaction name="separator"/>
+    <addaction name="actCheckUpdate"/>
+    <addaction name="action_26"/>
+    <addaction name="separator"/>
+    <addaction name="actApiInfo"/>
+    <addaction name="actTwitterNews"/>
+    <addaction name="separator"/>
+    <addaction name="actAboutQween"/>
+    <addaction name="actAboutQt"/>
+    <addaction name="menu_D"/>
+   </widget>
+   <addaction name="menu_F"/>
+   <addaction name="menu_E"/>
+   <addaction name="menu_O"/>
+   <addaction name="menu_T"/>
+   <addaction name="menu_C"/>
+   <addaction name="menu_Help"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actUpdate"/>
+   <addaction name="actOptions"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actOptions">
+   <property name="text">
+    <string>設定(&amp;O)...</string>
+   </property>
+  </action>
+  <action name="action_S">
+   <property name="text">
+    <string>ファイル保存(&amp;S)...</string>
+   </property>
+  </action>
+  <action name="action_Q">
+   <property name="text">
+    <string>新着通知(&amp;Q)</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>サウンド再生</string>
+   </property>
+  </action>
+  <action name="action_L">
+   <property name="text">
+    <string>新着時リスト固定(&amp;L)</string>
+   </property>
+  </action>
+  <action name="action_M">
+   <property name="text">
+    <string>発言欄複数行入力(&amp;M)</string>
+   </property>
+  </action>
+  <action name="actExit">
+   <property name="text">
+    <string>終了(&amp;X)</string>
+   </property>
+  </action>
+  <action name="actCopyStot">
+   <property name="text">
+    <string>コピー(STOT形式テキスト)(&amp;C)</string>
+   </property>
+  </action>
+  <action name="actCopyIdUri">
+   <property name="text">
+    <string>コピー(ステータスURL)(&amp;S)</string>
+   </property>
+  </action>
+  <action name="action_F">
+   <property name="text">
+    <string>検索(&amp;F)...</string>
+   </property>
+  </action>
+  <action name="action_X_2">
+   <property name="text">
+    <string>次を検索(&amp;X)</string>
+   </property>
+  </action>
+  <action name="action_P">
+   <property name="text">
+    <string>前を検索(&amp;P)</string>
+   </property>
+  </action>
+  <action name="action_7">
+   <property name="text">
+    <string>@返信(&amp;R)</string>
+   </property>
+  </action>
+  <action name="action_ALL">
+   <property name="text">
+    <string>@返信ALL</string>
+   </property>
+  </action>
+  <action name="actionDM">
+   <property name="text">
+    <string>DM送信</string>
+   </property>
+  </action>
+  <action name="actionReTweet">
+   <property name="text">
+    <string>ReTweet</string>
+   </property>
+  </action>
+  <action name="actionReTweet_unofficial">
+   <property name="text">
+    <string>ReTweet(unofficial)</string>
+   </property>
+  </action>
+  <action name="actionFav_F">
+   <property name="text">
+    <string>Fav追加(&amp;F)</string>
+   </property>
+  </action>
+  <action name="actionFav">
+   <property name="text">
+    <string>Fav削除</string>
+   </property>
+  </action>
+  <action name="action_13">
+   <property name="text">
+    <string>未読へジャンプ</string>
+   </property>
+  </action>
+  <action name="action_A">
+   <property name="text">
+    <string>全て選択(&amp;A)</string>
+   </property>
+  </action>
+  <action name="action_D">
+   <property name="text">
+    <string>削除(&amp;D)</string>
+   </property>
+  </action>
+  <action name="actUpdate">
+   <property name="text">
+    <string>更新(&amp;U)</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="action_N">
+   <property name="text">
+    <string>タブ作成(&amp;N)...</string>
+   </property>
+  </action>
+  <action name="action_15">
+   <property name="text">
+    <string>タブ名の変更</string>
+   </property>
+  </action>
+  <action name="action_U_2">
+   <property name="text">
+    <string>未読管理(&amp;U)</string>
+   </property>
+  </action>
+  <action name="action_Q_2">
+   <property name="text">
+    <string>新着通知表示(&amp;Q)</string>
+   </property>
+  </action>
+  <action name="action_17">
+   <property name="text">
+    <string>サウンド？</string>
+   </property>
+  </action>
+  <action name="action_F_2">
+   <property name="text">
+    <string>振り分けルール編集(&amp;F)...</string>
+   </property>
+  </action>
+  <action name="action_20">
+   <property name="text">
+    <string>このタブの発言をクリア</string>
+   </property>
+  </action>
+  <action name="action_D_2">
+   <property name="text">
+    <string>タブ削除(&amp;D)</string>
+   </property>
+  </action>
+  <action name="actShortenUri">
+   <property name="text">
+    <string>入力欄のURLを短縮変換</string>
+   </property>
+  </action>
+  <action name="action_22">
+   <property name="text">
+    <string>片思いユーザリスト取得</string>
+   </property>
+  </action>
+  <action name="actionBlackFav">
+   <property name="text">
+    <string>BlackFav</string>
+   </property>
+  </action>
+  <action name="actionFollow_Command">
+   <property name="text">
+    <string>Follow Command</string>
+   </property>
+  </action>
+  <action name="actionRemove_Command">
+   <property name="text">
+    <string>Remove Command</string>
+   </property>
+  </action>
+  <action name="actionShow_Friendships">
+   <property name="text">
+    <string>Show Friendships</string>
+   </property>
+  </action>
+  <action name="actShowUserStatus">
+   <property name="text">
+    <string>Show your status</string>
+   </property>
+  </action>
+  <action name="actQweenHomepage">
+   <property name="text">
+    <string>Qween Homepage</string>
+   </property>
+  </action>
+  <action name="actCheckUpdate">
+   <property name="text">
+    <string>アップデートの確認(&amp;G)</string>
+   </property>
+  </action>
+  <action name="action_26">
+   <property name="text">
+    <string>解析キー情報更新</string>
+   </property>
+  </action>
+  <action name="actApiInfo">
+   <property name="text">
+    <string>API情報</string>
+   </property>
+  </action>
+  <action name="actTwitterNews">
+   <property name="text">
+    <string>Twitterからのお知らせ</string>
+   </property>
+  </action>
+  <action name="actAboutQween">
+   <property name="text">
+    <string>Qweenについて(&amp;A)</string>
+   </property>
+  </action>
+  <action name="actAboutQt">
+   <property name="text">
+    <string>Qtについて(&amp;Q)</string>
+   </property>
+  </action>
+  <action name="actionTest_bitly">
+   <property name="text">
+    <string>test bitly</string>
+   </property>
+  </action>
+  <action name="actionTest_iconmanager">
+   <property name="text">
+    <string>test iconmanager</string>
+   </property>
+  </action>
+  <action name="actionHoge">
+   <property name="text">
+    <string>hoge</string>
+   </property>
+  </action>
+  <action name="actionTest_icon">
+   <property name="text">
+    <string>test icon</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>ホームを開く</string>
+   </property>
+  </action>
+  <action name="actionFav_2">
+   <property name="text">
+    <string>Favを開く</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>ステータスを開く</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>返信元ステータスを開く</string>
+   </property>
+  </action>
+  <action name="action_5">
+   <property name="text">
+    <string>ふぁぼられを開く</string>
+   </property>
+  </action>
+  <action name="action_URI">
+   <property name="text">
+    <string>発言内URIを開く</string>
+   </property>
+  </action>
+  <action name="action_6">
+   <property name="text">
+    <string>タブ振り分けルールを作成</string>
+   </property>
+  </action>
+  <action name="actionID">
+   <property name="text">
+    <string>ID振り分けルールを作成</string>
+   </property>
+  </action>
+  <action name="action_8">
+   <property name="text">
+    <string>未読にする</string>
+   </property>
+  </action>
+  <action name="action_11">
+   <property name="text">
+    <string>既読にする</string>
+   </property>
+  </action>
+  <action name="actExplosion">
+   <property name="text">
+    <string>俺以外押すな 超危険</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QweenInputBox</class>
+   <extends>QLineEdit</extends>
+   <header>qweeninputbox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
