@@ -5,18 +5,26 @@
 #include "twitter.h"
 #include "QTwitLib.h"
 class TabInfo;
+class TimelineView;
 class QweenTabCtrl : public QTabWidget
 {
 Q_OBJECT
 public:
     explicit QweenTabCtrl(QWidget *parent = 0);
-    void initWithTabInfo(TabInfo *info);
-    quint64 getNewestTimelineId()const { return m_newestTLID; }
+    quint64 getNewestHomeId() const;
+    quint64 getNewestDMId() const;
+    quint64 getNewestReplyId() const;
+    quint64 getNewestFavId() const;
     quint64 myId() const { return m_myID; }
     void setMyId(quint64 myid);
-//    void addItems(QList<Twitter::TwitterItem> items);
     void addItem(Twitter::TwitterItem item);
     Twitter::TwitterItem currentItem();
+    TimelineView *currentTimelineView();
+    TimelineView *timelineView(int index);
+    //int addTab(const TabInfo& info);
+    void saveState(QIODevice*);
+    void restoreState(QIODevice*);
+    void fixLackingTabs();
 
 signals:
     void itemSelected(const Twitter::TwitterItem& item);
@@ -26,9 +34,14 @@ public slots:
     void OnItemSelected(const Twitter::TwitterItem& item);
 
 private:
-    quint64 m_newestTLID;
+    TimelineView* m_homeView;
+    TimelineView* m_replyView;
+    TimelineView* m_dmView;
+    TimelineView* m_favView;
+    quint64 m_newestHomeID;
     quint64 m_newestDMID;
     quint64 m_newestReplyID;
+    quint64 m_newestFavID;
     quint64 m_myID;
     Twitter::TwitterItem m_curItem;
 };

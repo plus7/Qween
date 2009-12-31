@@ -15,7 +15,8 @@
 
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::QweenMainWindow),m_firstShow(true),m_postAfterShorten(false),m_urisvc(NULL)
+    ui(new Ui::QweenMainWindow),m_firstShow(true),m_postAfterShorten(false),m_urisvc(NULL),
+    m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),m_newestReply(0),m_newestFav(0)
 {
     ui->setupUi(this);
     makeWidgets();
@@ -70,6 +71,7 @@ void QweenMainWindow::makeWidgets(){
     m_timelineTimer = new QTimer(this);
     m_DMTimer = new QTimer(this);
     m_replyTimer = new QTimer(this);
+    m_favTimer = new QTimer(this);
     m_fetchAnimTimer = new QTimer(this);
 
     m_trayIcon = new QSystemTrayIcon(this);
@@ -124,18 +126,26 @@ void QweenMainWindow::setupMenus()
 }
 
 void QweenMainWindow::setupTabs(){
-    tabWidget->initWithTabInfo(NULL);
+    QFile tabSettings(QweenApplication::profileDir()+"/tabs.xml");
+    if(tabSettings.exists()) tabWidget->restoreState(&tabSettings);
+    else tabWidget->restoreState(NULL);
 }
 
 void QweenMainWindow::setupTimers(){
     m_timelineTimer->setInterval(60*1000);
     m_timelineTimer->start();
 
-    m_DMTimer->setInterval(60*1000);
+    m_DMTimer->setInterval(600*1000);
     m_DMTimer->start();
+    //m_DMTimer->stop();
 
-    m_replyTimer->setInterval(60*1000);
+    m_replyTimer->setInterval(240*1000);
     m_replyTimer->start();
+    //m_replyTimer->stop();
+
+    m_favTimer->setInterval(600*1000);
+    m_favTimer->start();
+    //m_favTimer->stop();
 
     m_fetchAnimTimer->setInterval(85);
     m_fetchAnimTimer->start();
@@ -165,10 +175,10 @@ void QweenMainWindow::makeConnections(){
     connect(m_trayIcon, SIGNAL(messageClicked()), this, SLOT(OnMessageClicked()));
 
     //Timers
-    connect(m_timelineTimer, SIGNAL(timeout()), this, SLOT(on_timelineTimer_timeout()));
-    //TODO: connect(m_DMTimer, SIGNAL(timeout()), this, SLOT(on_timelineTimer_timeout()));
-    //TODO: connect(m_replyTimer, SIGNAL(timeout()), this, SLOT(on_timelineTimer_timeout()));
-    //TODO: connect(m_replyTimer, SIGNAL(timeout()), this, SLOT(on_timelineTimer_timeout()));
+    connect(m_timelineTimer, SIGNAL(timeout()), this, SLOT(OnTimelineTimerTimeout()));
+    connect(m_DMTimer, SIGNAL(timeout()), this, SLOT(OnDmTimerTimeout()));
+    connect(m_replyTimer, SIGNAL(timeout()), this, SLOT(OnReplyTimerTimeout()));
+    connect(m_favTimer, SIGNAL(timeout()), this, SLOT(OnFavTimerTimeout()));
 
     //Twitter
     connect(m_twitLib,SIGNAL(OnResponseReceived(Returnables::Response *)),this,SLOT(OnResponseReceived(Returnables::Response *)));
@@ -194,6 +204,7 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
                 while(!pTimeline->list.isEmpty()){
                     Returnables::StatusElementPtr element = pTimeline->list.takeLast();
                     Twitter::TwitterItem item(Twitter::Status, element, resp->reqID, false);
+                    if(m_newestFriendsStatus < item.id()) m_newestFriendsStatus = item.id();
                     popupText.append(QString("%1 : %2\n").arg(item.userName(), item.status()));
                     tabWidget->addItem(item);
                 }
@@ -203,7 +214,7 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
                 break;
             }
         case Returnables::NEW_STATUS:
-            {
+        {
             ui->statusText->setText("");
             ui->statusText->setEnabled(true);
             ui->postButton->setEnabled(true);
@@ -213,6 +224,54 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
             delete pNewstatus;
             break;
         }
+        case Returnables::RECENT_MENTIONS:
+        {
+            Returnables::RecentMentions *p = static_cast<Returnables::RecentMentions *>(resp);
+            while(!p->list.isEmpty()){
+                Returnables::StatusElementPtr element = p->list.takeLast();
+                Twitter::TwitterItem item(Twitter::Status, element, resp->reqID, false);
+                if(m_newestReply < item.id()) m_newestReply = item.id();
+                tabWidget->addItem(item);
+            }
+            delete p;
+            break;
+        }
+        case Returnables::SENT_DIRECT_MESSAGES:
+        {
+            Returnables::SentDirectMessages *p = static_cast<Returnables::SentDirectMessages *>(resp);
+            while(!p->list.isEmpty()){
+                Returnables::DirectMessageElementPtr element = p->list.takeLast();
+                Twitter::TwitterItem item(Twitter::DirectMessage, element, resp->reqID, false);
+                if(m_newestSentDM < item.id()) m_newestSentDM = item.id();
+                tabWidget->addItem(item);
+            }
+            delete p;
+            break;
+        }
+        case Returnables::RECEIVED_DIRECT_MESSAGES:
+        {
+            Returnables::ReceivedDirectMessages *p = static_cast<Returnables::ReceivedDirectMessages *>(resp);
+            while(!p->list.isEmpty()){
+                Returnables::DirectMessageElementPtr element = p->list.takeLast();
+                Twitter::TwitterItem item(Twitter::DirectMessage, element, resp->reqID, false);
+                if(m_newestRecvDM < item.id()) m_newestRecvDM = item.id();
+                tabWidget->addItem(item);
+            }
+            delete p;
+            break;
+        }
+        case Returnables::FAVORITES:
+        {
+            Returnables::Favorites *p = static_cast<Returnables::Favorites *>(resp);
+            while(!p->list.isEmpty()){
+                Returnables::StatusElementPtr element = p->list.takeLast();
+                Twitter::TwitterItem item(Twitter::Status, element, resp->reqID, false);
+                if(m_newestFav < item.id()) m_newestFav = item.id();
+                tabWidget->addItem(item);
+            }
+            delete p;
+            break;
+        }
         case Returnables::VERIFY_CREDENTIALS:
         {
             Returnables::VerifyCredentials *p = static_cast<Returnables::VerifyCredentials*>(resp);
@@ -220,9 +279,12 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
             tabWidget->setMyId(element->user.id);
             if(element->user.id!=0){
                 SERVER::Option1 opt;
-                opt.since_id = tabWidget->getNewestTimelineId();
+                opt.since_id = m_newestFriendsStatus;
                 opt.count = 20;
                 m_twitLib->GetFriendsTimeline(&opt);
+                OnDmTimerTimeout();
+                OnReplyTimerTimeout();
+                OnFavTimerTimeout();
             }
             delete p;
             break;
@@ -280,6 +342,11 @@ void QweenMainWindow::closeEvent(QCloseEvent *event)
     } else {
         event->ignore();
     }*/
+
+    QFile tabSettings(QweenApplication::profileDir()+"/tabs.xml");
+    tabSettings.open(QFile::WriteOnly);
+    tabWidget->saveState(&tabSettings);
+
     settings->setGeometry(saveGeometry());
     settings->setWindowState(saveState());
     settings->save();
@@ -365,12 +432,35 @@ void QweenMainWindow::on_postButton_clicked()
 
 }
 
-void QweenMainWindow::on_timelineTimer_timeout()
+void QweenMainWindow::OnTimelineTimerTimeout()
 {
     SERVER::Option1 opt;
-    opt.since_id = tabWidget->getNewestTimelineId();
+    opt.since_id = m_newestFriendsStatus;
     opt.count = 200;
     m_twitLib->GetFriendsTimeline(&opt);
+}
+
+
+void QweenMainWindow::OnDmTimerTimeout(){
+    SERVER::Option5 s_opt;
+    s_opt.since_id = m_newestSentDM;
+    s_opt.page = 1;
+    m_twitLib->GetSentDirectMessages(&s_opt);
+
+    SERVER::Option5 r_opt;
+    r_opt.since_id = m_newestRecvDM;
+    r_opt.page = 1;
+    m_twitLib->GetReceivedDirectMessages(&r_opt);
+}
+
+void QweenMainWindow::OnReplyTimerTimeout(){
+    SERVER::Option3 opt;
+    opt.since_id = m_newestReply;
+    m_twitLib->GetRecentMentions(&opt);
+}
+
+void QweenMainWindow::OnFavTimerTimeout(){
+    m_twitLib->GetFavorites();
 }
 
 void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
@@ -491,7 +581,7 @@ void QweenMainWindow::on_actionTest_icon_triggered()
 void QweenMainWindow::on_actUpdate_triggered()
 {
     SERVER::Option1 opt;
-    opt.since_id = tabWidget->getNewestTimelineId();
+    opt.since_id = m_newestFriendsStatus;
     opt.count = 200;
     m_twitLib->GetFriendsTimeline(&opt);
 }

@@ -3,7 +3,7 @@
 #include "QTwitLib.h"
 
 TimelineModel::TimelineModel(IconManager *iconMgr, QObject *parent)
-     : QAbstractItemModel(parent), m_iconMgr(iconMgr)
+     : QAbstractItemModel(parent), m_iconMgr(iconMgr), m_userId(0), m_newestId(0)
  {
     connect(m_iconMgr, SIGNAL(iconDownloaded(quint64,QIcon)),
             this, SLOT(OnIconDownloaded(quint64,QIcon)));
@@ -92,25 +92,51 @@ QVariant TimelineModel::headerData(int section, Qt::Orientation orientation, int
     return QVariant();
 }
 
-void TimelineModel::appendItem(Twitter::TwitterItem item)
+void TimelineModel::appendItem(Twitter::TwitterItem item)//, bool ignoreId)
 {
-    int index = m_itemList.count();
-    beginInsertRows(QModelIndex(), index, index);
-    Twitter::TwitterItem *internalItem = new Twitter::TwitterItem(item);
-    internalItem->setParent(this);
-    m_itemList.append(internalItem);
-    endInsertRows();
+    int index;
+    if(item.id()>m_newestId){
+        m_newestId = item.id();
+        index = m_itemList.count();
+        beginInsertRows(QModelIndex(), index, index);
+        Twitter::TwitterItem *internalItem = new Twitter::TwitterItem(item);
+        internalItem->setParent(this);
+        m_itemList.append(internalItem);
+        endInsertRows();
+    }else{
+        int i;
+        for(i = m_itemList.count() - 1;i>=0;i--){
+            if(m_itemList.at(i)->id() > item.id()) continue;
+            else if(m_itemList.at(i)->id() == item.id()) return;
+            else {
+                index = i+1;
+                beginInsertRows(QModelIndex(), index, index);
+                Twitter::TwitterItem *internalItem = new Twitter::TwitterItem(item);
+                internalItem->setParent(this);
+                m_itemList.insert(index, internalItem);
+                endInsertRows();
+                return;
+            }
+        }
+        beginInsertRows(QModelIndex(), 0, 0);
+        Twitter::TwitterItem *internalItem = new Twitter::TwitterItem(item);
+        internalItem->setParent(this);
+        m_itemList.insert(0, internalItem);
+        endInsertRows();
+    }
 }
 
-void TimelineModel::insertItem(int index, Twitter::TwitterItem item)
+/*
+void TimelineModel::insertItem(int index, Twitter::TwitterItem item, bool ignoreId)
 {
     if(index > m_itemList.count() || index < 0) return;
     beginInsertRows(QModelIndex(), index, index);
     Twitter::TwitterItem *internalItem = new Twitter::TwitterItem(item);
     internalItem->setParent(this);
     m_itemList.insert(index, internalItem);
+    if(!ignoreId && m_newestId < item.id()) m_newestId = item.id();
     endInsertRows();
-}
+}*/
 
 Twitter::TwitterItem TimelineModel::removeItem(int index)
 {

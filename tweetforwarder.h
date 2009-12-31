@@ -2,6 +2,7 @@
 #define TWEETFORWARDER_H
 
 #include <QObject>
+#include "twitter.h"
 
 class TweetForwarder : public QObject
 {

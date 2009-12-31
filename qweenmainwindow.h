@@ -8,10 +8,6 @@ namespace Ui {
     class QweenMainWindow;
 }
 
-typedef enum  {
-TinyUrl, Bitly, Isgd, Unu, Jmp, Twurl, Googl
-} ShortUriSvc;
-
 class QweenSettings;
 class QweenTabCtrl;
 class QTwitLib;
@@ -28,8 +24,8 @@ public:
 
 private:
     void applySettings();
-    QString convertUri(ShortUriSvc svc, const QString& source, bool shorten = true);
-    void doUriConvert(ShortUriSvc svc);
+    /*QString convertUri(ShortUriSvc svc, const QString& source, bool shorten = true);
+    void doUriConvert(ShortUriSvc svc);*/
     bool isNetworkAvailable();
     void setupMenus();
     void setupTabs();
@@ -59,6 +55,7 @@ private:
     QTimer *m_timelineTimer;
     QTimer *m_DMTimer;
     QTimer *m_replyTimer;
+    QTimer *m_favTimer;
     QTimer *m_fetchAnimTimer;
     QMenu *m_postModeMenu;
     QAction *m_actAutoShortenUri;
@@ -82,6 +79,13 @@ private:
 
     //DEBUG
     AbstractUriShortener *m_urisvc;
+
+    //ç≈êVÇÃIDÇΩÇø
+    quint64 m_newestFriendsStatus;
+    quint64 m_newestRecvDM;
+    quint64 m_newestSentDM;
+    quint64 m_newestReply;
+    quint64 m_newestFav;
 
 public slots:
     //void OnError(QString error);
@@ -113,7 +117,10 @@ private slots:
     void on_actAboutQween_triggered();
     void on_actAboutQt_triggered();
     void on_actOptions_triggered();
-    void on_timelineTimer_timeout();
+    void OnTimelineTimerTimeout();
+    void OnDmTimerTimeout();
+    void OnReplyTimerTimeout();
+    void OnFavTimerTimeout();
 };
 
 #endif // QWEENMAINWINDOW_H
