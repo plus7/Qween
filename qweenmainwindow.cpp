@@ -298,6 +298,7 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
                                           QString::number(p->remainingHits),
                                           p->resetTime));
             delete p;
+            break;
         }
         case Returnables::USER_DETAILS:
         {
