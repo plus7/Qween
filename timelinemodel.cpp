@@ -43,9 +43,16 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
             return item->createdAt();
             break;
         case 3:
-            return item->screenName();
+            if(item->favorited()){
+                return tr("★");
+            }else{
+                return "";
+            }
             break;
         case 4:
+            return item->screenName();
+            break;
+        case 5:
             return item->id();
             break;
         default:
@@ -81,8 +88,10 @@ QVariant TimelineModel::headerData(int section, Qt::Orientation orientation, int
         case 2:
             return tr("日時");
         case 3:
-            return tr("ユーザ名");
+            return tr("Fav");
         case 4:
+            return tr("ユーザ名");
+        case 5:
             return tr("ID");
 
         default:
@@ -161,6 +170,14 @@ void TimelineModel::setRead(int index, bool read){
     if(index > m_itemList.count() || index < 0) return;
     Twitter::TwitterItem *item = m_itemList.at(index);
     item->setRead(read);
+    QModelIndex idx = this->index(index,0,QModelIndex());
+    emit dataChanged(idx, idx);
+}
+
+void TimelineModel::setFav(int index, bool fav){
+    if(index > m_itemList.count() || index < 0) return;
+    Twitter::TwitterItem *item = m_itemList.at(index);
+    item->setFav(fav);
     QModelIndex idx = this->index(index,0,QModelIndex());
     emit dataChanged(idx, idx);
 }

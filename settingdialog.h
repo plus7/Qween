@@ -15,6 +15,7 @@ public:
     ~SettingDialog();
 
     void updateUi();
+    bool loginInfoChanged() { return m_loginInfoChanged; }
 
 public slots:
     virtual void accept();
@@ -27,7 +28,9 @@ private:
     Ui::SettingDialog *ui;
     QweenSettings *settings;
     QColor m_inputBgColor;
-
+    QString m_password;
+    QString m_id;
+    bool m_loginInfoChanged;
 private slots:
     void on_btnInputFont_clicked();
     void on_btnInputBgColor_clicked();

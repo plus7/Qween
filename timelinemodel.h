@@ -25,6 +25,7 @@ public:
     Twitter::TwitterItem removeItem(int index);
     Twitter::TwitterItem removeItemById(quint64 id);
     Twitter::TwitterItem itemAt(int index);
+    void setFav(int index, bool fav=true);
     void setRead(int index, bool read=true);
     void setUserId(quint64 id);
     quint64 userId() const { return m_userId; }

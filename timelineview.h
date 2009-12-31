@@ -20,6 +20,8 @@ public:
     QString title(){return m_title;}
     void setTitle(const QString& val){m_title = val;}
     TimelineModel* model(){ return (TimelineModel*)QTreeView::model(); }
+    int id(){ return m_id; }
+    void setId(int id){ m_id = id; }
 
 protected:
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected){
@@ -38,6 +40,7 @@ signals:
 
 public slots:
 private:
+    int m_id;
     QString m_type;
     QString m_title;
 };

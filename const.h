@@ -3,7 +3,7 @@
 
 #define QWEEN_VERSION_MAJOR 0
 #define QWEEN_VERSION_MINOR 0
-#define QWEEN_VERSION_REV   0
+#define QWEEN_VERSION_REV   1
 #define QWEEN_VERSION_COMMIT "Working Copy"
 
 #define URLRXDATA "http://(?:(?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9])\\."\

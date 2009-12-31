@@ -16,9 +16,9 @@ void QweenSettings::load(){
     m_password = ini.value("user/password", "").toString();
     m_geometry = ini.value("window/geometry", QByteArray()).value<QByteArray>();
     m_winstate = ini.value("window/state", QByteArray()).value<QByteArray>();
-    //interval/timeline
-    //interval/reply
-    //interval/dm
+    m_tlUpdateIntv = ini.value("interval/timeline", 60).toInt();
+    m_replyUpdateIntv = ini.value("interval/reply", 240).toInt();
+    m_dmUpdateIntv = ini.value("interval/dm", 600).toInt();
     //startup/recentpages
     //startup/replypages
     //startup/dmpages
@@ -27,7 +27,10 @@ void QweenSettings::load(){
     //startup/wedata? ‚¢‚ç‚È‚¢‚æ‚Ë
     //startup/checkoneway
     //tinyurl/
-    m_uriAutoShorten = ini.value("tinyurl/auto_shorten", QVariant(false)).toBool();
+    m_uriAutoShorten = ini.value("input/auto_shorten", QVariant(false)).toBool();
+    m_replaceZenkakuSpace = ini.value("input/replace_zenkaku_space", QVariant(true)).toBool();
+    m_divideUriFromZenkaku = ini.value("input/divide_uri_from_zenkaku", QVariant(false)).toBool();
+    m_avoidApiCmd = ini.value("input/avoid_api", QVariant(true)).toBool();
 
 }
 
@@ -41,6 +44,13 @@ void QweenSettings::save(){
     ini.setValue("window/geometry", m_geometry);
     ini.setValue("window/state", m_winstate);
     ini.setValue("tinyurl/auto_shorten", m_uriAutoShorten);
+    ini.setValue("interval/timeline", m_tlUpdateIntv);
+    ini.setValue("interval/reply", m_replyUpdateIntv);
+    ini.setValue("interval/dm", m_dmUpdateIntv);
+    ini.setValue("input/auto_shorten", m_uriAutoShorten);
+    ini.setValue("input/replace_zenkaku_space", m_replaceZenkakuSpace);
+    ini.setValue("input/divide_uri_from_zenkaku", m_divideUriFromZenkaku);
+    ini.setValue("input/avoid_api", m_avoidApiCmd);
 }
 
 QString QweenSettings::inputStyle(){

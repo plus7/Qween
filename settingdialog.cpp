@@ -4,11 +4,10 @@
 #include <QtGui>
 SettingDialog::SettingDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::SettingDialog)
+    ui(new Ui::SettingDialog),m_loginInfoChanged(false)
 {
     ui->setupUi(this);
     settings = QweenSettings::globalSettings();
-    m_inputBgColor = settings->inputBgColor();
     updateUi();
 }
 
@@ -18,24 +17,38 @@ SettingDialog::~SettingDialog()
 }
 
 void SettingDialog::updateUi(){
-
-    ui->edtPassword->setText(settings->password());
-    ui->edtUserid->setText(settings->userid());
+    m_password = settings->password();
+    ui->edtPassword->setText(m_password);
+    m_id = settings->userid();
+    ui->edtUserid->setText(m_id);
+    m_inputBgColor = settings->inputBgColor();
     setLineEditBgColor(ui->edtInputBgColorSample, m_inputBgColor);
     ui->chkRequireCtrlOnEnter->setChecked(settings->requireCtrlOnEnter());
     ui->chkAutoShortenUri->setChecked(settings->uriAutoShorten());
     ui->edtStatusSuffix->setText(settings->statusSuffix());
+    ui->spinTLUpdateIntv->setValue(settings->tlUpdateIntv());
+    ui->spinReplyUpdateIntv->setValue(settings->replyUpdateIntv());
+    ui->spinDMUpdateIntv->setValue(settings->dmUpdateIntv());
 }
 
 void SettingDialog::accept(){
     QDialog::accept();
     QweenSettings *settings = QweenSettings::globalSettings();
-    settings->setPassword(ui->edtPassword->text());
-    settings->setUserid(ui->edtUserid->text());
+    if(ui->edtPassword->text() != m_password){
+        settings->setPassword(ui->edtPassword->text());
+        m_loginInfoChanged = true;
+    }
+    if(ui->edtUserid->text() != m_id){
+        settings->setUserid(ui->edtUserid->text());
+        m_loginInfoChanged = true;
+    }
     settings->setInputBgColor(m_inputBgColor);
     settings->setStatusSuffix(ui->edtStatusSuffix->text());
     settings->setRequireCtrlOnEnter(ui->chkRequireCtrlOnEnter->checkState() == Qt::Checked);
     settings->setUriAutoShorten(ui->chkAutoShortenUri->checkState() == Qt::Checked);
+    settings->setTlUpdateIntv(ui->spinTLUpdateIntv->value());
+    settings->setReplyUpdateIntv(ui->spinReplyUpdateIntv->value());
+    settings->setDmUpdateIntv(ui->spinDMUpdateIntv->value());
     settings->save();
 }
 

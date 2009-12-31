@@ -59,6 +59,9 @@ private:
     QTimer *m_fetchAnimTimer;
     QMenu *m_postModeMenu;
     QAction *m_actAutoShortenUri;
+    QAction *m_actReplaceZenkakuSpace;
+    QAction *m_actDivideUriFromZenkaku;
+    QAction *m_actAvoidApiCommand;
 
     QSystemTrayIcon *m_trayIcon;
     QIcon *m_normalIcon;
@@ -98,8 +101,17 @@ public slots:
     void OnIconDownloaded(quint64 userid, const QIcon& icon);
     void OnMessageClicked();
     void OnUriShorteningFinished();
+    void OnActDivideUriFromZenkakuToggled(bool);
+    void OnActAvoidApiCommandToggled(bool);
+    void OnActAutoShortenUriToggled(bool);
+    void OnActReplaceZenkakuSpaceToggled(bool);
 
 private slots:
+    void on_actRenameTab_triggered();
+    void on_actCreateTab_triggered();
+    void on_actRemove_triggered();
+    void on_actFollow_triggered();
+    void on_actShowFriendships_triggered();
     void on_actShortenUri_triggered();
     void on_actExplosion_triggered();
     void on_actCopyIdUri_triggered();

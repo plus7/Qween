@@ -8,11 +8,14 @@
 #include "timelinemodel.h"
 #include "timelineview.h"
 #include "timelineitemdelegate.h"
+
+//XXX: ‚¾‚ñ‚¾‚ñ‰˜‚­‚È‚Á‚Ä‚«‚½c
+
 QweenTabCtrl::QweenTabCtrl(QWidget *parent) :
     QTabWidget(parent),m_homeView(NULL),m_replyView(NULL),
     m_dmView(NULL),m_favView(NULL)
 {
-
+    setMovable(true);
 }
 
 void QweenTabCtrl::saveState(QIODevice* device)
@@ -174,6 +177,39 @@ TimelineView *QweenTabCtrl::currentTimelineView(){
 
 TimelineView *QweenTabCtrl::timelineView(int index){
     return (TimelineView*)this->widget(index);
+}
+
+TimelineView *QweenTabCtrl::addTimelineView(const QString &title){
+    return insertTimelineView(count(), title);
+}
+
+TimelineView *QweenTabCtrl::insertTimelineView(int index, const QString& title){
+    TimelineView* view = new TimelineView(this);
+    view->setType("userdefined");
+    view->setTitle(title);
+    view->setItemDelegate(new TimelineItemDelegate(QweenApplication::iconManager()));
+    view->setModel(new TimelineModel(QweenApplication::iconManager(),this));
+    view->header()->resizeSection(1, 400);
+    connect(view, SIGNAL(itemSelected(Twitter::TwitterItem)),
+            this, SLOT(OnItemSelected(Twitter::TwitterItem)));
+    this->insertTab(index, view, QIcon(), view->title());
+    return view;
+}
+
+void QweenTabCtrl::removeTimelineView(int index){
+    TimelineView *view = timelineView(index);
+    if(view == m_homeView || view == m_dmView || view == m_favView || view || m_replyView) return;
+    delete view;
+}
+
+void QweenTabCtrl::moveTimelineView(int before, int after){
+    TimelineView *view = timelineView(before);
+    this->removeTab(before);
+    if(before > after){
+        this->insertTab(after - 1, view, QIcon(), view->title());
+    }else{
+        this->insertTab(after, view, QIcon(), view->title());
+    }
 }
 
 void QweenTabCtrl::setMyId(quint64 myid){

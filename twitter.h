@@ -117,12 +117,36 @@ namespace Twitter{
                 return 0;
             }
         }
+        bool favorited() const {
+            switch(m_type){
+            case Twitter::Status:
+                return m_sePtr->status.favorited;
+                break;
+            case Twitter::DirectMessage:
+                return false;
+                break;
+            default:
+                return false;
+            }
+        }
         TimelineModel *parent() const { return m_parent; }
         void setParent(TimelineModel *parent){ m_parent = parent; }
         enum ItemType type() const { return m_type; }
         Returnables::RequestId origin() const { return m_origin; }
         bool read() const { return m_read; }
         void setRead(bool val = true) { m_read = val; }
+        void setFav(bool val = true) {
+            switch(m_type){
+            case Twitter::Status:
+                m_sePtr->status.favorited = val;
+                break;
+            case Twitter::DirectMessage:
+                return;
+                break;
+            default:
+                return;
+            }
+        }
     private:
         enum ItemType m_type;
         Returnables::StatusElementPtr m_sePtr;

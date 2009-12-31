@@ -319,8 +319,8 @@
     <property name="title">
      <string>タブ(&amp;T)</string>
     </property>
-    <addaction name="action_N"/>
-    <addaction name="action_15"/>
+    <addaction name="actCreateTab"/>
+    <addaction name="actRenameTab"/>
     <addaction name="separator"/>
     <addaction name="action_U_2"/>
     <addaction name="action_Q_2"/>
@@ -340,9 +340,9 @@
     <addaction name="action_22"/>
     <addaction name="actionBlackFav"/>
     <addaction name="separator"/>
-    <addaction name="actionFollow_Command"/>
-    <addaction name="actionRemove_Command"/>
-    <addaction name="actionShow_Friendships"/>
+    <addaction name="actFollow"/>
+    <addaction name="actRemove"/>
+    <addaction name="actShowFriendships"/>
     <addaction name="separator"/>
     <addaction name="actShowUserStatus"/>
    </widget>
@@ -561,17 +561,17 @@
     <string>F5</string>
    </property>
   </action>
-  <action name="action_N">
+  <action name="actCreateTab">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>タブ作成(&amp;N)...</string>
    </property>
   </action>
-  <action name="action_15">
+  <action name="actRenameTab">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>タブ名の変更</string>
@@ -646,25 +646,25 @@
     <string>BlackFav</string>
    </property>
   </action>
-  <action name="actionFollow_Command">
+  <action name="actFollow">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Follow Command</string>
    </property>
   </action>
-  <action name="actionRemove_Command">
+  <action name="actRemove">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Remove Command</string>
    </property>
   </action>
-  <action name="actionShow_Friendships">
+  <action name="actShowFriendships">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Show Friendships</string>

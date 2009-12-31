@@ -21,7 +21,10 @@ public:
     Twitter::TwitterItem currentItem();
     TimelineView *currentTimelineView();
     TimelineView *timelineView(int index);
-    //int addTab(const TabInfo& info);
+    TimelineView *addTimelineView(const QString& title);
+    TimelineView *insertTimelineView(int index,const QString& title);
+    void removeTimelineView(int index);
+    void moveTimelineView(int before, int after);
     void saveState(QIODevice*);
     void restoreState(QIODevice*);
     void fixLackingTabs();

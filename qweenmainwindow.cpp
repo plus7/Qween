@@ -12,6 +12,7 @@
 #include "urishortensvc.h"
 #include "iconmanager.h"
 #include "qweenapplication.h"
+#include "timelineview.h"
 
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -90,8 +91,7 @@ void QweenMainWindow::applySettings(){
     ui->statusText->setStyleSheet(settings->inputStyle());
     ui->statusText->setRequireCtrlOnEnter(settings->requireCtrlOnEnter());
 
-    //setupTimers();
-    //setupTwitter();
+    setupTimers();
 }
 
 bool QweenMainWindow::isNetworkAvailable(){
@@ -105,22 +105,28 @@ void QweenMainWindow::setupMenus()
     //TODO: 実際にTreeView内でCtrl+Cが機能するようにする
     ui->actCopyStot->setText(ui->actCopyStot->text()+"\tCtrl+C");
     ui->actCopyIdUri->setText(ui->actCopyIdUri->text()+"\tCtrl+Shift+C");
-    QAction *act = new QAction(QIcon(), tr("URLからの全角文字列の切り離し"), this);
-    //connect(act, SIGNAL(triggered()), this, SLOT(open()));
-    m_postModeMenu->addAction(act);
 
-    act = new QAction(QIcon(), tr("APIコマンドを回避する"), this);
-    //connect(act, SIGNAL(triggered()), this, SLOT(open()));
-    m_postModeMenu->addAction(act);
+
+    m_actDivideUriFromZenkaku = new QAction(QIcon(), tr("URLからの全角文字列の切り離し"), this);
+    m_actDivideUriFromZenkaku->setCheckable(true);
+    connect(m_actDivideUriFromZenkaku, SIGNAL(triggered(bool)),
+            this, SLOT(OnActDivideUriFromZenkakuToggled(bool)));
+    m_postModeMenu->addAction(m_actDivideUriFromZenkaku);
+
+    m_actAvoidApiCommand = new QAction(QIcon(), tr("APIコマンドを回避する"), this);
+    m_actAvoidApiCommand->setCheckable(true);
+    connect(m_actAvoidApiCommand, SIGNAL(triggered(bool)), this, SLOT(OnActAvoidApiCommandToggled(bool)));
+    m_postModeMenu->addAction(m_actAvoidApiCommand);
 
     m_actAutoShortenUri = new QAction(QIcon(), tr("自動的にURLを短縮する"), this);
     m_actAutoShortenUri->setCheckable(true);
-    //connect(act, SIGNAL(triggered()), this, SLOT(open()));
+    connect(m_actAutoShortenUri, SIGNAL(triggered(bool)), this, SLOT(OnActAutoShortenUriToggled(bool)));
     m_postModeMenu->addAction(m_actAutoShortenUri);
 
-    act = new QAction(QIcon(), tr("全角スペースを半角スペースにする"), this);
-    //connect(act, SIGNAL(triggered()), this, SLOT(open()));
-    m_postModeMenu->addAction(act);
+    m_actReplaceZenkakuSpace = new QAction(QIcon(), tr("全角スペースを半角スペースにする"), this);
+    m_actReplaceZenkakuSpace->setCheckable(true);
+    connect(m_actReplaceZenkakuSpace, SIGNAL(triggered(bool)), this, SLOT(OnActReplaceZenkakuSpaceToggled(bool)));
+    m_postModeMenu->addAction(m_actReplaceZenkakuSpace);
 
     ui->postButton->setMenu(m_postModeMenu);
 }
@@ -132,14 +138,14 @@ void QweenMainWindow::setupTabs(){
 }
 
 void QweenMainWindow::setupTimers(){
-    m_timelineTimer->setInterval(60*1000);
+    m_timelineTimer->setInterval(settings->tlUpdateIntv()*1000);
     m_timelineTimer->start();
 
-    m_DMTimer->setInterval(600*1000);
+    m_DMTimer->setInterval(settings->dmUpdateIntv()*1000);
     m_DMTimer->start();
     //m_DMTimer->stop();
 
-    m_replyTimer->setInterval(240*1000);
+    m_replyTimer->setInterval(settings->replyUpdateIntv()*1000);
     m_replyTimer->start();
     //m_replyTimer->stop();
 
@@ -147,8 +153,8 @@ void QweenMainWindow::setupTimers(){
     m_favTimer->start();
     //m_favTimer->stop();
 
-    m_fetchAnimTimer->setInterval(85);
-    m_fetchAnimTimer->start();
+    /*m_fetchAnimTimer->setInterval(85);
+    m_fetchAnimTimer->start();*/
 }
 
 void QweenMainWindow::setupTrayIcon(){
@@ -158,6 +164,8 @@ void QweenMainWindow::setupTrayIcon(){
 }
 
 void QweenMainWindow::setupTwitter(){
+    m_twitLib->Abort();
+    m_twitLib->Logout();
     m_twitLib->SetLoginInfo(settings->userid(), settings->password());
 }
 
@@ -209,6 +217,9 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
                     tabWidget->addItem(item);
                 }
                 delete pTimeline;
+                //TODO: dm, reply, sound
+                //バルーン・サウンドは最初は抑制するようだ
+                //設定項目があるのでそこを見るべし
                 m_trayIcon->showMessage(title, popupText, QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information),
                                         5 * 1000);
                 break;
@@ -300,6 +311,15 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
             delete p;
             break;
         }
+        case Returnables::FRIENDSHIP_EXISTS:
+        {
+            Returnables::FriendshipExist *p = static_cast<Returnables::FriendshipExist*>(resp);
+            if(p->friends)
+                QMessageBox::information(this, tr("友達関係"),
+                                         tr("相互にフォローしています。")); //TODO: existsじゃなくてshowを使う
+            delete p;
+            break;
+        }
         case Returnables::USER_DETAILS:
         {
             Returnables::UserDetails *p = static_cast<Returnables::UserDetails*>(resp);
@@ -315,6 +335,25 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
                                           QString::number(element->details.statusesCount),
                                           element->user.location,
                                           element->user.description));
+            break;
+        }
+        case Returnables::ADD_FRIENDSHIP:
+        {
+            Returnables::AddFriendship *p = static_cast<Returnables::AddFriendship*>(resp);
+            Returnables::BasicUserInfoElementPtr user = p->user;
+            if(!user->user.screenName.isEmpty())
+                QMessageBox::information(this, "Follow", tr("@%1 をFollow開始しました。").arg(user->user.screenName));
+            delete p;
+            break;
+        }
+        case Returnables::REMOVE_FRIENDSHIP:
+        {
+            Returnables::RemoveFriendship *p = static_cast<Returnables::RemoveFriendship*>(resp);
+            Returnables::BasicUserInfoElementPtr user = p->user;
+            if(!user->user.screenName.isEmpty())
+                QMessageBox::information(this, "Remove", tr("@%1 をRemoveしました。").arg(user->user.screenName));
+            delete p;
+            break;
         }
         default:
             break;
@@ -386,6 +425,11 @@ void QweenMainWindow::on_actOptions_triggered()
     //bool chgUseApi = false;
     if(dlg.exec() == QDialog::Accepted){
         applySettings();
+
+        if(dlg.loginInfoChanged()){
+            setupTwitter();
+            m_twitLib->VerifyCredentials();
+        }
     }
 }
 
@@ -489,7 +533,9 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
 
 void QweenMainWindow::OnPostModeMenuOpen(){
     m_actAutoShortenUri->setChecked(settings->uriAutoShorten());
-    //TODO:その他三つのMenu
+    m_actAvoidApiCommand->setChecked(settings->avoidApiCmd());
+    m_actDivideUriFromZenkaku->setChecked(settings->divideUriFromZenkaku());
+    m_actReplaceZenkakuSpace->setChecked(settings->replaceZenkakuSpace());
 }
 
 void QweenMainWindow::OnUriShortened(const QString& src, const QString& dest){
@@ -520,6 +566,18 @@ int QweenMainWindow::getRestStatusCount(const QString &str, bool footer)
     int rv = 140 - str.length();
     if(footer)
         rv -= settings->statusSuffix().length()+1;
+    if(settings->avoidApiCmd()){
+
+    }
+
+    if(settings->replaceZenkakuSpace()){
+
+    }
+
+    if(settings->divideUriFromZenkaku()){
+
+    }
+
     //TODO: フッタ機能と連動
     //TODO: Shiftキー
     //詳しくはTweenのソースを検索 GetRestStatusCount
@@ -538,6 +596,7 @@ void QweenMainWindow::on_actApiInfo_triggered()
 
 void QweenMainWindow::on_actQweenHomepage_triggered()
 {
+    //TODO: ブラウザを設定できるようにする
     QDesktopServices::openUrl(QUrl("http://qween.tnose.net/"));
 }
 
@@ -620,4 +679,71 @@ void QweenMainWindow::on_actExplosion_triggered()
 void QweenMainWindow::on_actShortenUri_triggered()
 {
     ui->statusText->shortenUri();
+}
+
+void QweenMainWindow::OnActDivideUriFromZenkakuToggled(bool val){
+    settings->setDivideUriFromZenkaku(val);
+}
+
+void QweenMainWindow::OnActAvoidApiCommandToggled(bool val){
+    settings->setAvoidApiCmd(val);
+}
+
+void QweenMainWindow::OnActAutoShortenUriToggled(bool val){
+    settings->setUriAutoShorten(val);
+}
+
+void QweenMainWindow::OnActReplaceZenkakuSpaceToggled(bool val){
+    settings->setReplaceZenkakuSpace(val);
+}
+
+void QweenMainWindow::on_actShowFriendships_triggered()
+{
+    QString name = tabWidget->currentItem().screenName();
+    bool ok;
+    QString rv = QInputDialog::getText(this, tr("フォロー関係を調べる"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
+    if(ok){
+        m_twitLib->FriendshipExist(settings->userid(), rv);
+    }
+}
+
+void QweenMainWindow::on_actFollow_triggered()
+{
+    QString name = tabWidget->currentItem().screenName();
+    bool ok;
+    QString rv = QInputDialog::getText(this, tr("Follow"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
+    if(ok){
+        m_twitLib->AddFriendship(rv, true);
+    }
+}
+
+void QweenMainWindow::on_actRemove_triggered()
+{
+    QString name = tabWidget->currentItem().screenName();
+    bool ok;
+    QString rv = QInputDialog::getText(this, tr("Follow"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
+    if(ok){
+        m_twitLib->RemoveFriendship(rv);
+    }
+}
+
+void QweenMainWindow::on_actCreateTab_triggered()
+{
+    QString name = QString("NewTab%1").arg(tabWidget->count());
+    bool ok;
+    QString rv = QInputDialog::getText(this, tr("新規タブ"), tr("タブ名を入力してください"), QLineEdit::Normal, name, &ok);
+    if(ok){
+        tabWidget->addTimelineView(rv);
+    }
+}
+
+void QweenMainWindow::on_actRenameTab_triggered()
+{
+    TimelineView *view = tabWidget->currentTimelineView();
+    bool ok;
+    QString rv = QInputDialog::getText(this, tr("名前変更"), tr("名前を入力してください"), QLineEdit::Normal, view->title(), &ok);
+    if(ok){
+        view->setTitle(rv);
+        tabWidget->setTabText(tabWidget->indexOf(view), rv);
+    }
 }
