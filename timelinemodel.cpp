@@ -263,7 +263,7 @@ void TimelineModel::OnIconDownloaded(quint64 userid, const QIcon &icon)
 {
     for(int i=0;i<m_itemList.count();i++){
         Twitter::TwitterItem *item = m_itemList.at(i);
-        if(item->id() == userid){
+        if(item->userId() == userid){
             QModelIndex idx = index(i,0,QModelIndex());
             emit dataChanged(idx, idx);
         }

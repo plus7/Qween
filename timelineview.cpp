@@ -18,7 +18,30 @@ QDomElement TimelineView::saveToElement(QDomDocument& doc){
     QString peHeaderState(this->header()->saveState().toPercentEncoding());
     header.setAttribute("state", peHeaderState);
     elm.appendChild(header);
+    QDomElement forward = doc.createElement("forward");
     //TODO: U‚è•ª‚¯İ’è‚Ì‘‚«o‚µ
+    for(int i;i<forwardingRule.count();i++){
+        QDomElement ruleElm = doc.createElement("rule");
+        ForwardingRule rule = forwardingRule.at(i);
+        ruleElm.setAttribute("body", rule.body);
+        ruleElm.setAttribute("exbody", rule.exbody);
+        ruleElm.setAttribute("name", rule.name);
+        ruleElm.setAttribute("exname", rule.exname);
+        ruleElm.setAttribute("cs", rule.caseSensitive);
+        ruleElm.setAttribute("excs", rule.exCaseSensitive);
+        /*
+        bool useBoth;
+        bool exUseBoth;
+        bool moveFromRecent;
+        bool setMark;
+        bool searchUrl;
+        bool exSearchUrl;
+        bool caseSensitive;
+        bool exCaseSensitive;
+        bool useRegex;
+        bool exUseRegex;*/
+    }
+    elm.appendChild(forward);
     return elm;
 }
 

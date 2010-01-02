@@ -7,7 +7,7 @@ class TimelineModel;
 namespace Twitter{
     enum ItemType
     {
-        Undefined, Status, DirectMessage
+        Undefined, Status, DirectMessage, BasicUserInfo, ExtUserInfo
     };
 
     class TwitterItem{
@@ -27,6 +27,11 @@ namespace Twitter{
             :m_type(type), m_dmPtr(ptr), m_origin(origin), m_read(read),m_parent(parent)
         {}
 
+        TwitterItem(ItemType type, Returnables::BasicUserInfoElementPtr ptr, Returnables::RequestId origin,
+                    bool read, TimelineModel *parent = 0)
+            :m_type(type), m_biPtr(ptr), m_origin(origin), m_read(read),m_parent(parent)
+        {}
+
         QString userName() const {
             switch(m_type){
             case Twitter::Status:
@@ -34,6 +39,9 @@ namespace Twitter{
                 break;
             case Twitter::DirectMessage:
                 return m_dmPtr->sender.name;
+                break;
+            case Twitter::BasicUserInfo:
+                return m_biPtr->user.name;
                 break;
             default:
                 return QString();
@@ -48,6 +56,9 @@ namespace Twitter{
             case Twitter::DirectMessage:
                 return m_dmPtr->sender.screenName;
                 break;
+            case Twitter::BasicUserInfo:
+                return m_biPtr->user.screenName;
+                break;
             default:
                 return QString();
             }
@@ -60,6 +71,9 @@ namespace Twitter{
                 break;
             case Twitter::DirectMessage:
                 return m_dmPtr->headerInfo.createdAt;
+                break;
+            case Twitter::BasicUserInfo:
+                return m_biPtr->status.createdAt;
                 break;
             default:
                 return QString();
@@ -74,6 +88,9 @@ namespace Twitter{
             case Twitter::DirectMessage:
                 return m_dmPtr->headerInfo.text;
                 break;
+            case Twitter::BasicUserInfo:
+                return m_biPtr->status.text;
+                break;
             default:
                 return QString();
             }
@@ -86,6 +103,9 @@ namespace Twitter{
                 break;
             case Twitter::DirectMessage:
                 return m_dmPtr->headerInfo.id;
+                break;
+            case Twitter::BasicUserInfo:
+                return m_biPtr->status.id;
                 break;
             default:
                 return 0;
@@ -100,6 +120,9 @@ namespace Twitter{
             case Twitter::DirectMessage:
                 return m_dmPtr->sender.id;
                 break;
+            case Twitter::BasicUserInfo:
+                return m_biPtr->user.id;
+                break;
             default:
                 return 0;
             }
@@ -113,6 +136,9 @@ namespace Twitter{
             case Twitter::DirectMessage:
                 return m_dmPtr->sender.profileImageUrl;
                 break;
+            case Twitter::BasicUserInfo:
+                return m_biPtr->user.profileImageUrl;
+                break;
             default:
                 return 0;
             }
@@ -123,6 +149,9 @@ namespace Twitter{
                 return m_sePtr->status.favorited;
                 break;
             case Twitter::DirectMessage:
+                return false;
+                break;
+            case Twitter::BasicUserInfo:
                 return false;
                 break;
             default:
@@ -151,6 +180,8 @@ namespace Twitter{
         enum ItemType m_type;
         Returnables::StatusElementPtr m_sePtr;
         Returnables::DirectMessageElementPtr m_dmPtr;
+        Returnables::BasicUserInfoElementPtr m_biPtr;
+        Returnables::ExtUserInfoElementPtr m_euPtr;
         Returnables::RequestId m_origin;
         bool m_read;
         TimelineModel *m_parent;

@@ -16,6 +16,9 @@ class QMenu;
 class QIcon;
 class QSystemTrayIcon;
 class AbstractUriShortener;
+class UsersModel;
+class QCompleter;
+class QSortFilterProxyModel;
 class QweenMainWindow : public QMainWindow {
     Q_OBJECT
 public:
@@ -73,6 +76,10 @@ private:
 
     QList<QString> m_inputHistory;
 
+    UsersModel *m_usersModel;
+    QSortFilterProxyModel *m_proxyModel;
+    QCompleter *m_completer;
+
     //flags:
     //ç≈èâÇÃshowEventÇ©Ç«Ç§Ç©ÇîªífÇ∑ÇÈÉtÉâÉO
     bool m_firstShow;
@@ -107,6 +114,8 @@ public slots:
     void OnActReplaceZenkakuSpaceToggled(bool);
 
 private slots:
+    void on_actTabSettings_triggered();
+    void on_actTwitterNews_triggered();
     void on_actRenameTab_triggered();
     void on_actCreateTab_triggered();
     void on_actRemove_triggered();

@@ -5,19 +5,20 @@
 #include "qweentabctrl.h"
 #include "settingdialog.h"
 #include "QTwitLib.h"
-#include <QDialog>
-#include <QMessageBox>
+#include <QtCore>
 #include <QtGui>
-//#include <QtWebKit>
 #include "urishortensvc.h"
 #include "iconmanager.h"
 #include "qweenapplication.h"
 #include "timelineview.h"
+#include "tabsettingsdialog.h"
+#include "forwardruledialog.h"
+#include "usersmodel.h"
 
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::QweenMainWindow),m_firstShow(true),m_postAfterShorten(false),m_urisvc(NULL),
-    m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),m_newestReply(0),m_newestFav(0)
+    ui(new Ui::QweenMainWindow),m_firstShow(true),m_postAfterShorten(false),m_urisvc(NULL),m_usersModel(NULL),
+    m_completer(NULL), m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),m_newestReply(0),m_newestFav(0)
 {
     ui->setupUi(this);
     makeWidgets();
@@ -85,6 +86,16 @@ void QweenMainWindow::makeWidgets(){
     ui->splitter->insertWidget(0,tabWidget);
     ui->splitter->setStretchFactor(0, 1);
     ui->splitter->setStretchFactor(1, 0);
+
+    m_usersModel = new UsersModel(QweenApplication::iconManager(), this);
+    m_proxyModel = new QSortFilterProxyModel(this);
+    m_proxyModel->setDynamicSortFilter(true);
+    m_proxyModel->setSourceModel(m_usersModel);
+    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    m_proxyModel->sort(0, Qt::AscendingOrder);
+
+    m_completer = new QCompleter(m_proxyModel, this);
+    ui->statusText->setCompleter(m_completer);
 }
 
 void QweenMainWindow::applySettings(){
@@ -214,6 +225,8 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
                     Twitter::TwitterItem item(Twitter::Status, element, resp->reqID, false);
                     if(m_newestFriendsStatus < item.id()) m_newestFriendsStatus = item.id();
                     popupText.append(QString("%1 : %2\n").arg(item.userName(), item.status()));
+                    if(!m_usersModel->userExists(item.userId()))
+                        m_usersModel->appendItem(item);
                     tabWidget->addItem(item);
                 }
                 delete pTimeline;
@@ -242,6 +255,8 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
                 Returnables::StatusElementPtr element = p->list.takeLast();
                 Twitter::TwitterItem item(Twitter::Status, element, resp->reqID, false);
                 if(m_newestReply < item.id()) m_newestReply = item.id();
+                if(!m_usersModel->userExists(item.userId()))
+                    m_usersModel->appendItem(item);
                 tabWidget->addItem(item);
             }
             delete p;
@@ -266,6 +281,8 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
                 Returnables::DirectMessageElementPtr element = p->list.takeLast();
                 Twitter::TwitterItem item(Twitter::DirectMessage, element, resp->reqID, false);
                 if(m_newestRecvDM < item.id()) m_newestRecvDM = item.id();
+                if(!m_usersModel->userExists(item.userId()))
+                    m_usersModel->appendItem(item);
                 tabWidget->addItem(item);
             }
             delete p;
@@ -278,6 +295,8 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
                 Returnables::StatusElementPtr element = p->list.takeLast();
                 Twitter::TwitterItem item(Twitter::Status, element, resp->reqID, false);
                 if(m_newestFav < item.id()) m_newestFav = item.id();
+                if(!m_usersModel->userExists(item.userId()))
+                    m_usersModel->appendItem(item);
                 tabWidget->addItem(item);
             }
             delete p;
@@ -308,6 +327,14 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
                                      .arg(QString::number(p->hourlyLimit),
                                           QString::number(p->remainingHits),
                                           p->resetTime));
+            delete p;
+            break;
+        }
+        case Returnables::USER_TIMELINE:
+        {
+            Returnables::UserTimeline *p = static_cast<Returnables::UserTimeline*>(resp);
+            Returnables::StatusElementPtr element = p->list.takeFirst();
+            QMessageBox::information(this,tr("@twj ‚ÌÅV‚ÌTweet"),element->status.text);
             delete p;
             break;
         }
@@ -746,4 +773,17 @@ void QweenMainWindow::on_actRenameTab_triggered()
         view->setTitle(rv);
         tabWidget->setTabText(tabWidget->indexOf(view), rv);
     }
+}
+
+void QweenMainWindow::on_actTwitterNews_triggered()
+{
+    SERVER::Option2 opt;
+    opt.screen_name = "twj";
+    m_twitLib->GetUsersTimeline(&opt);
+}
+
+void QweenMainWindow::on_actTabSettings_triggered()
+{
+    TabSettingsDialog dlg(tabWidget);
+    dlg.exec();
 }

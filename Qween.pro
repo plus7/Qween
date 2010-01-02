@@ -32,7 +32,10 @@ SOURCES += main.cpp \
     shorturi/urishortensvc.cpp \
     shorturi/simpleurishortener.cpp \
     forwardingrule.cpp \
-    shorturi/shorturiresolver.cpp
+    shorturi/shorturiresolver.cpp \
+    forwardruledialog.cpp \
+    tabsettingsdialog.cpp \
+    usersmodel.cpp
 HEADERS += qweenmainwindow.h \
     twitter.h \
     qweensettings.h \
@@ -58,9 +61,14 @@ HEADERS += qweenmainwindow.h \
     qweenapplication.h \
     shorturi/simpleurishortener.h \
     forwardingrule.h \
-    shorturi/shorturiresolver.h
+    shorturi/shorturiresolver.h \
+    forwardruledialog.h \
+    tabsettingsdialog.h \
+    usersmodel.h
 FORMS += qweenmainwindow.ui \
     aboutdialog.ui \
-    settingdialog.ui
+    settingdialog.ui \
+    forwardruledialog.ui \
+    tabsettingsdialog.ui
 OTHER_FILES += memo.txt
 RESOURCES += res.qrc

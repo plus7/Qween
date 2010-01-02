@@ -176,6 +176,9 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="focusPolicy">
+                <enum>Qt::ClickFocus</enum>
+               </property>
               </widget>
              </item>
             </layout>
@@ -326,7 +329,7 @@
     <addaction name="action_Q_2"/>
     <addaction name="action_17"/>
     <addaction name="separator"/>
-    <addaction name="action_F_2"/>
+    <addaction name="actTabSettings"/>
     <addaction name="separator"/>
     <addaction name="action_20"/>
     <addaction name="separator"/>
@@ -601,9 +604,9 @@
     <string>サウンド？</string>
    </property>
   </action>
-  <action name="action_F_2">
+  <action name="actTabSettings">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>振り分けルール編集(&amp;F)...</string>
@@ -703,7 +706,7 @@
   </action>
   <action name="actTwitterNews">
    <property name="text">
-    <string>Twitterからのお知らせ</string>
+    <string>@twj の最新情報を表示</string>
    </property>
   </action>
   <action name="actAboutQween">

@@ -17,8 +17,8 @@ public:
     quint64 replyToId(){ return m_reply_to_id; }
     void setReplyToId(quint64 val){ m_reply_to_id = val; }
 
-    void setCompleter(QCompleter *completer){ m_completer = completer; }
-    QCompleter* completer() const { return m_completer; }
+    void setCompleter(QCompleter *completer);
+    QCompleter* completer() const;
 
     void shortenUri();
     void doShorten();
@@ -28,6 +28,7 @@ signals:
 public slots:
     void OnUriShortened(const QString& src, const QString& dest);
     void OnUriShorteningFailed(const QString& src, int status);
+    void insertCompletion(const QString &completion);
 
 private:
     quint64 m_reply_to_id;
