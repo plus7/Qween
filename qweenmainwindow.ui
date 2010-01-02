@@ -300,9 +300,9 @@
      <addaction name="action_8"/>
      <addaction name="action_11"/>
     </widget>
-    <addaction name="action_7"/>
+    <addaction name="actAtReply"/>
     <addaction name="action_ALL"/>
-    <addaction name="actionDM"/>
+    <addaction name="actSendDM"/>
     <addaction name="actionReTweet"/>
     <addaction name="actionReTweet_unofficial"/>
     <addaction name="separator"/>
@@ -476,12 +476,15 @@
     <string>前を検索(&amp;P)</string>
    </property>
   </action>
-  <action name="action_7">
+  <action name="actAtReply">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>@返信(&amp;R)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="action_ALL">
@@ -492,12 +495,15 @@
     <string>@返信ALL</string>
    </property>
   </action>
-  <action name="actionDM">
+  <action name="actSendDM">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>DM送信</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
    </property>
   </action>
   <action name="actionReTweet">

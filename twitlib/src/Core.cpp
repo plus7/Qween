@@ -1,4 +1,8 @@
 /*
+  2010-01-02 This file is modified by
+  */
+
+/*
     This file is part of QTwitlib.
 
     QTwitlib is free software: you can redistribute it and/or modify

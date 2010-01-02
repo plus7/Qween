@@ -1,3 +1,21 @@
+/*
+  This file is part of Qween.
+  Copyright (C) 2009-2010 NOSE Takafumi <ahya365@gmail.com>
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "qweenmainwindow.h"
 #include "ui_qweenmainwindow.h"
 #include "aboutdialog.h"
@@ -786,4 +804,19 @@ void QweenMainWindow::on_actTabSettings_triggered()
 {
     TabSettingsDialog dlg(tabWidget);
     dlg.exec();
+}
+
+void QweenMainWindow::on_actAtReply_triggered()
+{
+    //stub.
+    //TODO: ‚È‚É‚â‚ç•¡ŽG‚Èˆ—
+    ui->statusText->setCursorPosition(0);
+    ui->statusText->insert("@"+tabWidget->currentItem().screenName()+" ");
+}
+
+void QweenMainWindow::on_actSendDM_triggered()
+{
+    //stub.
+    ui->statusText->setCursorPosition(0);
+    ui->statusText->insert("D "+tabWidget->currentItem().screenName()+" ");
 }

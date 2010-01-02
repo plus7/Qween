@@ -70,5 +70,6 @@ FORMS += qweenmainwindow.ui \
     settingdialog.ui \
     forwardruledialog.ui \
     tabsettingsdialog.ui
-OTHER_FILES += memo.txt
+OTHER_FILES += memo.txt \
+    LICENSE.txt
 RESOURCES += res.qrc

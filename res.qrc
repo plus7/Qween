@@ -6,5 +6,6 @@
         <file>res/offline.png</file>
         <file>res/reply.png</file>
         <file>res/unread.png</file>
+        <file>res/qween_icon.png</file>
     </qresource>
 </RCC>
