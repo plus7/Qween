@@ -693,7 +693,7 @@ void QweenMainWindow::on_actCopyIdUri_triggered()
     if(item.type()==Twitter::Undefined) return;
     //TODO: Protected‚È‚çƒRƒs[‚µ‚È‚¢Ý’è‚ð’Ç‰Á
     //TODO: ReTweet‘Î‰ž
-    QString data = "http://twitter.com/%0/status/%1]";
+    QString data = "http://twitter.com/%0/status/%1";
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(data.arg(item.screenName(), QString::number(item.id())), QClipboard::Clipboard);
 }
