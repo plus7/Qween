@@ -76,6 +76,7 @@ OTHER_FILES += memo.txt \
 RESOURCES += res.qrc
 
 win32 {
+  message(GET_GIT_INFO)
   SHPATH = C:\cygwin\bin\sh.exe
   CONFIG(debug, debug|release) {
     system($$SHPATH get_git_info.sh debug)
