@@ -45,8 +45,8 @@ public:
     Twitter::TwitterItem itemAt(int index);
     void setFav(int index, bool fav=true);
     void setRead(int index, bool read=true);
-    void setUserId(quint64 id);
-    quint64 userId() const { return m_userId; }
+    void setMyId(quint64 id);//{ m_myId = id; }
+    quint64 myId() const { return m_myId; }
     void setNewestId(quint64 id) { m_newestId = id; }
     quint64 newestId() const { return m_newestId; }
     void setBaseIndex(int i){ m_baseIndex = i; }
@@ -61,7 +61,7 @@ public slots:
 private:
     IconManager *m_iconMgr;
     int m_baseIndex;
-    quint64 m_userId;
+    quint64 m_myId;
     quint64 m_newestId;
     QList<Twitter::TwitterItem*> m_itemList;
 };

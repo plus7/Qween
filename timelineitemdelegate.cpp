@@ -33,6 +33,8 @@ void TimelineItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     QStyleOptionViewItem myOption = option;
     if(!item->read())
         myOption.font.setBold(true);
+    if(item->userId() == item->parent()->myId())
+        myOption.palette.setColor(QPalette::Text, QColor(255,0,0));
     if(index.row() == item->parent()->baseIndex()){
         myOption.decorationSize.setHeight(16);
         myOption.decorationSize.setWidth(16);

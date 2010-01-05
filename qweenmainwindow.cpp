@@ -326,6 +326,7 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
             Returnables::ExtUserInfoElementPtr element = p->userExt;
             tabWidget->setMyId(element->user.id);
             if(element->user.id!=0){
+                tabWidget->setMyId(element->user.id);
                 SERVER::Option1 opt;
                 opt.since_id = m_newestFriendsStatus;
                 opt.count = 20;

@@ -233,6 +233,9 @@ void QweenTabCtrl::moveTimelineView(int before, int after){
 void QweenTabCtrl::setMyId(quint64 myid){
     //TODO: 各ModelにMyIDをセット
     m_myID = myid;
+    for(int i=0;i<this->count();i++){
+        ((TimelineView*)(this->widget(i)))->setMyId(myid);
+    }
 }
 
 quint64 QweenTabCtrl::getNewestHomeId() const {

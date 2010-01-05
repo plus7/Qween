@@ -19,7 +19,7 @@
 #include "timelineview.h"
 #include <QtXml>
 TimelineView::TimelineView(QWidget *parent) :
-    QTreeView(parent),m_id(0)
+    QTreeView(parent),m_myId(0)
 {
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setEditTriggers(QAbstractItemView::NoEditTriggers);

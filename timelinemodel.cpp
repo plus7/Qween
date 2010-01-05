@@ -21,7 +21,7 @@
 #include "QTwitLib.h"
 
 TimelineModel::TimelineModel(IconManager *iconMgr, QObject *parent)
-     : QAbstractItemModel(parent), m_iconMgr(iconMgr), m_userId(0), m_newestId(0)
+     : QAbstractItemModel(parent), m_iconMgr(iconMgr), m_myId(0), m_newestId(0)
  {
     connect(m_iconMgr, SIGNAL(iconDownloaded(quint64,QIcon)),
             this, SLOT(OnIconDownloaded(quint64,QIcon)));
@@ -200,12 +200,12 @@ void TimelineModel::setFav(int index, bool fav){
     emit dataChanged(idx, idx);
 }
 
-void TimelineModel::setUserId(quint64 id){
-    if(m_userId != id){
-        m_userId = id;
+void TimelineModel::setMyId(quint64 id){
+    if(m_myId != id){
+        m_myId = id;
         for(int i=0;i<m_itemList.count();i++){
             Twitter::TwitterItem *item = m_itemList.at(i);
-            if(item->type() == Twitter::DirectMessage && item->id() == m_userId){
+            if(item->type() == Twitter::DirectMessage && item->id() == m_myId){
                 QModelIndex idx = index(i,0,QModelIndex());
                 emit dataChanged(idx, idx);
             }

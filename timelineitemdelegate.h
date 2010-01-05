@@ -40,8 +40,11 @@ signals:
 */
 /*private slots:
     void commitAndCloseEditor();*/
+    quint64 myId() { return m_myid; }
+    void setMyId(quint64 id){ m_myid = id; }
 private:
     IconManager *m_iconMgr;
+    quint64 m_myid;
 };
 
 #endif // TIMELINEITEMDELEGATE_H
