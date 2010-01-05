@@ -86,9 +86,9 @@ win32 {
 }
 unix {
   CONFIG(debug, debug|release) {
-    system(./get_git_info.sh debug)
+    system(./get_git_info.sh .)
   }
   else {
-    system(./get_git_info.sh release)
+    system(./get_git_info.sh .)
   }
 }
