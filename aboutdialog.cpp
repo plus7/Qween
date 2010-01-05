@@ -37,11 +37,14 @@ AboutDialog::AboutDialog(QWidget *parent) :
         commitInfo.open(QIODevice::ReadOnly|QIODevice::Text);
         QString line(commitInfo.readLine());
         line.replace("commit ","");
+        m_commitId = line;
         ui->textBrowser_about->append(aboutText.arg(line));
         commitInfo.close();
     }
 
     ui->textBrowser_about->append("<p align=\"left\">Copyright (C) 2009-2010 NOSE Takafumi &lt;ahya365@gmail.com&gt;</p>");
+
+    ui->textEdit_debug->appendPlainText(QString("Commit ID: %1").arg(m_commitId));
 }
 
 AboutDialog::~AboutDialog()

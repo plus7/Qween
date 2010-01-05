@@ -439,7 +439,13 @@
   </action>
   <action name="actExit">
    <property name="text">
-    <string>終了(&amp;X)</string>
+    <string>終了(&amp;Q)</string>
+   </property>
+   <property name="toolTip">
+    <string>終了(Q)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actCopyStot">

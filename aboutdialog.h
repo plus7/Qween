@@ -36,6 +36,7 @@ protected:
 
 private:
     Ui::AboutDialog *ui;
+    QString m_commitId;
 };
 
 #endif // ABOUTDIALOG_H
