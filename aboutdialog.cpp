@@ -36,7 +36,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
         QString aboutText = "<p align=\"left\">Commit: %1</p>";
         commitInfo.open(QIODevice::ReadOnly|QIODevice::Text);
         QString line(commitInfo.readLine());
-        line.replace("commit: ","");
+        line.replace("commit ","");
         ui->textBrowser_about->append(aboutText.arg(line));
         commitInfo.close();
     }
