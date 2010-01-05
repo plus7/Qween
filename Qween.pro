@@ -9,7 +9,7 @@ INCLUDEPATH += ./twitlib/include \
     ./shorturi
 DEPENDPATH += ./twitlib/include \
     ./shorturi
-LIBS += -L./twitlib/debug \
+LIBS += -L./twitlib/release \
     -lQTwitLib
 
 # Kilroy was here
@@ -71,5 +71,24 @@ FORMS += qweenmainwindow.ui \
     forwardruledialog.ui \
     tabsettingsdialog.ui
 OTHER_FILES += memo.txt \
-    LICENSE.txt
+    LICENSE.txt \
+    get_git_info.sh
 RESOURCES += res.qrc
+
+win32 {
+  SHPATH = C:\cygwin\bin\sh.exe
+  CONFIG(debug, debug|release) {
+    system($$SHPATH get_git_info.sh debug)
+  }
+  else {
+    system($$SHPATH get_git_info.sh release)
+  }
+}
+unix {
+  CONFIG(debug, debug|release) {
+    system(./get_git_info.sh debug)
+  }
+  else {
+    system(./get_git_info.sh release)
+  }
+}
