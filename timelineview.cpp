@@ -37,7 +37,7 @@ QDomElement TimelineView::saveToElement(QDomDocument& doc){
     header.setAttribute("state", peHeaderState);
     elm.appendChild(header);
     QDomElement forward = doc.createElement("forward");
-    //TODO: U‚è•ª‚¯İ’è‚Ì‘‚«o‚µ
+    //TODO: æŒ¯ã‚Šåˆ†ã‘è¨­å®šã®æ›¸ãå‡ºã—
     for(int i;i<forwardingRule.count();i++){
         QDomElement ruleElm = doc.createElement("rule");
         ForwardingRule rule = forwardingRule.at(i);
@@ -70,5 +70,5 @@ void TimelineView::restoreFromElement(const QDomElement& element){
         QByteArray arr;
         this->header()->restoreState(arr.fromPercentEncoding(headerStateStr.toAscii()));
     }
-    //TODO: U‚è•ª‚¯İ’è‚Ì“Ç‚İ‚İ
+    //TODO: æŒ¯ã‚Šåˆ†ã‘è¨­å®šã®èª­ã¿è¾¼ã¿
 }

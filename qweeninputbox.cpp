@@ -23,7 +23,7 @@
 QweenInputBox::QweenInputBox(QWidget *parent) :
     QLineEdit(parent), m_pos(0), m_completer(new QCompleter(this))
 {
-    //TODO: ƒT[ƒrƒX‚ğİ’èo—ˆ‚é‚æ‚¤‚É‚·‚é
+    //TODO: ã‚µãƒ¼ãƒ“ã‚¹ã‚’è¨­å®šå‡ºæ¥ã‚‹ã‚ˆã†ã«ã™ã‚‹
     m_uriShortenSvc = getUriShortenService("bitly", this);
 
     connect(m_uriShortenSvc, SIGNAL(uriShortened(QString,QString)),
@@ -95,7 +95,7 @@ void QweenInputBox::keyPressEvent(QKeyEvent *event)
        !event->modifiers().testFlag(Qt::ControlModifier) &&
        !event->modifiers().testFlag(Qt::AltModifier)){
         if(event->key() == Qt::Key_Space){
-            if(text() == " " || text() == "@"){
+            if(text() == " " || text() == "ã€€"){
                 setText("");
                 return;
                 //TODO:JumpUnreadMenuItem_Click(Nothing, Nothing);
@@ -112,11 +112,11 @@ void QweenInputBox::keyPressEvent(QKeyEvent *event)
         event->modifiers().testFlag(Qt::ControlModifier) &&
        !event->modifiers().testFlag(Qt::AltModifier)){
         if(event->key() == Qt::Key_Up || event->key() == Qt::Key_Down){
-            //TODO:“ü—Í—š—ğ‚ğã‰º‚·‚é
+            //TODO:å…¥åŠ›å±¥æ­´ã‚’ä¸Šä¸‹ã™ã‚‹
         }else if(event->key() == Qt::Key_PageUp){
-            //TODO:‰E‚Ìƒ^ƒu‚ğ‘I‘ğ
+            //TODO:å³ã®ã‚¿ãƒ–ã‚’é¸æŠ
         }else if(event->key() == Qt::Key_PageUp){
-            //TODO:¶‚Ìƒ^ƒu‚ğ‘I‘ğ
+            //TODO:å·¦ã®ã‚¿ãƒ–ã‚’é¸æŠ
         }else if(event->key() == Qt::Key_Return){
             if(requireCtrlOnEnter()){
                 emit returnPressed();

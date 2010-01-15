@@ -42,7 +42,7 @@ void QweenSettings::load(){
     //startup/dmpages
     //startup/markread
     //startup/versioncheck
-    //startup/wedata? ‚¢‚ç‚È‚¢‚æ‚Ë
+    //startup/wedata? ã„ã‚‰ãªã„ã‚ˆã­
     //startup/checkoneway
     //tinyurl/
     m_uriAutoShorten = ini.value("input/auto_shorten", QVariant(false)).toBool();
