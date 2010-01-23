@@ -32,6 +32,7 @@
 #include "tabsettingsdialog.h"
 #include "forwardruledialog.h"
 #include "usersmodel.h"
+#include "const.h"
 
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -558,9 +559,18 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
 {
     switch(item.type()){
     case Twitter::Status:
+    {
+        QString status(item.status());
+        QRegExp urirx(URLRXDATA);
+        int pos=0;
+        while ((pos = urirx.indexIn(status, pos)) != -1) {
+            QString anchor = QString("<a href=\"%1\">%1</a>").arg(urirx.cap(0));
+            status.replace(pos, urirx.matchedLength(), anchor);
+            pos += anchor.length();
+        }
         ui->textBrowser->setHtml(tr("<html><body style=\"%1\">")
                                  .arg(settings->statusViewStyle()) +
-                                 item.status() + tr("</body></html>"));
+                                 status + tr("</body></html>"));
         ui->lblNameId->setText(item.screenName() + "/" + item.userName());
         ui->lblUpdateDatetime->setText(item.createdAt());
         if(QweenApplication::iconManager()->isIconAvailable(item.userId())){
@@ -572,6 +582,7 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
         }
         ui->userIconLabel->repaint();
         break;
+    }
     default:
         break;
     }
