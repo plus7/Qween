@@ -21,11 +21,9 @@
 #include "const.h"
 #include <QtGui>
 QweenInputBox::QweenInputBox(QWidget *parent) :
-    QLineEdit(parent), m_pos(0), m_completer(new QCompleter(this))
+    QLineEdit(parent), m_pos(0), m_completer(new QCompleter(this)), m_shortenSvcName("bitly"),
+    m_uriShortenSvc(getUriShortenService(m_shortenSvcName, this))
 {
-    //TODO: サービスを設定出来るようにする
-    m_uriShortenSvc = getUriShortenService("bitly", this);
-
     connect(m_uriShortenSvc, SIGNAL(uriShortened(QString,QString)),
             this, SLOT(OnUriShortened(QString,QString)));
     connect(m_uriShortenSvc, SIGNAL(failed(QString,int)),
@@ -49,6 +47,15 @@ void QweenInputBox::setCompleter(QCompleter *completer){
 }
 
 QCompleter* QweenInputBox::completer() const { return m_completer; }
+
+void QweenInputBox::setUriShortenSvc(const QString& name){
+    if(m_uriShortenSvc) {
+        delete m_uriShortenSvc;
+        m_uriShortenSvc = NULL;
+    }
+    m_shortenSvcName = name;
+    m_uriShortenSvc = getUriShortenService(m_shortenSvcName, this);
+}
 
 void QweenInputBox::insertCompletion(const QString& completion)
 {
@@ -180,6 +187,8 @@ void QweenInputBox::OnUriShortened(const QString& src, const QString& dest){
 }
 
 void QweenInputBox::OnUriShorteningFailed(const QString& src, int status){
+    Q_UNUSED(src)
+    Q_UNUSED(status)
     m_pos = 0;
     setEnabled(true);
     emit uriShorteningFinished();
