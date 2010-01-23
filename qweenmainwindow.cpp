@@ -36,8 +36,9 @@
 
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::QweenMainWindow),m_firstShow(true),m_postAfterShorten(false),m_urisvc(NULL),m_usersModel(NULL),
-    m_completer(NULL), m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),m_newestReply(0),m_newestFav(0)
+    ui(new Ui::QweenMainWindow),m_firstShow(true),m_postAfterShorten(false),m_usersModel(NULL),
+    m_completer(NULL), m_urisvc(NULL), m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),
+    m_newestReply(0),m_newestFav(0)
 {
     ui->setupUi(this);
     makeWidgets();
@@ -503,7 +504,9 @@ void QweenMainWindow::doPost(){
 }
 
 void QweenMainWindow::makeReplyOrDirectStatus(bool isAuto, bool isReply, bool isAll){
-
+    Q_UNUSED(isAuto)
+    Q_UNUSED(isReply)
+    Q_UNUSED(isAll)
 }
 
 void QweenMainWindow::OnUriShorteningFinished(){
@@ -596,10 +599,12 @@ void QweenMainWindow::OnPostModeMenuOpen(){
 }
 
 void QweenMainWindow::OnUriShortened(const QString& src, const QString& dest){
+    Q_UNUSED(src)
     QMessageBox::information(this, "", dest);
 }
 
 void QweenMainWindow::OnIconDownloaded(quint64 userid, const QIcon &icon){
+    Q_UNUSED(userid)
     ui->userIconLabel->setPixmap(icon.pixmap(50,50,QIcon::Normal,QIcon::On));
 }
 
@@ -611,6 +616,7 @@ void QweenMainWindow::OnMessageClicked(){
 
 void QweenMainWindow::on_statusText_textChanged(QString string)
 {
+    Q_UNUSED(string)
     int rest = getRestStatusCount(ui->statusText->text().trimmed());
     ui->lblStatusLength->setText(QString("%1").arg(rest));
     if(rest < 0){ 
