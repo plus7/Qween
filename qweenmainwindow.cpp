@@ -604,6 +604,8 @@ void QweenMainWindow::OnIconDownloaded(quint64 userid, const QIcon &icon){
 }
 
 void QweenMainWindow::OnMessageClicked(){
+    //FIXME: X11環境だと動かないことがある？
+    this->raise();
     this->activateWindow();
 }
 
