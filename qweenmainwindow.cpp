@@ -564,11 +564,43 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
     case Twitter::Status:
     {
         QString status(item.status());
-        QRegExp urirx(URLRXDATA);
+        QRegExp linkrx(LINK_RX_DATA);
         int pos=0;
-        while ((pos = urirx.indexIn(status, pos)) != -1) {
-            QString anchor = QString("<a href=\"%1\">%1</a>").arg(urirx.cap(0));
-            status.replace(pos, urirx.matchedLength(), anchor);
+        while ((pos = linkrx.indexIn(status, pos)) != -1) {
+            QStringList list = linkrx.capturedTexts();
+            QString str;
+            QString anchor;
+            int length;
+            if (list[1] != ""){ //hashtag
+                str = list[1];
+                if (str.at(0) != '#'){
+                    str.remove(0,1);
+                    pos++;
+                }
+                QString str2 = str;
+                str2.remove(0,1);
+                anchor = QString("<a href=\"http://twitter/#search?q=%2\">%1</a>")
+                         .arg(str,str2);
+                length = str.length();
+            }
+            else if(list[2] != ""){ //reply
+                str = list[2];
+                if (str.at(0) == '@'){
+                    str.remove(0,1);
+                    pos++;
+                }else{
+                    str.remove(0,2);
+                    pos+=2;
+                }
+                anchor = QString("<a href=\"http://twitter.com/%1\">%1</a>").arg(str);
+                length = str.length();
+            }
+            else if(list[3] != ""){ //URI
+                str = list[3];
+                anchor = QString("<a href=\"%1\">%1</a>").arg(str);
+                length = str.length();
+            }
+            status.replace(pos, length, anchor);
             pos += anchor.length();
         }
         ui->textBrowser->setHtml(tr("<html><body style=\"%1\">")
