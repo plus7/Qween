@@ -13,3 +13,4 @@ twitlib/generated/
 twitlib/intermediates/
 *.o
 Makefile
+moc_*.cpp
