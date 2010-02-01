@@ -11,3 +11,5 @@ release
 twitlib/DevGui/
 twitlib/generated/
 twitlib/intermediates/
+*.o
+Makefile
