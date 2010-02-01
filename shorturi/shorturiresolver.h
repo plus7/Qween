@@ -20,17 +20,22 @@
 #define SHORTURIRESOLVER_H
 
 #include <QObject>
-
+#include <QtCore>
+class QNetworkAccessManager;
+class QNetworkReply;
 class ShortUriResolver : public QObject
 {
 Q_OBJECT
 public:
     explicit ShortUriResolver(QObject *parent = 0);
-
+    void resolveAsync(const QString& uri);
 signals:
 
 public slots:
-
+    void replyFinished(QNetworkReply*);
+private:
+    QNetworkAccessManager *m_manager;
+    QMap<QString, QNetworkReply*> m_buffer;
 };
 
 #endif // SHORTURIRESOLVER_H

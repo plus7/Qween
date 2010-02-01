@@ -17,8 +17,42 @@
 */
 
 #include "shorturiresolver.h"
-
+#include <QtNetwork>
 ShortUriResolver::ShortUriResolver(QObject *parent) :
     QObject(parent)
 {
+    QNetworkAccessManager *m_manager = new QNetworkAccessManager(this);
+    connect(m_manager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(replyFinished(QNetworkReply*)));
+}
+
+void ShortUriResolver::replyFinished(QNetworkReply* reply){
+    QString srcuri = m_buffer.key(reply);
+    if(srcuri.isEmpty()) {
+        emit uriResolved(srcuri, srcuri);
+        reply->deleteLater();
+        return;
+    }
+    m_buffer.remove(srcuri);
+    QVariant redirUriVar = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+    QUrl redirUri = redirUriVar.toUrl();
+    if(redirUri.isEmpty()){
+        emit uriResolved(srcuri, srcuri);
+    }else{
+        if(srcuri == redirUri.toString()){
+            emit uriResolved(srcuri, srcuri);
+        }else{
+            emit uriResolved(srcuri, redirUri.toString());
+        }
+    }
+    reply->deleteLater();
+}
+
+
+void ShortUriResolver::resolveAsync(const QString& uri){
+    if(m_buffer.contains(uri)) return;
+    QNetworkRequest request;
+    request.setUrl(QUrl(uri));
+    QNetworkReply *rep = m_manager->head(request);
+    m_buffer.insert(uri, rep);
 }
