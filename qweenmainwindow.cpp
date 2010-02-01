@@ -579,8 +579,10 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
                 }
                 QString str2 = str;
                 str2.remove(0,1);
-                anchor = QString("<a href=\"http://twitter/#search?q=%2\">%1</a>")
-                         .arg(str,str2);
+                QUrl url("http://twitter/");
+                url.setFragment("search?q=%23"+str2);
+                anchor = QString("<a href=\"%2\">%1</a>")
+                         .arg(str,url.toString());
                 length = str.length();
             }
             else if(list[2] != ""){ //reply
