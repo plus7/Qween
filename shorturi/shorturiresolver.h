@@ -30,7 +30,7 @@ public:
     explicit ShortUriResolver(QObject *parent = 0);
     void resolveAsync(const QString& uri);
 signals:
-
+    void uriResolved(const QString& srcuri, const QString& desturi);
 public slots:
     void replyFinished(QNetworkReply*);
 private:
