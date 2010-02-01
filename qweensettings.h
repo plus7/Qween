@@ -100,7 +100,7 @@ public:
     bool avoidApiCmd() const { return m_avoidApiCmd; }
     void setAvoidApiCmd(bool val) { m_avoidApiCmd = val; }
 
-    QString statusViewStyle() { return "margin:0px;padding:0px;font-size:12px;font-family:monospace;"; } //stub monospace‚Æ‚©‚Ìİ’è‚ğ”½‰f‚·‚é
+    QString statusViewStyle() { return "margin:0px;padding:0px;font-size:12px;font-family:monospace;"; } //stub monospaceã¨ã‹ã®è¨­å®šã‚’åæ˜ ã™ã‚‹
 
     static QweenSettings* globalSettings();
 

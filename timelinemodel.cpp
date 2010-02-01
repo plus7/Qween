@@ -62,7 +62,7 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
             break;
         case 3:
             if(item->favorited()){
-                return tr("š");
+                return tr("â˜…");
             }else{
                 return "";
             }
@@ -100,15 +100,15 @@ QVariant TimelineModel::headerData(int section, Qt::Orientation orientation, int
     if (orientation == Qt::Horizontal) {
         switch (section) {
         case 0:
-            return tr("–¼‘O");
+            return tr("åå‰");
         case 1:
-            return tr("“Še");
+            return tr("æŠ•ç¨¿");
         case 2:
-            return tr("“ú");
+            return tr("æ—¥æ™‚");
         case 3:
             return tr("Fav");
         case 4:
-            return tr("ƒ†[ƒU–¼");
+            return tr("ãƒ¦ãƒ¼ã‚¶å");
         case 5:
             return tr("ID");
 
@@ -261,7 +261,7 @@ QModelIndex TimelineModel::index(int row, int column, const QModelIndex &parent)
     if (!parent.isValid())
         return createIndex(row, column, m_itemList.at(row));
     else
-        return QModelIndex(); //TLƒ‚ƒfƒ‹‚Å‚Íq‹Ÿ‚ÍƒAƒCƒeƒ€‚ğ‚½‚È‚¢‚©‚ç
+        return QModelIndex(); //TLãƒ¢ãƒ‡ãƒ«ã§ã¯å­ä¾›ã¯ã‚¢ã‚¤ãƒ†ãƒ ã‚’æŒãŸãªã„ã‹ã‚‰
 }
 
 QModelIndex TimelineModel::parent(const QModelIndex &child) const

@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setApplicationName("Qween");
     QweenApplication a(argc, argv);
-    QTextCodec* codec = QTextCodec::codecForName("Shift-JIS");
+    QTextCodec* codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForTr(codec);
     QweenMainWindow w;
     w.show();

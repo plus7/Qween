@@ -99,16 +99,16 @@ private:
     QCompleter *m_completer;
 
     //flags:
-    //Å‰‚ÌshowEvent‚©‚Ç‚¤‚©‚ğ”»’f‚·‚éƒtƒ‰ƒO
+    //æœ€åˆã®showEventã‹ã©ã†ã‹ã‚’åˆ¤æ–­ã™ã‚‹ãƒ•ãƒ©ã‚°
     bool m_firstShow;
-    //’ZkURI‹@”\‚ÍEnter‚Å”­“®‚·‚éê‡‚ÆAƒƒjƒ…[‚©‚ç”­“®‚·‚éê‡‚ª‚ ‚éB
-    //Enter‚Ì‚ÍPost‚µ‚È‚¯‚ê‚Î‚¢‚¯‚È‚¢‚Ì‚ÅA‚»‚Ì”»’f‚ğ‚·‚éƒtƒ‰ƒO
+    //çŸ­ç¸®URIæ©Ÿèƒ½ã¯Enterã§ç™ºå‹•ã™ã‚‹å ´åˆã¨ã€ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‹ã‚‰ç™ºå‹•ã™ã‚‹å ´åˆãŒã‚ã‚‹ã€‚
+    //Enterã®æ™‚ã¯Postã—ãªã‘ã‚Œã°ã„ã‘ãªã„ã®ã§ã€ãã®åˆ¤æ–­ã‚’ã™ã‚‹ãƒ•ãƒ©ã‚°
     bool m_postAfterShorten;
 
     //DEBUG
     AbstractUriShortener *m_urisvc;
 
-    //ÅV‚ÌID‚½‚¿
+    //æœ€æ–°ã®IDãŸã¡
     quint64 m_newestFriendsStatus;
     quint64 m_newestRecvDM;
     quint64 m_newestSentDM;

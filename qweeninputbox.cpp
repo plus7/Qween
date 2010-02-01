@@ -21,11 +21,9 @@
 #include "const.h"
 #include <QtGui>
 QweenInputBox::QweenInputBox(QWidget *parent) :
-    QLineEdit(parent), m_pos(0), m_completer(new QCompleter(this))
+    QLineEdit(parent), m_pos(0), m_completer(new QCompleter(this)), m_shortenSvcName("bitly"),
+    m_uriShortenSvc(getUriShortenService(m_shortenSvcName, this))
 {
-    //TODO: ƒT[ƒrƒX‚ðÝ’èo—ˆ‚é‚æ‚¤‚É‚·‚é
-    m_uriShortenSvc = getUriShortenService("bitly", this);
-
     connect(m_uriShortenSvc, SIGNAL(uriShortened(QString,QString)),
             this, SLOT(OnUriShortened(QString,QString)));
     connect(m_uriShortenSvc, SIGNAL(failed(QString,int)),
@@ -49,6 +47,15 @@ void QweenInputBox::setCompleter(QCompleter *completer){
 }
 
 QCompleter* QweenInputBox::completer() const { return m_completer; }
+
+void QweenInputBox::setUriShortenSvc(const QString& name){
+    if(m_uriShortenSvc) {
+        delete m_uriShortenSvc;
+        m_uriShortenSvc = NULL;
+    }
+    m_shortenSvcName = name;
+    m_uriShortenSvc = getUriShortenService(m_shortenSvcName, this);
+}
 
 void QweenInputBox::insertCompletion(const QString& completion)
 {
@@ -95,7 +102,7 @@ void QweenInputBox::keyPressEvent(QKeyEvent *event)
        !event->modifiers().testFlag(Qt::ControlModifier) &&
        !event->modifiers().testFlag(Qt::AltModifier)){
         if(event->key() == Qt::Key_Space){
-            if(text() == " " || text() == "@"){
+            if(text() == " " || text() == "ã€€"){
                 setText("");
                 return;
                 //TODO:JumpUnreadMenuItem_Click(Nothing, Nothing);
@@ -112,11 +119,11 @@ void QweenInputBox::keyPressEvent(QKeyEvent *event)
         event->modifiers().testFlag(Qt::ControlModifier) &&
        !event->modifiers().testFlag(Qt::AltModifier)){
         if(event->key() == Qt::Key_Up || event->key() == Qt::Key_Down){
-            //TODO:“ü—Í—š—ð‚ðã‰º‚·‚é
+            //TODO:å…¥åŠ›å±¥æ­´ã‚’ä¸Šä¸‹ã™ã‚‹
         }else if(event->key() == Qt::Key_PageUp){
-            //TODO:‰E‚Ìƒ^ƒu‚ð‘I‘ð
+            //TODO:å³ã®ã‚¿ãƒ–ã‚’é¸æŠž
         }else if(event->key() == Qt::Key_PageUp){
-            //TODO:¶‚Ìƒ^ƒu‚ð‘I‘ð
+            //TODO:å·¦ã®ã‚¿ãƒ–ã‚’é¸æŠž
         }else if(event->key() == Qt::Key_Return){
             if(requireCtrlOnEnter()){
                 emit returnPressed();
@@ -180,6 +187,8 @@ void QweenInputBox::OnUriShortened(const QString& src, const QString& dest){
 }
 
 void QweenInputBox::OnUriShorteningFailed(const QString& src, int status){
+    Q_UNUSED(src)
+    Q_UNUSED(status)
     m_pos = 0;
     setEnabled(true);
     emit uriShorteningFinished();

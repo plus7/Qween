@@ -32,11 +32,13 @@
 #include "tabsettingsdialog.h"
 #include "forwardruledialog.h"
 #include "usersmodel.h"
+#include "const.h"
 
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::QweenMainWindow),m_firstShow(true),m_postAfterShorten(false),m_urisvc(NULL),m_usersModel(NULL),
-    m_completer(NULL), m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),m_newestReply(0),m_newestFav(0)
+    ui(new Ui::QweenMainWindow),m_firstShow(true),m_postAfterShorten(false),m_usersModel(NULL),
+    m_completer(NULL), m_urisvc(NULL), m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),
+    m_newestReply(0),m_newestFav(0)
 {
     ui->setupUi(this);
     makeWidgets();
@@ -47,14 +49,14 @@ QweenMainWindow::QweenMainWindow(QWidget *parent) :
     setAcceptDrops(true);
 
     settings = QweenSettings::globalSettings();
-    //ÉÜÅ[ÉUÅ[IDÇ‹ÇΩÇÕÉpÉXÉèÅ[ÉhÇ™ñ≥Ç¢ÇÃÇ≈ê›íËÉ_ÉCÉAÉçÉOÇ≈ì¸óÕÇµÇƒÇ‡ÇÁÇ§
+    //„É¶„Éº„Ç∂„ÉºID„Åæ„Åü„ÅØ„Éë„Çπ„ÉØ„Éº„Éâ„ÅåÁÑ°„ÅÑ„ÅÆ„ÅßË®≠ÂÆö„ÉÄ„Ç§„Ç¢„É≠„Ç∞„ÅßÂÖ•Âäõ„Åó„Å¶„ÇÇ„Çâ„ÅÜ
     if(settings->userid().isEmpty() || settings->password().isEmpty())
     {
         SettingDialog dlg(this);
         if(dlg.exec() != QDialog::Accepted ||
            settings->userid().isEmpty() || settings->password().isEmpty())
         {
-            exit(-1); //ì¸óÕÇ≥ÇÍÇ»Ç©Ç¡ÇΩÇÃÇ≈èIóπ
+            exit(-1); //ÂÖ•Âäõ„Åï„Çå„Å™„Åã„Å£„Åü„ÅÆ„ÅßÁµÇ‰∫Ü
         }else{
             applySettings();
         }
@@ -64,9 +66,9 @@ QweenMainWindow::QweenMainWindow(QWidget *parent) :
 
     restoreGeometry(settings->geometry());
     restoreState(settings->windowState());
-    //TODO: splitterÇïúå≥
+    //TODO: splitter„ÇíÂæ©ÂÖÉ
     //TODO: if(outOfScreen()){
-        //âÊñ ì‡Ç…ñﬂÇ∑
+        //ÁîªÈù¢ÂÜÖ„Å´Êàª„Åô
     //}
 
     //setupWebview
@@ -131,28 +133,28 @@ bool QweenMainWindow::isNetworkAvailable(){
 
 void QweenMainWindow::setupMenus()
 {
-    //TODO: é¿ç€Ç…TreeViewì‡Ç≈Ctrl+CÇ™ã@î\Ç∑ÇÈÇÊÇ§Ç…Ç∑ÇÈ
+    //TODO: ÂÆüÈöõ„Å´TreeViewÂÜÖ„ÅßCtrl+C„ÅåÊ©üËÉΩ„Åô„Çã„Çà„ÅÜ„Å´„Åô„Çã
     ui->actCopyStot->setText(ui->actCopyStot->text()+"\tCtrl+C");
     ui->actCopyIdUri->setText(ui->actCopyIdUri->text()+"\tCtrl+Shift+C");
 
 
-    m_actDivideUriFromZenkaku = new QAction(QIcon(), tr("URLÇ©ÇÁÇÃëSäpï∂éöóÒÇÃêÿÇËó£Çµ"), this);
+    m_actDivideUriFromZenkaku = new QAction(QIcon(), tr("URL„Åã„Çâ„ÅÆÂÖ®ËßíÊñáÂ≠óÂàó„ÅÆÂàá„ÇäÈõ¢„Åó"), this);
     m_actDivideUriFromZenkaku->setCheckable(true);
     connect(m_actDivideUriFromZenkaku, SIGNAL(triggered(bool)),
             this, SLOT(OnActDivideUriFromZenkakuToggled(bool)));
     m_postModeMenu->addAction(m_actDivideUriFromZenkaku);
 
-    m_actAvoidApiCommand = new QAction(QIcon(), tr("APIÉRÉ}ÉìÉhÇâÒîÇ∑ÇÈ"), this);
+    m_actAvoidApiCommand = new QAction(QIcon(), tr("API„Ç≥„Éû„É≥„Éâ„ÇíÂõûÈÅø„Åô„Çã"), this);
     m_actAvoidApiCommand->setCheckable(true);
     connect(m_actAvoidApiCommand, SIGNAL(triggered(bool)), this, SLOT(OnActAvoidApiCommandToggled(bool)));
     m_postModeMenu->addAction(m_actAvoidApiCommand);
 
-    m_actAutoShortenUri = new QAction(QIcon(), tr("é©ìÆìIÇ…URLÇíZèkÇ∑ÇÈ"), this);
+    m_actAutoShortenUri = new QAction(QIcon(), tr("Ëá™ÂãïÁöÑ„Å´URL„ÇíÁü≠Á∏Æ„Åô„Çã"), this);
     m_actAutoShortenUri->setCheckable(true);
     connect(m_actAutoShortenUri, SIGNAL(triggered(bool)), this, SLOT(OnActAutoShortenUriToggled(bool)));
     m_postModeMenu->addAction(m_actAutoShortenUri);
 
-    m_actReplaceZenkakuSpace = new QAction(QIcon(), tr("ëSäpÉXÉyÅ[ÉXÇîºäpÉXÉyÅ[ÉXÇ…Ç∑ÇÈ"), this);
+    m_actReplaceZenkakuSpace = new QAction(QIcon(), tr("ÂÖ®Ëßí„Çπ„Éö„Éº„Çπ„ÇíÂçäËßí„Çπ„Éö„Éº„Çπ„Å´„Åô„Çã"), this);
     m_actReplaceZenkakuSpace->setCheckable(true);
     connect(m_actReplaceZenkakuSpace, SIGNAL(triggered(bool)), this, SLOT(OnActReplaceZenkakuSpaceToggled(bool)));
     m_postModeMenu->addAction(m_actReplaceZenkakuSpace);
@@ -237,7 +239,7 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
             {
                 Returnables::FriendsTimeline *pTimeline = static_cast<Returnables::FriendsTimeline *>(resp);
                 QString popupText;
-                QString title(tr("êVíÖ ") + QString::number(pTimeline->list.count()) + tr("åè\n"));
+                QString title(tr("Êñ∞ÁùÄ ") + QString::number(pTimeline->list.count()) + tr("‰ª∂\n"));
                 while(!pTimeline->list.isEmpty()){
                     Returnables::StatusElementPtr element = pTimeline->list.takeLast();
                     Twitter::TwitterItem item(Twitter::Status, element, resp->reqID, false);
@@ -249,8 +251,8 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
                 }
                 delete pTimeline;
                 //TODO: dm, reply, sound
-                //ÉoÉãÅ[ÉìÅEÉTÉEÉìÉhÇÕç≈èâÇÕó}êßÇ∑ÇÈÇÊÇ§Çæ
-                //ê›íËçÄñ⁄Ç™Ç†ÇÈÇÃÇ≈ÇªÇ±Çå©ÇÈÇ◊Çµ
+                //„Éê„É´„Éº„É≥„Éª„Çµ„Ç¶„É≥„Éâ„ÅØÊúÄÂàù„ÅØÊäëÂà∂„Åô„Çã„Çà„ÅÜ„Å†
+                //Ë®≠ÂÆöÈ†ÖÁõÆ„Åå„ÅÇ„Çã„ÅÆ„Åß„Åù„Åì„ÇíË¶ã„Çã„Åπ„Åó
                 m_trayIcon->showMessage(title, popupText, QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information),
                                         5 * 1000);
                 break;
@@ -341,8 +343,8 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
         case Returnables::API_REQUESTS:
         {
             Returnables::ApiRequests *p = static_cast<Returnables::ApiRequests*>(resp);
-            QMessageBox::information(this,tr("APIèÓïÒ"),
-                                     tr("è„å¿: %1\nécêî: %2\nÉäÉZÉbÉgì˙éû: %3\n")
+            QMessageBox::information(this,tr("APIÊÉÖÂ†±"),
+                                     tr("‰∏äÈôê: %1\nÊÆãÊï∞: %2\n„É™„Çª„ÉÉ„ÉàÊó•ÊôÇ: %3\n")
                                      .arg(QString::number(p->hourlyLimit),
                                           QString::number(p->remainingHits),
                                           p->resetTime));
@@ -353,7 +355,7 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
         {
             Returnables::UserTimeline *p = static_cast<Returnables::UserTimeline*>(resp);
             Returnables::StatusElementPtr element = p->list.takeFirst();
-            QMessageBox::information(this,tr("@twj ÇÃç≈êVÇÃTweet"),element->status.text);
+            QMessageBox::information(this,tr("@twj „ÅÆÊúÄÊñ∞„ÅÆTweet"),element->status.text);
             delete p;
             break;
         }
@@ -361,8 +363,8 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
         {
             Returnables::FriendshipExist *p = static_cast<Returnables::FriendshipExist*>(resp);
             if(p->friends)
-                QMessageBox::information(this, tr("óFíBä÷åW"),
-                                         tr("ëäå›Ç…ÉtÉHÉçÅ[ÇµÇƒÇ¢Ç‹Ç∑ÅB")); //TODO: existsÇ∂Ç·Ç»Ç≠ÇƒshowÇégÇ§
+                QMessageBox::information(this, tr("ÂèãÈÅîÈñ¢‰øÇ"),
+                                         tr("Áõ∏‰∫í„Å´„Éï„Ç©„É≠„Éº„Åó„Å¶„ÅÑ„Åæ„Åô„ÄÇ")); //TODO: exists„Åò„ÇÉ„Å™„Åè„Å¶show„Çí‰Ωø„ÅÜ
             delete p;
             break;
         }
@@ -370,7 +372,7 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
         {
             Returnables::UserDetails *p = static_cast<Returnables::UserDetails*>(resp);
             Returnables::ExtUserInfoElementPtr element = p->userExt;
-            QMessageBox::information(this, tr("ÉvÉçÉtÉ@ÉCÉãèÓïÒ"),
+            QMessageBox::information(this, tr("„Éó„É≠„Éï„Ç°„Ç§„É´ÊÉÖÂ†±"),
                                      tr("Following : %1\n"
                                         "Followers : %2\n"
                                         "Statuses count : %3\n"
@@ -388,7 +390,7 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
             Returnables::AddFriendship *p = static_cast<Returnables::AddFriendship*>(resp);
             Returnables::BasicUserInfoElementPtr user = p->user;
             if(!user->user.screenName.isEmpty())
-                QMessageBox::information(this, "Follow", tr("@%1 ÇFollowäJénÇµÇ‹ÇµÇΩÅB").arg(user->user.screenName));
+                QMessageBox::information(this, "Follow", tr("@%1 „ÇíFollowÈñãÂßã„Åó„Åæ„Åó„Åü„ÄÇ").arg(user->user.screenName));
             delete p;
             break;
         }
@@ -397,7 +399,7 @@ void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
             Returnables::RemoveFriendship *p = static_cast<Returnables::RemoveFriendship*>(resp);
             Returnables::BasicUserInfoElementPtr user = p->user;
             if(!user->user.screenName.isEmpty())
-                QMessageBox::information(this, "Remove", tr("@%1 ÇRemoveÇµÇ‹ÇµÇΩÅB").arg(user->user.screenName));
+                QMessageBox::information(this, "Remove", tr("@%1 „ÇíRemove„Åó„Åæ„Åó„Åü„ÄÇ").arg(user->user.screenName));
             delete p;
             break;
         }
@@ -502,7 +504,9 @@ void QweenMainWindow::doPost(){
 }
 
 void QweenMainWindow::makeReplyOrDirectStatus(bool isAuto, bool isReply, bool isAll){
-
+    Q_UNUSED(isAuto)
+    Q_UNUSED(isReply)
+    Q_UNUSED(isAll)
 }
 
 void QweenMainWindow::OnUriShorteningFinished(){
@@ -558,9 +562,52 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
 {
     switch(item.type()){
     case Twitter::Status:
+    {
+        QString status(item.status());
+        QRegExp linkrx(LINK_RX_DATA);
+        int pos=0;
+        while ((pos = linkrx.indexIn(status, pos)) != -1) {
+            QStringList list = linkrx.capturedTexts();
+            QString str;
+            QString anchor;
+            int length;
+            if (list[1] != ""){ //hashtag
+                str = list[1];
+                if (str.at(0) != '#'){
+                    str.remove(0,1);
+                    pos++;
+                }
+                QString str2 = str;
+                str2.remove(0,1);
+                QUrl url("http://twitter/");
+                url.setFragment("search?q=%23"+str2);
+                anchor = QString("<a href=\"%2\">%1</a>")
+                         .arg(str,url.toString());
+                length = str.length();
+            }
+            else if(list[2] != ""){ //reply
+                str = list[2];
+                if (str.at(0) == '@'){
+                    str.remove(0,1);
+                    pos++;
+                }else{
+                    str.remove(0,2);
+                    pos+=2;
+                }
+                anchor = QString("<a href=\"http://twitter.com/%1\">%1</a>").arg(str);
+                length = str.length();
+            }
+            else if(list[3] != ""){ //URI
+                str = list[3];
+                anchor = QString("<a href=\"%1\">%1</a>").arg(str);
+                length = str.length();
+            }
+            status.replace(pos, length, anchor);
+            pos += anchor.length();
+        }
         ui->textBrowser->setHtml(tr("<html><body style=\"%1\">")
                                  .arg(settings->statusViewStyle()) +
-                                 item.status() + tr("</body></html>"));
+                                 status + tr("</body></html>"));
         ui->lblNameId->setText(item.screenName() + "/" + item.userName());
         ui->lblUpdateDatetime->setText(item.createdAt());
         if(QweenApplication::iconManager()->isIconAvailable(item.userId())){
@@ -572,6 +619,7 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
         }
         ui->userIconLabel->repaint();
         break;
+    }
     default:
         break;
     }
@@ -585,19 +633,24 @@ void QweenMainWindow::OnPostModeMenuOpen(){
 }
 
 void QweenMainWindow::OnUriShortened(const QString& src, const QString& dest){
+    Q_UNUSED(src)
     QMessageBox::information(this, "", dest);
 }
 
 void QweenMainWindow::OnIconDownloaded(quint64 userid, const QIcon &icon){
+    Q_UNUSED(userid)
     ui->userIconLabel->setPixmap(icon.pixmap(50,50,QIcon::Normal,QIcon::On));
 }
 
 void QweenMainWindow::OnMessageClicked(){
+    //FIXME: X11Áí∞Â¢É„Å†„Å®Âãï„Åã„Å™„ÅÑ„Åì„Å®„Åå„ÅÇ„ÇãÔºü
+    this->raise();
     this->activateWindow();
 }
 
 void QweenMainWindow::on_statusText_textChanged(QString string)
 {
+    Q_UNUSED(string)
     int rest = getRestStatusCount(ui->statusText->text().trimmed());
     ui->lblStatusLength->setText(QString("%1").arg(rest));
     if(rest < 0){ 
@@ -624,9 +677,9 @@ int QweenMainWindow::getRestStatusCount(const QString &str, bool footer)
 
     }
 
-    //TODO: ÉtÉbÉ^ã@î\Ç∆òAìÆ
-    //TODO: ShiftÉLÅ[
-    //è⁄ÇµÇ≠ÇÕTweenÇÃÉ\Å[ÉXÇåüçı GetRestStatusCount
+    //TODO: „Éï„ÉÉ„ÇøÊ©üËÉΩ„Å®ÈÄ£Âãï
+    //TODO: Shift„Ç≠„Éº
+    //Ë©≥„Åó„Åè„ÅØTween„ÅÆ„ÇΩ„Éº„Çπ„ÇíÊ§úÁ¥¢ GetRestStatusCount
     return rv;
 }
 
@@ -642,7 +695,7 @@ void QweenMainWindow::on_actApiInfo_triggered()
 
 void QweenMainWindow::on_actQweenHomepage_triggered()
 {
-    //TODO: ÉuÉâÉEÉUÇê›íËÇ≈Ç´ÇÈÇÊÇ§Ç…Ç∑ÇÈ
+    //TODO: „Éñ„É©„Ç¶„Ç∂„ÇíË®≠ÂÆö„Åß„Åç„Çã„Çà„ÅÜ„Å´„Åô„Çã
     QDesktopServices::openUrl(QUrl("http://qween.tnose.net/"));
 }
 
@@ -669,7 +722,7 @@ void QweenMainWindow::on_actionTest_bitly_triggered()
 
 void QweenMainWindow::on_statusText_returnPressed()
 {
-    //TODO: ï°êîçsëŒâûÅHÇ‚ÇËÇΩÇ≠ÇÀÅ[
+    //TODO: Ë§áÊï∞Ë°åÂØæÂøúÔºü„ÇÑ„Çä„Åü„Åè„Å≠„Éº
 }
 
 void QweenMainWindow::on_actionTest_iconmanager_triggered()
@@ -694,11 +747,11 @@ void QweenMainWindow::on_actUpdate_triggered()
 
 void QweenMainWindow::on_actCopyStot_triggered()
 {
-    //TODO: ï°êîëIëâ¬î\Ç…Ç∑ÇÈ
+    //TODO: Ë§áÊï∞ÈÅ∏ÊäûÂèØËÉΩ„Å´„Åô„Çã
     Twitter::TwitterItem item = tabWidget->currentItem();
     if(item.type()==Twitter::Undefined) return;
-    //TODO: ProtectedÇ»ÇÁÉRÉsÅ[ÇµÇ»Ç¢ê›íËÇí«â¡
-    //TODO: ReTweetëŒâû
+    //TODO: Protected„Å™„Çâ„Ç≥„Éî„Éº„Åó„Å™„ÅÑË®≠ÂÆö„ÇíËøΩÂä†
+    //TODO: ReTweetÂØæÂøú
     QString data = "%0:%1 [http://twitter.com/%0/status/%2]";
     QString dataRT = "%0:%1 [http://twitter.com/%2/status/%3]";
     QClipboard *clipboard = QApplication::clipboard();
@@ -707,11 +760,11 @@ void QweenMainWindow::on_actCopyStot_triggered()
 
 void QweenMainWindow::on_actCopyIdUri_triggered()
 {
-    //TODO: ï°êîëIëâ¬î\Ç…Ç∑ÇÈ
+    //TODO: Ë§áÊï∞ÈÅ∏ÊäûÂèØËÉΩ„Å´„Åô„Çã
     Twitter::TwitterItem item = tabWidget->currentItem();
     if(item.type()==Twitter::Undefined) return;
-    //TODO: ProtectedÇ»ÇÁÉRÉsÅ[ÇµÇ»Ç¢ê›íËÇí«â¡
-    //TODO: ReTweetëŒâû
+    //TODO: Protected„Å™„Çâ„Ç≥„Éî„Éº„Åó„Å™„ÅÑË®≠ÂÆö„ÇíËøΩÂä†
+    //TODO: ReTweetÂØæÂøú
     QString data = "http://twitter.com/%0/status/%1";
     QClipboard *clipboard = QApplication::clipboard();
     clipboard->setText(data.arg(item.screenName(), QString::number(item.id())), QClipboard::Clipboard);
@@ -719,7 +772,7 @@ void QweenMainWindow::on_actCopyIdUri_triggered()
 
 void QweenMainWindow::on_actExplosion_triggered()
 {
-    QMessageBox::information(this, tr("∫ﬁŸß"), tr("ÇæÇ©ÇÁÇ‚ÇﬂÇÍÇ¡ÇƒÇÃ"));
+    QMessageBox::information(this, tr("„Ç¥„É´„Ç°"), tr("„Å†„Åã„Çâ„ÇÑ„ÇÅ„Çå„Å£„Å¶„ÅÆ"));
 }
 
 void QweenMainWindow::on_actShortenUri_triggered()
@@ -747,7 +800,7 @@ void QweenMainWindow::on_actShowFriendships_triggered()
 {
     QString name = tabWidget->currentItem().screenName();
     bool ok;
-    QString rv = QInputDialog::getText(this, tr("ÉtÉHÉçÅ[ä÷åWÇí≤Ç◊ÇÈ"), tr("IDÇì¸óÕÇµÇƒÇ≠ÇæÇ≥Ç¢"), QLineEdit::Normal, name, &ok);
+    QString rv = QInputDialog::getText(this, tr("„Éï„Ç©„É≠„ÉºÈñ¢‰øÇ„ÇíË™ø„Åπ„Çã"), tr("ID„ÇíÂÖ•Âäõ„Åó„Å¶„Åè„Å†„Åï„ÅÑ"), QLineEdit::Normal, name, &ok);
     if(ok){
         m_twitLib->FriendshipExist(settings->userid(), rv);
     }
@@ -757,7 +810,7 @@ void QweenMainWindow::on_actFollow_triggered()
 {
     QString name = tabWidget->currentItem().screenName();
     bool ok;
-    QString rv = QInputDialog::getText(this, tr("Follow"), tr("IDÇì¸óÕÇµÇƒÇ≠ÇæÇ≥Ç¢"), QLineEdit::Normal, name, &ok);
+    QString rv = QInputDialog::getText(this, tr("Follow"), tr("ID„ÇíÂÖ•Âäõ„Åó„Å¶„Åè„Å†„Åï„ÅÑ"), QLineEdit::Normal, name, &ok);
     if(ok){
         m_twitLib->AddFriendship(rv, true);
     }
@@ -767,7 +820,7 @@ void QweenMainWindow::on_actRemove_triggered()
 {
     QString name = tabWidget->currentItem().screenName();
     bool ok;
-    QString rv = QInputDialog::getText(this, tr("Follow"), tr("IDÇì¸óÕÇµÇƒÇ≠ÇæÇ≥Ç¢"), QLineEdit::Normal, name, &ok);
+    QString rv = QInputDialog::getText(this, tr("Follow"), tr("ID„ÇíÂÖ•Âäõ„Åó„Å¶„Åè„Å†„Åï„ÅÑ"), QLineEdit::Normal, name, &ok);
     if(ok){
         m_twitLib->RemoveFriendship(rv);
     }
@@ -777,7 +830,7 @@ void QweenMainWindow::on_actCreateTab_triggered()
 {
     QString name = QString("NewTab%1").arg(tabWidget->count());
     bool ok;
-    QString rv = QInputDialog::getText(this, tr("êVãKÉ^Éu"), tr("É^ÉuñºÇì¸óÕÇµÇƒÇ≠ÇæÇ≥Ç¢"), QLineEdit::Normal, name, &ok);
+    QString rv = QInputDialog::getText(this, tr("Êñ∞Ë¶è„Çø„Éñ"), tr("„Çø„ÉñÂêç„ÇíÂÖ•Âäõ„Åó„Å¶„Åè„Å†„Åï„ÅÑ"), QLineEdit::Normal, name, &ok);
     if(ok){
         tabWidget->addTimelineView(rv);
     }
@@ -787,7 +840,7 @@ void QweenMainWindow::on_actRenameTab_triggered()
 {
     TimelineView *view = tabWidget->currentTimelineView();
     bool ok;
-    QString rv = QInputDialog::getText(this, tr("ñºëOïœçX"), tr("ñºëOÇì¸óÕÇµÇƒÇ≠ÇæÇ≥Ç¢"), QLineEdit::Normal, view->title(), &ok);
+    QString rv = QInputDialog::getText(this, tr("ÂêçÂâçÂ§âÊõ¥"), tr("ÂêçÂâç„ÇíÂÖ•Âäõ„Åó„Å¶„Åè„Å†„Åï„ÅÑ"), QLineEdit::Normal, view->title(), &ok);
     if(ok){
         view->setTitle(rv);
         tabWidget->setTabText(tabWidget->indexOf(view), rv);
@@ -810,7 +863,7 @@ void QweenMainWindow::on_actTabSettings_triggered()
 void QweenMainWindow::on_actAtReply_triggered()
 {
     //stub.
-    //TODO: Ç»Ç…Ç‚ÇÁï°éGÇ»èàóù
+    //TODO: „Å™„Å´„ÇÑ„ÇâË§áÈõë„Å™Âá¶ÁêÜ
     ui->statusText->setCursorPosition(0);
     ui->statusText->insert("@"+tabWidget->currentItem().screenName()+" ");
 }

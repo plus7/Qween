@@ -155,7 +155,7 @@ QModelIndex UsersModel::index(int row, int column, const QModelIndex &parent)
     if (!parent.isValid())
         return createIndex(row, column, m_itemList.at(row));
     else
-        return QModelIndex(); //TLƒ‚ƒfƒ‹‚Å‚Íq‹Ÿ‚ÍƒAƒCƒeƒ€‚ğ‚½‚È‚¢‚©‚ç
+        return QModelIndex(); //TLãƒ¢ãƒ‡ãƒ«ã§ã¯å­ä¾›ã¯ã‚¢ã‚¤ãƒ†ãƒ ã‚’æŒãŸãªã„ã‹ã‚‰
 }
 
 QModelIndex UsersModel::parent(const QModelIndex &child) const

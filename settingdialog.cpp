@@ -83,7 +83,7 @@ void SettingDialog::changeEvent(QEvent *e)
 }
 
 void SettingDialog::setLineEditBgColor(QLineEdit *edit, const QColor& color){
-    //XXX: ‚ ‚Æ‚Å”wŒiF‚ðŠÈ’P‚ÉÝ’è‚Å‚«‚éLineEdit‚ÌƒNƒ‰ƒX‚ðì‚é
+    //XXX: ã‚ã¨ã§èƒŒæ™¯è‰²ã‚’ç°¡å˜ã«è¨­å®šã§ãã‚‹LineEditã®ã‚¯ãƒ©ã‚¹ã‚’ä½œã‚‹
     edit->setStyleSheet(
             QString("*{background-color:rgb(%1,%2,%3);}")
             .arg(color.red())

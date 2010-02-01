@@ -1,6 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2009-12-20T20:03:58
 # -------------------------------------------------
+CONFIG += qt debug
 QT += network \ # webkit \
     xml
 TARGET = Qween

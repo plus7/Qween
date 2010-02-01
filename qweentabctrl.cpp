@@ -27,7 +27,7 @@
 #include "timelineview.h"
 #include "timelineitemdelegate.h"
 
-//XXX: ‚¾‚ñ‚¾‚ñ‰˜‚­‚È‚Á‚Ä‚«‚½c
+//XXX: ã ã‚“ã ã‚“æ±šããªã£ã¦ããŸâ€¦
 
 QweenTabCtrl::QweenTabCtrl(QWidget *parent) :
     QTabWidget(parent),m_homeView(NULL),m_replyView(NULL),
@@ -73,7 +73,7 @@ void QweenTabCtrl::restoreState(QIODevice* device){
     }
     QDomElement tabelm = root.firstChildElement("tab");
     while (!tabelm.isNull()) {
-        //XXX: U‚è•ª‚¯İ’è‚Æ‚©‚Ìƒf[ƒ^‚ğView‚ª‚Á‚Ä‚é‚Ì‚ª‹C‚¿ˆ«‚¢
+        //XXX: æŒ¯ã‚Šåˆ†ã‘è¨­å®šã¨ã‹ã®ãƒ‡ãƒ¼ã‚¿ã‚’ViewãŒæŒã£ã¦ã‚‹ã®ãŒæ°—æŒã¡æ‚ªã„
         QString type = tabelm.attribute("type", "userdefined");
         QString title = tabelm.attribute("title", "Untitled");
         TimelineView* view = new TimelineView(this);
@@ -106,7 +106,7 @@ void QweenTabCtrl::restoreState(QIODevice* device){
 
 void QweenTabCtrl::fixLackingTabs(){
     TimelineView* view;
-    //XXX: ƒRƒsƒy–o–Å
+    //XXX: ã‚³ãƒ”ãƒšæ’²æ»…
     if(!m_homeView){
         view = new TimelineView(this);
         view->setType("home");
@@ -231,7 +231,7 @@ void QweenTabCtrl::moveTimelineView(int before, int after){
 }
 
 void QweenTabCtrl::setMyId(quint64 myid){
-    //TODO: ŠeModel‚ÉMyID‚ğƒZƒbƒg
+    //TODO: å„Modelã«MyIDã‚’ã‚»ãƒƒãƒˆ
     m_myID = myid;
     for(int i=0;i<this->count();i++){
         ((TimelineView*)(this->widget(i)))->setMyId(myid);

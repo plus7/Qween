@@ -43,4 +43,4 @@ void TimelineItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     QStyledItemDelegate::paint(painter, myOption, index);
 }
 
-//TODO: F‚Ìİ’è‚ğÀ‘•
+//TODO: è‰²ã®è¨­å®šã‚’å®Ÿè£…

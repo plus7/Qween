@@ -20,7 +20,7 @@
 #include "qweenapplication.h"
 #include <QtCore>
 
-//TODO: ‚à‚Á‚ÆŒ«‚¢ƒLƒƒƒbƒVƒ…
+//TODO: ã‚‚ã£ã¨è³¢ã„ã‚­ãƒ£ãƒƒã‚·ãƒ¥
 IconManager::IconManager(QObject *parent) :
     QObject(parent), m_iconCacheMaxCount(50)
 {

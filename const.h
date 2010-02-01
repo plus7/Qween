@@ -21,7 +21,7 @@
 
 #define QWEEN_VERSION_MAJOR 0
 #define QWEEN_VERSION_MINOR 0
-#define QWEEN_VERSION_REV   1
+#define QWEEN_VERSION_REV   2
 
 #define URLRXDATA "http://(?:(?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9])\\."\
            ")*(?:[a-zA-Z]|[a-zA-Z][-a-zA-Z0-9]*[a-zA-Z0-9])\\.?|[0-9]+\\.[0-9]+\\"\
@@ -31,5 +31,10 @@
            "0-9A-Fa-f])*(?:;(?:[-_.!~*'()a-zA-Z0-9:@&=+$,]|%[0-9A-Fa-f][0-9A-F"\
            "a-f])*)*)*(?:\\?(?:[-_.!~*'()a-zA-Z0-9;/?:@&=+$,]|%[0-9A-Fa-f][0-9A"\
            "-Fa-f])*)?)?"
+
+#define HASHTAG_RX_DATA "(?:^(?:#[a-zA-Z0-9_]+)|[^a-zA-Z0-9_](?:#[a-zA-Z0-9_]+))"
+#define ATREPLY_RX_DATA "(?:^@(?:[a-zA-Z0-9_]+)|[^a-zA-Z0-9_]@(?:[a-zA-Z0-9_]+))"
+
+#define LINK_RX_DATA "(" HASHTAG_RX_DATA ")|(" ATREPLY_RX_DATA ")|(" URLRXDATA ")"
 
 #endif // CONST_H

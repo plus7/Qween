@@ -37,6 +37,8 @@ public:
 
     void setCompleter(QCompleter *completer);
     QCompleter* completer() const;
+    void setUriShortenSvc(const QString& name);
+    QString getUriShortenSvc(){ return m_shortenSvcName; }
 
     void shortenUri();
     void doShorten();
@@ -52,9 +54,10 @@ private:
     quint64 m_reply_to_id;
     QString m_reply_to_name;
     bool m_requireCtrlOnEnter;
-    AbstractUriShortener* m_uriShortenSvc;
     int m_pos;
     QCompleter *m_completer;
+    QString m_shortenSvcName;
+    AbstractUriShortener* m_uriShortenSvc;
 };
 
 #endif // QWEENINPUTBOX_H
