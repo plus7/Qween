@@ -1,8 +1,10 @@
 # -------------------------------------------------
 # Project created by QtCreator 2009-12-20T20:03:58
 # -------------------------------------------------
-CONFIG += qt debug
-QT += network \ # webkit \
+CONFIG += qt \
+    debug
+QT += network \
+    \ \ # webkit \
     xml
 TARGET = Qween
 TEMPLATE = app
@@ -36,7 +38,8 @@ SOURCES += main.cpp \
     shorturi/shorturiresolver.cpp \
     forwardruledialog.cpp \
     tabsettingsdialog.cpp \
-    usersmodel.cpp
+    usersmodel.cpp \
+    hashtagmodel.cpp
 HEADERS += qweenmainwindow.h \
     twitter.h \
     qweensettings.h \
@@ -65,7 +68,8 @@ HEADERS += qweenmainwindow.h \
     shorturi/shorturiresolver.h \
     forwardruledialog.h \
     tabsettingsdialog.h \
-    usersmodel.h
+    usersmodel.h \
+    hashtagmodel.h
 FORMS += qweenmainwindow.ui \
     aboutdialog.ui \
     settingdialog.ui \
@@ -75,22 +79,13 @@ OTHER_FILES += memo.txt \
     LICENSE.txt \
     get_git_info.sh
 RESOURCES += res.qrc
-
-win32 {
-  message(GET_GIT_INFO)
-  SHPATH = C:\cygwin\bin\sh.exe
-  CONFIG(debug, debug|release) {
-    system($$SHPATH get_git_info.sh debug)
-  }
-  else {
-    system($$SHPATH get_git_info.sh release)
-  }
+win32 { 
+    message(GET_GIT_INFO)
+    SHPATH = C:\cygwin\bin\sh.exe
+    CONFIG(debug, debug|release):system($$SHPATH get_git_info.sh debug)
+    else:system($$SHPATH get_git_info.sh release)
 }
-unix {
-  CONFIG(debug, debug|release) {
-    system(./get_git_info.sh .)
-  }
-  else {
-    system(./get_git_info.sh .)
-  }
+unix { 
+    CONFIG(debug, debug|release):system(./get_git_info.sh .)
+    else:system(./get_git_info.sh .)
 }
