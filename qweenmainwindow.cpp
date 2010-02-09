@@ -131,6 +131,16 @@ bool QweenMainWindow::isNetworkAvailable(){
     return true;
 }
 
+void QweenMainWindow::save(){
+  QFile tabSettings(QweenApplication::profileDir()+"/tabs.xml");
+  tabSettings.open(QFile::WriteOnly);
+  tabWidget->saveState(&tabSettings);
+
+  settings->setGeometry(saveGeometry());
+  settings->setWindowState(saveState());
+  settings->save();
+}
+
 void QweenMainWindow::setupMenus()
 {
     //TODO: 実際にTreeView内でCtrl+Cが機能するようにする
@@ -191,6 +201,7 @@ void QweenMainWindow::setupTimers(){
 void QweenMainWindow::setupTrayIcon(){
     m_trayIcon->setIcon(QIcon(":/res/normal.png"));
     setWindowIcon(QIcon(":/res/normal.png"));
+    m_trayIcon->setContextMenu(ui->menu_File);
     m_trayIcon->show();
 }
 
@@ -203,7 +214,7 @@ void QweenMainWindow::setupTwitter(){
 void QweenMainWindow::makeConnections(){
     //MainMenu
     connect(ui->actExit, SIGNAL(triggered()),
-            this, SLOT(close()));
+            this, SLOT(OnExit()));
     //PostMode
     connect(m_postModeMenu, SIGNAL(aboutToShow()),
             this, SLOT(OnPostModeMenuOpen()));
@@ -212,6 +223,8 @@ void QweenMainWindow::makeConnections(){
             ui->postButton,SLOT(click()));
     //TrayIcon
     connect(m_trayIcon, SIGNAL(messageClicked()), this, SLOT(OnMessageClicked()));
+    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(OnIconActivated(QSystemTrayIcon::ActivationReason)));
 
     //Timers
     connect(m_timelineTimer, SIGNAL(timeout()), this, SLOT(OnTimelineTimerTimeout()));
@@ -228,6 +241,12 @@ void QweenMainWindow::makeConnections(){
     //StatusText
     connect(ui->statusText, SIGNAL(uriShorteningFinished()),
             this, SLOT(OnUriShorteningFinished()));
+}
+
+void QweenMainWindow::OnExit()
+{
+    save();
+    QweenApplication::exit();
 }
 
 void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
@@ -424,20 +443,12 @@ void QweenMainWindow::changeEvent(QEvent *e)
 void QweenMainWindow::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event)
-    /*if (maybeSave()) {
-        writeSettings();
-        event->accept();
-    } else {
-        event->ignore();
-    }*/
-
-    QFile tabSettings(QweenApplication::profileDir()+"/tabs.xml");
-    tabSettings.open(QFile::WriteOnly);
-    tabWidget->saveState(&tabSettings);
-
-    settings->setGeometry(saveGeometry());
-    settings->setWindowState(saveState());
-    settings->save();
+    if (settings->minimizeOnClose()) {
+         hide();
+         event->ignore();
+    }else{
+        save();
+  }
 }
 
 void QweenMainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -646,6 +657,21 @@ void QweenMainWindow::OnMessageClicked(){
     //FIXME: X11環境だと動かないことがある？
     this->raise();
     this->activateWindow();
+}
+
+void QweenMainWindow::OnIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+  switch (reason) {
+     case QSystemTrayIcon::Trigger:
+     case QSystemTrayIcon::DoubleClick:
+        if(!this->isVisible())
+            this->show();
+         break;
+     case QSystemTrayIcon::MiddleClick:
+         break;
+     default:
+         ;
+  }
 }
 
 void QweenMainWindow::on_statusText_textChanged(QString string)

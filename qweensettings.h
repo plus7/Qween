@@ -37,6 +37,7 @@ private:
     QString m_password;
     QByteArray m_geometry;
     QByteArray m_winstate;
+    bool m_minOnClose;
     bool m_requireCtrlOnEnter;
     bool m_uriAutoShorten;
     QString m_statusSuffix;
@@ -72,6 +73,9 @@ public:
 
     QByteArray windowState() { return m_winstate; }
     void setWindowState(const QByteArray& val) { m_winstate = val; }
+
+    bool minimizeOnClose() const { return m_minOnClose; }
+    void setMinimizeOnClose(bool val) { m_minOnClose = val; }
 
     bool requireCtrlOnEnter() const { return m_requireCtrlOnEnter; }
     void setRequireCtrlOnEnter(bool val) { m_requireCtrlOnEnter = val; }

@@ -47,6 +47,7 @@ void SettingDialog::updateUi(){
     ui->spinTLUpdateIntv->setValue(settings->tlUpdateIntv());
     ui->spinReplyUpdateIntv->setValue(settings->replyUpdateIntv());
     ui->spinDMUpdateIntv->setValue(settings->dmUpdateIntv());
+    ui->chkMinimizeOnClose->setChecked(settings->minimizeOnClose());
 }
 
 void SettingDialog::accept(){
@@ -67,6 +68,7 @@ void SettingDialog::accept(){
     settings->setTlUpdateIntv(ui->spinTLUpdateIntv->value());
     settings->setReplyUpdateIntv(ui->spinReplyUpdateIntv->value());
     settings->setDmUpdateIntv(ui->spinDMUpdateIntv->value());
+    settings->setMinimizeOnClose(ui->chkMinimizeOnClose->checkState() == Qt::Checked);
     settings->save();
 }
 
@@ -83,7 +85,7 @@ void SettingDialog::changeEvent(QEvent *e)
 }
 
 void SettingDialog::setLineEditBgColor(QLineEdit *edit, const QColor& color){
-    //XXX: あとで背景色を簡単に設定できるLineEditのクラスを作る
+    //TODO: あとで背景色を簡単に設定できるLineEditのクラスを作る
     edit->setStyleSheet(
             QString("*{background-color:rgb(%1,%2,%3);}")
             .arg(color.red())

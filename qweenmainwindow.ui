@@ -247,7 +247,7 @@
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_F">
+   <widget class="QMenu" name="menu_File">
     <property name="title">
      <string>ファイル(&amp;F)</string>
     </property>
@@ -377,7 +377,7 @@
     <addaction name="actAboutQt"/>
     <addaction name="menu_D"/>
    </widget>
-   <addaction name="menu_F"/>
+   <addaction name="menu_File"/>
    <addaction name="menu_E"/>
    <addaction name="menu_O"/>
    <addaction name="menu_T"/>

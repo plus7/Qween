@@ -18,7 +18,7 @@
 
 #ifndef QWEENMAINWINDOW_H
 #define QWEENMAINWINDOW_H
-
+#include <QtGui>
 #include <QMainWindow>
 #include "QTwitLib.h"
 #include "twitter.h"
@@ -48,6 +48,7 @@ private:
     /*QString convertUri(ShortUriSvc svc, const QString& source, bool shorten = true);
     void doUriConvert(ShortUriSvc svc);*/
     bool isNetworkAvailable();
+    void save();
     void setupMenus();
     void setupTabs();
     void setupTimers();
@@ -119,12 +120,14 @@ public slots:
     //void OnError(QString error);
     //void OnMessageReceived(QString message);
     //void OnStatusReceived(SERVER::RESP response);
+    void OnExit();
     void OnResponseReceived(Returnables::Response *);
     void OnItemSelected(const Twitter::TwitterItem &item);
     void OnPostModeMenuOpen();
     void OnUriShortened(const QString& src, const QString& dest);
     void OnIconDownloaded(quint64 userid, const QIcon& icon);
     void OnMessageClicked();
+    void OnIconActivated(QSystemTrayIcon::ActivationReason reason);
     void OnUriShorteningFinished();
     void OnActDivideUriFromZenkakuToggled(bool);
     void OnActAvoidApiCommandToggled(bool);
