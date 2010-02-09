@@ -66,7 +66,8 @@ QweenMainWindow::QweenMainWindow(QWidget *parent) :
 
     restoreGeometry(settings->geometry());
     restoreState(settings->windowState());
-    //TODO: splitterを復元
+    ui->splitter->restoreState(settings->splitterState());
+
     //TODO: if(outOfScreen()){
         //画面内に戻す
     //}
@@ -138,6 +139,7 @@ void QweenMainWindow::save(){
 
   settings->setGeometry(saveGeometry());
   settings->setWindowState(saveState());
+  settings->setSplitterState(ui->splitter->saveState());
   settings->save();
 }
 

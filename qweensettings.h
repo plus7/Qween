@@ -37,6 +37,7 @@ private:
     QString m_password;
     QByteArray m_geometry;
     QByteArray m_winstate;
+    QByteArray m_splitterstate;
     bool m_minOnClose;
     bool m_requireCtrlOnEnter;
     bool m_uriAutoShorten;
@@ -73,6 +74,9 @@ public:
 
     QByteArray windowState() { return m_winstate; }
     void setWindowState(const QByteArray& val) { m_winstate = val; }
+
+    QByteArray splitterState() { return m_splitterstate; }
+    void setSplitterState(const QByteArray& val) { m_splitterstate = val; }
 
     bool minimizeOnClose() const { return m_minOnClose; }
     void setMinimizeOnClose(bool val) { m_minOnClose = val; }
