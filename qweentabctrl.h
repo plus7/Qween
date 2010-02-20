@@ -21,7 +21,6 @@
 
 #include <QTabWidget>
 #include "twitter.h"
-#include "QTwitLib.h"
 class TabInfo;
 class TimelineView;
 class QweenTabCtrl : public QTabWidget

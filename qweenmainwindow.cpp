@@ -22,7 +22,6 @@
 #include "qweensettings.h"
 #include "qweentabctrl.h"
 #include "settingdialog.h"
-#include "QTwitLib.h"
 #include <QtCore>
 #include <QtGui>
 #include "urishortensvc.h"
@@ -84,12 +83,12 @@ QweenMainWindow::~QweenMainWindow()
 {
     delete ui;
     m_trayIcon->hide();
-    if(m_twitLib)
-        delete m_twitLib;
+    if(m_petrelLib)
+        delete m_petrelLib;
 }
 
 void QweenMainWindow::makeWidgets(){
-    m_twitLib = new QTwitLib();
+    m_petrelLib = new Petrel("","");
 
     m_timelineTimer = new QTimer(this);
     m_DMTimer = new QTimer(this);
@@ -208,9 +207,9 @@ void QweenMainWindow::setupTrayIcon(){
 }
 
 void QweenMainWindow::setupTwitter(){
-    m_twitLib->Abort();
-    m_twitLib->Logout();
-    m_twitLib->SetLoginInfo(settings->userid(), settings->password());
+    m_petrelLib->abort();
+    //m_twitLib->Logout(); TODO: EndSessionで置き換える
+    m_petrelLib->setLoginInfo(settings->userid(), settings->password());
 }
 
 void QweenMainWindow::makeConnections(){
@@ -235,7 +234,30 @@ void QweenMainWindow::makeConnections(){
     connect(m_favTimer, SIGNAL(timeout()), this, SLOT(OnFavTimerTimeout()));
 
     //Twitter
-    connect(m_twitLib,SIGNAL(OnResponseReceived(Returnables::Response *)),this,SLOT(OnResponseReceived(Returnables::Response *)));
+    connect(m_petrelLib, SIGNAL(homeTimelineReceived(statuses_t&)),
+            this, SLOT(OnHomeTimelineReceived(statuses_t&)));
+    connect(m_petrelLib, SIGNAL(verifyCredentialsReceived(user_t&)),
+            this, SLOT(OnVerifyCredentialsReceived(user_t&)));
+    connect(m_petrelLib, SIGNAL(sentDirectMessagesReceived(direct_messages_t&)),
+            this, SLOT(OnSentDirectMessagesReceived(direct_messages_t&)));
+    connect(m_petrelLib, SIGNAL(directMessagesReceived(direct_messages_t&)),
+            this, SLOT(OnDirectMessagesReceived(direct_messages_t&)));
+    connect(m_petrelLib, SIGNAL(updateReceived(status_t&)),
+            this, SLOT(OnUpdateReceived(status_t&)));
+    connect(m_petrelLib, SIGNAL(rateLimitStatusReceived(hash_t&)),
+            this, SLOT(OnRateLimitStatusReceived(hash_t&)));
+    connect(m_petrelLib, SIGNAL(mentionsReceived(statuses_t&)),
+            this, SLOT(OnMentionsReceived(statuses_t&)));
+    connect(m_petrelLib, SIGNAL(userTimelineReceived(statuses_t&)),
+            this, SLOT(OnUserTimelineReceived(statuses_t&)));
+    connect(m_petrelLib, SIGNAL(existsFriendshipsReceived(friends_t&)),
+            this, SLOT(OnExistsFriendshipsReceived(friends_t&)));
+    connect(m_petrelLib, SIGNAL(showUsersReceived(user_t&)),
+            this, SLOT(OnShowUserDetailsReceived(user_t&)));
+    connect(m_petrelLib, SIGNAL(createFriendshipReceived(user_t&)),
+            this, SLOT(OnCreateFriendshipReceived(user_t&)));
+    connect(m_petrelLib, SIGNAL(destroyFriendshipReceived(user_t&)),
+            this, SLOT(OnDestroyFriendshipReceived(user_t&)));
 
     //Tab
     connect(tabWidget, SIGNAL(itemSelected(Twitter::TwitterItem)),
@@ -251,183 +273,125 @@ void QweenMainWindow::OnExit()
     QweenApplication::exit();
 }
 
-void QweenMainWindow::OnResponseReceived(Returnables::Response *resp){
-    if(resp)
-    {
-        switch(resp->reqID)
-        {
-        case Returnables::FRIENDS_TIMELINE:
-            {
-                Returnables::FriendsTimeline *pTimeline = static_cast<Returnables::FriendsTimeline *>(resp);
-                QString popupText;
-                QString title(tr("新着 ") + QString::number(pTimeline->list.count()) + tr("件\n"));
-                while(!pTimeline->list.isEmpty()){
-                    Returnables::StatusElementPtr element = pTimeline->list.takeLast();
-                    Twitter::TwitterItem item(Twitter::Status, element, resp->reqID, false);
-                    if(m_newestFriendsStatus < item.id()) m_newestFriendsStatus = item.id();
-                    popupText.append(QString("%1 : %2\n").arg(item.userName(), item.status()));
-                    if(!m_usersModel->userExists(item.userId()))
-                        m_usersModel->appendItem(item);
-                    tabWidget->addItem(item);
-                }
-                delete pTimeline;
-                //TODO: dm, reply, sound
-                //バルーン・サウンドは最初は抑制するようだ
-                //設定項目があるのでそこを見るべし
-                m_trayIcon->showMessage(title, popupText, QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information),
-                                        5 * 1000);
-                break;
-            }
-        case Returnables::NEW_STATUS:
-        {
-            ui->statusText->setText("");
-            ui->statusText->setEnabled(true);
-            ui->postButton->setEnabled(true);
-            Returnables::NewStatus *pNewstatus = static_cast<Returnables::NewStatus*>(resp);
-            Returnables::StatusElementPtr element = pNewstatus->status;
-            tabWidget->addItem(Twitter::TwitterItem(Twitter::Status, element, resp->reqID, false));
-            delete pNewstatus;
-            break;
+void QweenMainWindow::OnHomeTimelineReceived(statuses_t& s){
+        QString popupText;
+        QString title(tr("新着 ") + QString::number(s.status.count()) + tr("件\n"));
+        foreach(QSharedPointer<status_t> ptr, s.status){
+            Twitter::TwitterItem item(Twitter::Status, ptr, HOME_TIMELINE, false);
+            if(m_newestFriendsStatus < item.id()) m_newestFriendsStatus = item.id();
+            popupText.append(QString("%1 : %2\n").arg(item.userName(), item.status()));
+            if(!m_usersModel->userExists(item.userId()))
+                m_usersModel->appendItem(item);
+            tabWidget->addItem(item);
         }
-        case Returnables::RECENT_MENTIONS:
-        {
-            Returnables::RecentMentions *p = static_cast<Returnables::RecentMentions *>(resp);
-            while(!p->list.isEmpty()){
-                Returnables::StatusElementPtr element = p->list.takeLast();
-                Twitter::TwitterItem item(Twitter::Status, element, resp->reqID, false);
-                if(m_newestReply < item.id()) m_newestReply = item.id();
-                if(!m_usersModel->userExists(item.userId()))
-                    m_usersModel->appendItem(item);
-                tabWidget->addItem(item);
-            }
-            delete p;
-            break;
-        }
-        case Returnables::SENT_DIRECT_MESSAGES:
-        {
-            Returnables::SentDirectMessages *p = static_cast<Returnables::SentDirectMessages *>(resp);
-            while(!p->list.isEmpty()){
-                Returnables::DirectMessageElementPtr element = p->list.takeLast();
-                Twitter::TwitterItem item(Twitter::DirectMessage, element, resp->reqID, false);
-                if(m_newestSentDM < item.id()) m_newestSentDM = item.id();
-                tabWidget->addItem(item);
-            }
-            delete p;
-            break;
-        }
-        case Returnables::RECEIVED_DIRECT_MESSAGES:
-        {
-            Returnables::ReceivedDirectMessages *p = static_cast<Returnables::ReceivedDirectMessages *>(resp);
-            while(!p->list.isEmpty()){
-                Returnables::DirectMessageElementPtr element = p->list.takeLast();
-                Twitter::TwitterItem item(Twitter::DirectMessage, element, resp->reqID, false);
-                if(m_newestRecvDM < item.id()) m_newestRecvDM = item.id();
-                if(!m_usersModel->userExists(item.userId()))
-                    m_usersModel->appendItem(item);
-                tabWidget->addItem(item);
-            }
-            delete p;
-            break;
-        }
-        case Returnables::FAVORITES:
-        {
-            Returnables::Favorites *p = static_cast<Returnables::Favorites *>(resp);
-            while(!p->list.isEmpty()){
-                Returnables::StatusElementPtr element = p->list.takeLast();
-                Twitter::TwitterItem item(Twitter::Status, element, resp->reqID, false);
-                if(m_newestFav < item.id()) m_newestFav = item.id();
-                if(!m_usersModel->userExists(item.userId()))
-                    m_usersModel->appendItem(item);
-                tabWidget->addItem(item);
-            }
-            delete p;
-            break;
-        }
-        case Returnables::VERIFY_CREDENTIALS:
-        {
-            Returnables::VerifyCredentials *p = static_cast<Returnables::VerifyCredentials*>(resp);
-            Returnables::ExtUserInfoElementPtr element = p->userExt;
-            tabWidget->setMyId(element->user.id);
-            if(element->user.id!=0){
-                tabWidget->setMyId(element->user.id);
-                SERVER::Option1 opt;
-                opt.since_id = m_newestFriendsStatus;
-                opt.count = 20;
-                m_twitLib->GetFriendsTimeline(&opt);
-                OnDmTimerTimeout();
-                OnReplyTimerTimeout();
-                OnFavTimerTimeout();
-            }
-            delete p;
-            break;
-        }
-        case Returnables::API_REQUESTS:
-        {
-            Returnables::ApiRequests *p = static_cast<Returnables::ApiRequests*>(resp);
-            QMessageBox::information(this,tr("API情報"),
-                                     tr("上限: %1\n残数: %2\nリセット日時: %3\n")
-                                     .arg(QString::number(p->hourlyLimit),
-                                          QString::number(p->remainingHits),
-                                          p->resetTime));
-            delete p;
-            break;
-        }
-        case Returnables::USER_TIMELINE:
-        {
-            Returnables::UserTimeline *p = static_cast<Returnables::UserTimeline*>(resp);
-            Returnables::StatusElementPtr element = p->list.takeFirst();
-            QMessageBox::information(this,tr("@twj の最新のTweet"),element->status.text);
-            delete p;
-            break;
-        }
-        case Returnables::FRIENDSHIP_EXISTS:
-        {
-            Returnables::FriendshipExist *p = static_cast<Returnables::FriendshipExist*>(resp);
-            if(p->friends)
-                QMessageBox::information(this, tr("友達関係"),
-                                         tr("相互にフォローしています。")); //TODO: existsじゃなくてshowを使う
-            delete p;
-            break;
-        }
-        case Returnables::USER_DETAILS:
-        {
-            Returnables::UserDetails *p = static_cast<Returnables::UserDetails*>(resp);
-            Returnables::ExtUserInfoElementPtr element = p->userExt;
-            QMessageBox::information(this, tr("プロファイル情報"),
-                                     tr("Following : %1\n"
-                                        "Followers : %2\n"
-                                        "Statuses count : %3\n"
-                                        "Location : %4\n"
-                                        "Bio : %5")
-                                     .arg(QString::number(element->details.friendsCount),
-                                          QString::number(element->user.followersCount),
-                                          QString::number(element->details.statusesCount),
-                                          element->user.location,
-                                          element->user.description));
-            break;
-        }
-        case Returnables::ADD_FRIENDSHIP:
-        {
-            Returnables::AddFriendship *p = static_cast<Returnables::AddFriendship*>(resp);
-            Returnables::BasicUserInfoElementPtr user = p->user;
-            if(!user->user.screenName.isEmpty())
-                QMessageBox::information(this, "Follow", tr("@%1 をFollow開始しました。").arg(user->user.screenName));
-            delete p;
-            break;
-        }
-        case Returnables::REMOVE_FRIENDSHIP:
-        {
-            Returnables::RemoveFriendship *p = static_cast<Returnables::RemoveFriendship*>(resp);
-            Returnables::BasicUserInfoElementPtr user = p->user;
-            if(!user->user.screenName.isEmpty())
-                QMessageBox::information(this, "Remove", tr("@%1 をRemoveしました。").arg(user->user.screenName));
-            delete p;
-            break;
-        }
-        default:
-            break;
-        }
+        //TODO: dm, reply, sound
+        //バルーン・サウンドは最初は抑制するようだ
+        //設定項目があるのでそこを見るべし
+        m_trayIcon->showMessage(title, popupText, QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information),
+                                5 * 1000);
+}
+
+void QweenMainWindow::OnVerifyCredentialsReceived(user_t& user){
+    if(user.id!=0){
+        tabWidget->setMyId(user.id);
+        m_idAsUInt64 = user.id;
+        m_petrelLib->homeTimeline(m_newestFriendsStatus,0,20,0);
+        OnDmTimerTimeout();
+        OnReplyTimerTimeout();
+        OnFavTimerTimeout();
     }
+}
+
+void QweenMainWindow::OnSentDirectMessagesReceived(direct_messages_t& direct_messages){
+    foreach(QSharedPointer<direct_message_t> ptr, direct_messages.direct_message){
+        Twitter::TwitterItem item(Twitter::DirectMessage, ptr, SENT_DIRECT_MESSAGES, false);
+        if(m_newestSentDM < item.id()) m_newestSentDM = item.id();
+        tabWidget->addItem(item);
+    }
+}
+
+void QweenMainWindow::OnDirectMessagesReceived(direct_messages_t& direct_messages){
+    foreach(QSharedPointer<direct_message_t> ptr, direct_messages.direct_message){
+        Twitter::TwitterItem item(Twitter::DirectMessage, ptr, DIRECT_MESSAGES, false);
+        if(m_newestRecvDM < item.id()) m_newestRecvDM = item.id();
+        if(!m_usersModel->userExists(item.userId()))
+            m_usersModel->appendItem(item);
+        tabWidget->addItem(item);
+    }
+}
+
+void QweenMainWindow::OnUpdateReceived(status_t& status){
+    ui->statusText->setText("");
+    ui->statusText->setEnabled(true);
+    ui->postButton->setEnabled(true);
+    QSharedPointer<status_t> s(new status_t(status));
+    tabWidget->addItem(Twitter::TwitterItem(Twitter::Status, s, UPDATE, false));
+}
+
+
+void QweenMainWindow::OnRateLimitStatusReceived(hash_t& hash){
+    QMessageBox::information(this,tr("API情報"),
+                             tr("上限: %1\n残数: %2\nリセット日時: %3\n")
+                             .arg(hash.hourly_limit,
+                                  hash.remaining_hits,
+                                  hash.reset_time));
+}
+
+
+void QweenMainWindow::OnMentionsReceived(statuses_t& s){
+    foreach(QSharedPointer<status_t> ptr, s.status){
+        Twitter::TwitterItem item(Twitter::Status, ptr, MENTIONS, false);
+        if(m_newestReply < item.id()) m_newestReply = item.id();
+        if(!m_usersModel->userExists(item.userId()))
+            m_usersModel->appendItem(item);
+        tabWidget->addItem(item);
+    }
+}
+
+void QweenMainWindow::OnFavoritesReceived(statuses_t& s){
+    foreach(QSharedPointer<status_t> ptr, s.status){
+        Twitter::TwitterItem item(Twitter::Status, ptr, MENTIONS, false);
+        if(m_newestFav < item.id()) m_newestFav = item.id();
+        if(!m_usersModel->userExists(item.userId()))
+            m_usersModel->appendItem(item);
+        tabWidget->addItem(item);
+    }
+}
+
+void QweenMainWindow::OnUserTimelineReceived(statuses_t& s){
+    QSharedPointer<status_t> st = s.status.takeFirst();
+    if(!st.isNull())
+        QMessageBox::information(this,tr("@twj の最新のTweet"),st->text);
+}
+
+void QweenMainWindow::OnExistsFriendshipsReceived(friends_t& friends){
+    if(friends.value)
+        QMessageBox::information(this, tr("友達関係"),
+                                 tr("相互にフォローしています。")); //TODO: existsじゃなくてshowを使う
+}
+
+void QweenMainWindow::OnShowUserDetailsReceived(user_t& user){
+    QMessageBox::information(this, tr("プロファイル情報"),
+                             tr("Following : %1\n"
+                                "Followers : %2\n"
+                                "Statuses count : %3\n"
+                                "Location : %4\n"
+                                "Bio : %5")
+                             .arg(QString::number(user.friends_count),
+                                  QString::number(user.followers_count),
+                                  QString::number(user.statuses_count),
+                                  user.location,
+                                  user.description));
+}
+
+void QweenMainWindow::OnCreateFriendshipReceived(user_t& user){
+    if(!user.screen_name.isEmpty())
+        QMessageBox::information(this, "Follow", tr("@%1 をFollow開始しました。").arg(user.screen_name));
+}
+
+void QweenMainWindow::OnDestroyFriendshipReceived(user_t& user){
+    if(!user.screen_name.isEmpty())
+        QMessageBox::information(this, "Remove", tr("@%1 をRemoveしました。").arg(user.screen_name));
 }
 
 void QweenMainWindow::changeEvent(QEvent *e)
@@ -469,7 +433,7 @@ void QweenMainWindow::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
     if(isNetworkAvailable() && m_firstShow){
-        m_twitLib->VerifyCredentials();
+        m_petrelLib->verifyCredentials();
         m_firstShow = false;
     //TODO: version check
     /*
@@ -489,7 +453,7 @@ void QweenMainWindow::on_actOptions_triggered()
 
         if(dlg.loginInfoChanged()){
             setupTwitter();
-            m_twitLib->VerifyCredentials();
+            m_petrelLib->verifyCredentials();
         }
     }
 }
@@ -513,7 +477,7 @@ void QweenMainWindow::doPost(){
     }
     ui->statusText->setEnabled(false);
     ui->postButton->setEnabled(false);
-    m_twitLib->PostNewStatus(postText + tr(" ") + settings->statusSuffix(), 0, "Qween");
+    m_petrelLib->update(postText + tr(" ") + settings->statusSuffix(),0,"",""); // TODO:クライアント名"Qween"を付加 OAuth対応後
 }
 
 void QweenMainWindow::makeReplyOrDirectStatus(bool isAuto, bool isReply, bool isAll){
@@ -542,33 +506,21 @@ void QweenMainWindow::on_postButton_clicked()
 
 void QweenMainWindow::OnTimelineTimerTimeout()
 {
-    SERVER::Option1 opt;
-    opt.since_id = m_newestFriendsStatus;
-    opt.count = 200;
-    m_twitLib->GetFriendsTimeline(&opt);
+    m_petrelLib->homeTimeline(m_newestFriendsStatus,0,200,0);
 }
 
 
 void QweenMainWindow::OnDmTimerTimeout(){
-    SERVER::Option5 s_opt;
-    s_opt.since_id = m_newestSentDM;
-    s_opt.page = 1;
-    m_twitLib->GetSentDirectMessages(&s_opt);
-
-    SERVER::Option5 r_opt;
-    r_opt.since_id = m_newestRecvDM;
-    r_opt.page = 1;
-    m_twitLib->GetReceivedDirectMessages(&r_opt);
+    m_petrelLib->sentDirectMessages(m_newestSentDM,0,0,1);
+    m_petrelLib->directMessages(m_newestRecvDM,0,0,1);
 }
 
 void QweenMainWindow::OnReplyTimerTimeout(){
-    SERVER::Option3 opt;
-    opt.since_id = m_newestReply;
-    m_twitLib->GetRecentMentions(&opt);
+    m_petrelLib->mentions(m_newestReply,0,0,0);
 }
 
 void QweenMainWindow::OnFavTimerTimeout(){
-    m_twitLib->GetFavorites();
+    m_petrelLib->favorites(0,0);
 }
 
 void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
@@ -713,12 +665,14 @@ int QweenMainWindow::getRestStatusCount(const QString &str, bool footer)
 
 void QweenMainWindow::on_actShowUserStatus_triggered()
 {
-    m_twitLib->GetUserDetails(settings->userid());
+    m_petrelLib->showUsers(m_idAsUInt64,0,"");
+    //m_twitLib->GetUserDetails(settings->userid());
 }
 
 void QweenMainWindow::on_actApiInfo_triggered()
 {
-    m_twitLib->RemainingApiRequests();
+    m_petrelLib->rateLimitStatus();
+    //m_twitLib->RemainingApiRequests();
 }
 
 void QweenMainWindow::on_actQweenHomepage_triggered()
@@ -767,10 +721,7 @@ void QweenMainWindow::on_actionTest_icon_triggered()
 
 void QweenMainWindow::on_actUpdate_triggered()
 {
-    SERVER::Option1 opt;
-    opt.since_id = m_newestFriendsStatus;
-    opt.count = 200;
-    m_twitLib->GetFriendsTimeline(&opt);
+    m_petrelLib->homeTimeline(m_newestFriendsStatus,0,20,0);
 }
 
 void QweenMainWindow::on_actCopyStot_triggered()
@@ -830,7 +781,7 @@ void QweenMainWindow::on_actShowFriendships_triggered()
     bool ok;
     QString rv = QInputDialog::getText(this, tr("フォロー関係を調べる"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
     if(ok){
-        m_twitLib->FriendshipExist(settings->userid(), rv);
+        m_petrelLib->existsFriendships(settings->userid(), rv);
     }
 }
 
@@ -840,7 +791,7 @@ void QweenMainWindow::on_actFollow_triggered()
     bool ok;
     QString rv = QInputDialog::getText(this, tr("Follow"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
     if(ok){
-        m_twitLib->AddFriendship(rv, true);
+        m_petrelLib->createFriendship(0,0,rv,false);
     }
 }
 
@@ -850,7 +801,7 @@ void QweenMainWindow::on_actRemove_triggered()
     bool ok;
     QString rv = QInputDialog::getText(this, tr("Follow"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
     if(ok){
-        m_twitLib->RemoveFriendship(rv);
+        m_petrelLib->destroyFriendship(0,0,rv);
     }
 }
 
@@ -877,9 +828,7 @@ void QweenMainWindow::on_actRenameTab_triggered()
 
 void QweenMainWindow::on_actTwitterNews_triggered()
 {
-    SERVER::Option2 opt;
-    opt.screen_name = "twj";
-    m_twitLib->GetUsersTimeline(&opt);
+    m_petrelLib->userTimeline(0,0,"twj",0,0,0,0);
 }
 
 void QweenMainWindow::on_actTabSettings_triggered()

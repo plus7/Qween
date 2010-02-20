@@ -20,15 +20,14 @@
 #define QWEENMAINWINDOW_H
 #include <QtGui>
 #include <QMainWindow>
-#include "QTwitLib.h"
 #include "twitter.h"
+#include "petrel/petrel.h"
 namespace Ui {
     class QweenMainWindow;
 }
 
 class QweenSettings;
 class QweenTabCtrl;
-class QTwitLib;
 class QTimer;
 class QMenu;
 class QIcon;
@@ -73,7 +72,7 @@ private:
     Ui::QweenMainWindow *ui;
     QweenSettings *settings;
     QweenTabCtrl *tabWidget;
-    QTwitLib  *m_twitLib;
+    Petrel *m_petrelLib;
     QTimer *m_timelineTimer;
     QTimer *m_DMTimer;
     QTimer *m_replyTimer;
@@ -110,6 +109,7 @@ private:
     AbstractUriShortener *m_urisvc;
 
     //最新のIDたち
+    quint64 m_idAsUInt64;
     quint64 m_newestFriendsStatus;
     quint64 m_newestRecvDM;
     quint64 m_newestSentDM;
@@ -118,10 +118,21 @@ private:
 
 public slots:
     //void OnError(QString error);
-    //void OnMessageReceived(QString message);
-    //void OnStatusReceived(SERVER::RESP response);
     void OnExit();
-    void OnResponseReceived(Returnables::Response *);
+    void OnHomeTimelineReceived(statuses_t& s);
+    void OnVerifyCredentialsReceived(user_t& user);
+    void OnSentDirectMessagesReceived(direct_messages_t& direct_messages);
+    void OnDirectMessagesReceived(direct_messages_t& direct_messages);
+    void OnUpdateReceived(status_t& status);
+    void OnRateLimitStatusReceived(hash_t& hash);
+    void OnMentionsReceived(statuses_t& statuses);
+    void OnFavoritesReceived(statuses_t& statuses);
+    void OnUserTimelineReceived(statuses_t& statuses);
+    void OnExistsFriendshipsReceived(friends_t& friends);
+    void OnShowUserDetailsReceived(user_t& user);
+    void OnCreateFriendshipReceived(user_t& user);
+    void OnDestroyFriendshipReceived(user_t& user);
+
     void OnItemSelected(const Twitter::TwitterItem &item);
     void OnPostModeMenuOpen();
     void OnUriShortened(const QString& src, const QString& dest);

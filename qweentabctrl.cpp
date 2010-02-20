@@ -162,22 +162,22 @@ void QweenTabCtrl::fixLackingTabs(){
 
 void QweenTabCtrl::addItem(Twitter::TwitterItem item){
     switch(item.origin()){
-    case Returnables::FRIENDS_TIMELINE:
+    case HOME_TIMELINE:
         if(m_homeView) m_homeView->model()->appendItem(item);
         break;
-    case Returnables::RECENT_MENTIONS:
+    case MENTIONS:
         if(m_replyView) m_replyView->model()->appendItem(item);
         break;
-    case Returnables::RECEIVED_DIRECT_MESSAGES:
+    case DIRECT_MESSAGES:
         if(m_dmView) m_dmView->model()->appendItem(item);
         break;
-    case Returnables::SENT_DIRECT_MESSAGES:
+    case SENT_DIRECT_MESSAGES:
         if(m_dmView) m_dmView->model()->appendItem(item);
         break;
-    case Returnables::FAVORITES:
+    case FAVORITES:
         if(m_favView) m_favView->model()->appendItem(item);
         break;
-    case Returnables::NEW_STATUS:
+    case UPDATE:
         if(m_homeView) m_homeView->model()->appendItem(item);
         break;
     default:

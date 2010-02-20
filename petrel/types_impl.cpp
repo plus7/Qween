@@ -1,6 +1,6 @@
 #include <QtCore>
 #include <QtXml>
-#include "petrel_types.h"
+#include "types.h"
 
 
 QUrl getUrlValue(QDomElement elm){

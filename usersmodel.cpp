@@ -19,7 +19,6 @@
 #include "usersmodel.h"
 #include "iconmanager.h"
 #include "twitter.h"
-#include "QTwitLib.h"
 UsersModel::UsersModel(IconManager *iconMgr, QObject *parent) :
     QAbstractItemModel(parent), m_iconMgr(iconMgr)
 {

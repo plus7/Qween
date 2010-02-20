@@ -18,7 +18,6 @@
 
 #include "timelinemodel.h"
 #include "iconmanager.h"
-#include "QTwitLib.h"
 
 TimelineModel::TimelineModel(IconManager *iconMgr, QObject *parent)
      : QAbstractItemModel(parent), m_iconMgr(iconMgr), m_myId(0), m_newestId(0)

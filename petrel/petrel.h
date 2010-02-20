@@ -20,6 +20,16 @@ class Petrel : public QObject
     Q_OBJECT
 public:
     Petrel(const QString& userid, const QString& pass);
+    void setLoginInfo(const QString& userid, const QString& pass){
+        m_userid = userid;
+        m_pass = pass;
+    }
+    void abort(){
+        foreach(QNetworkReply *r, m_replies){
+            r->abort();
+        }
+    }
+
     virtual ~Petrel();
     //BEGIN auto generated methods
     void availableTrends(const QString& lat, const QString& long_);
@@ -167,6 +177,7 @@ public slots:
     void replyFinished( QNetworkReply* );
 private:
     QNetworkAccessManager *m_manager;
+    QList<QNetworkReply*> m_replies;
     QString m_userid;
     QString m_pass;
 };

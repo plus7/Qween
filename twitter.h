@@ -20,7 +20,7 @@
 #define TWITTER_H
 
 #include <QObject>
-#include "QTwitLib.h"
+#include "petrel/petrel.h"
 class TimelineModel;
 namespace Twitter{
     enum ItemType
@@ -35,31 +35,31 @@ namespace Twitter{
             :m_type(Undefined),m_read(false),m_parent(parent)
         {}
 
-        TwitterItem(ItemType type, Returnables::StatusElementPtr ptr, Returnables::RequestId origin,
+        TwitterItem(ItemType type, QSharedPointer<status_t> ptr, enum ROLE_TYPE origin,
                     bool read, TimelineModel *parent = 0)
-            :m_type(type), m_sePtr(ptr), m_origin(origin), m_read(read),m_parent(parent)
+            :m_type(type), m_statusPtr(ptr), m_origin(origin), m_read(read),m_parent(parent)
         {}
 
-        TwitterItem(ItemType type, Returnables::DirectMessageElementPtr ptr, Returnables::RequestId origin,
+        TwitterItem(ItemType type, QSharedPointer<direct_message_t> ptr, enum ROLE_TYPE origin,
                     bool read, TimelineModel *parent = 0)
             :m_type(type), m_dmPtr(ptr), m_origin(origin), m_read(read),m_parent(parent)
         {}
 
-        TwitterItem(ItemType type, Returnables::BasicUserInfoElementPtr ptr, Returnables::RequestId origin,
+        TwitterItem(ItemType type, QSharedPointer<user_t> ptr, enum ROLE_TYPE origin,
                     bool read, TimelineModel *parent = 0)
-            :m_type(type), m_biPtr(ptr), m_origin(origin), m_read(read),m_parent(parent)
+            :m_type(type), m_userPtr(ptr), m_origin(origin), m_read(read),m_parent(parent)
         {}
 
         QString userName() const {
             switch(m_type){
             case Twitter::Status:
-                return m_sePtr->user.name;
+                return m_statusPtr->user->name;
                 break;
             case Twitter::DirectMessage:
-                return m_dmPtr->sender.name;
+                return m_dmPtr->sender->name;
                 break;
             case Twitter::BasicUserInfo:
-                return m_biPtr->user.name;
+                return m_userPtr->name;
                 break;
             default:
                 return QString();
@@ -69,13 +69,13 @@ namespace Twitter{
         QString screenName() const {
             switch(m_type){
             case Twitter::Status:
-                return m_sePtr->user.screenName;
+                return m_statusPtr->user->screen_name;
                 break;
             case Twitter::DirectMessage:
-                return m_dmPtr->sender.screenName;
+                return m_dmPtr->sender->screen_name;
                 break;
             case Twitter::BasicUserInfo:
-                return m_biPtr->user.screenName;
+                return m_userPtr->screen_name;
                 break;
             default:
                 return QString();
@@ -85,13 +85,13 @@ namespace Twitter{
         QString createdAt() const {
             switch(m_type){
             case Twitter::Status:
-                return m_sePtr->status.createdAt;
+                return m_statusPtr->created_at.toString();
                 break;
             case Twitter::DirectMessage:
-                return m_dmPtr->headerInfo.createdAt;
+                return m_dmPtr->created_at.toString();
                 break;
             case Twitter::BasicUserInfo:
-                return m_biPtr->status.createdAt;
+                return m_userPtr->status->created_at.toString();
                 break;
             default:
                 return QString();
@@ -101,13 +101,13 @@ namespace Twitter{
         QString status() const {
             switch(m_type){
             case Twitter::Status:
-                return m_sePtr->status.text;
+                return m_statusPtr->text;
                 break;
             case Twitter::DirectMessage:
-                return m_dmPtr->headerInfo.text;
+                return m_dmPtr->text;
                 break;
             case Twitter::BasicUserInfo:
-                return m_biPtr->status.text;
+                return m_userPtr->status->text;
                 break;
             default:
                 return QString();
@@ -117,13 +117,13 @@ namespace Twitter{
         quint64 id()const {
             switch(m_type){
             case Twitter::Status:
-                return m_sePtr->status.id;
+                return m_statusPtr->id;
                 break;
             case Twitter::DirectMessage:
-                return m_dmPtr->headerInfo.id;
+                return m_dmPtr->id;
                 break;
             case Twitter::BasicUserInfo:
-                return m_biPtr->status.id;
+                return m_userPtr->status->id;
                 break;
             default:
                 return 0;
@@ -133,13 +133,13 @@ namespace Twitter{
         quint64 userId() const {
             switch(m_type){
             case Twitter::Status:
-                return m_sePtr->user.id;
+                return m_statusPtr->user->id;
                 break;
             case Twitter::DirectMessage:
-                return m_dmPtr->sender.id;
+                return m_dmPtr->sender->id;
                 break;
             case Twitter::BasicUserInfo:
-                return m_biPtr->user.id;
+                return m_userPtr->id;
                 break;
             default:
                 return 0;
@@ -149,13 +149,13 @@ namespace Twitter{
         QString iconUri() const {
             switch(m_type){
             case Twitter::Status:
-                return m_sePtr->user.profileImageUrl;
+                return m_statusPtr->user->profile_image_url.toString();
                 break;
             case Twitter::DirectMessage:
-                return m_dmPtr->sender.profileImageUrl;
+                return m_dmPtr->sender->profile_image_url.toString();
                 break;
             case Twitter::BasicUserInfo:
-                return m_biPtr->user.profileImageUrl;
+                return m_userPtr->profile_image_url.toString();
                 break;
             default:
                 return 0;
@@ -164,7 +164,7 @@ namespace Twitter{
         bool favorited() const {
             switch(m_type){
             case Twitter::Status:
-                return m_sePtr->status.favorited;
+                return m_statusPtr->favorited;
                 break;
             case Twitter::DirectMessage:
                 return false;
@@ -179,13 +179,13 @@ namespace Twitter{
         TimelineModel *parent() const { return m_parent; }
         void setParent(TimelineModel *parent){ m_parent = parent; }
         enum ItemType type() const { return m_type; }
-        Returnables::RequestId origin() const { return m_origin; }
+        enum ROLE_TYPE origin() const { return m_origin; }
         bool read() const { return m_read; }
         void setRead(bool val = true) { m_read = val; }
         void setFav(bool val = true) {
             switch(m_type){
             case Twitter::Status:
-                m_sePtr->status.favorited = val;
+                m_statusPtr->favorited = val;
                 break;
             case Twitter::DirectMessage:
                 return;
@@ -196,11 +196,10 @@ namespace Twitter{
         }
     private:
         enum ItemType m_type;
-        Returnables::StatusElementPtr m_sePtr;
-        Returnables::DirectMessageElementPtr m_dmPtr;
-        Returnables::BasicUserInfoElementPtr m_biPtr;
-        Returnables::ExtUserInfoElementPtr m_euPtr;
-        Returnables::RequestId m_origin;
+        QSharedPointer<status_t> m_statusPtr;
+        QSharedPointer<direct_message_t> m_dmPtr;
+        QSharedPointer<user_t> m_userPtr;
+        enum ROLE_TYPE m_origin;
         bool m_read;
         TimelineModel *m_parent;
     };
