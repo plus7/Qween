@@ -8,12 +8,8 @@ QT += network \
     xml
 TARGET = Qween
 TEMPLATE = app
-INCLUDEPATH += ./twitlib/include \
-    ./shorturi
-DEPENDPATH += ./twitlib/include \
-    ./shorturi
-LIBS += -L./twitlib/release \
-    -lQTwitLib
+INCLUDEPATH += ./shorturi
+DEPENDPATH += ./shorturi
 
 # Kilroy was here
 SOURCES += main.cpp \

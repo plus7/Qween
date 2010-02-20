@@ -666,13 +666,11 @@ int QweenMainWindow::getRestStatusCount(const QString &str, bool footer)
 void QweenMainWindow::on_actShowUserStatus_triggered()
 {
     m_petrelLib->showUsers(m_idAsUInt64,0,"");
-    //m_twitLib->GetUserDetails(settings->userid());
 }
 
 void QweenMainWindow::on_actApiInfo_triggered()
 {
     m_petrelLib->rateLimitStatus();
-    //m_twitLib->RemainingApiRequests();
 }
 
 void QweenMainWindow::on_actQweenHomepage_triggered()
