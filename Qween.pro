@@ -39,7 +39,9 @@ SOURCES += main.cpp \
     forwardruledialog.cpp \
     tabsettingsdialog.cpp \
     usersmodel.cpp \
-    hashtagmodel.cpp
+    hashtagmodel.cpp \
+    petrel/petrel.cpp \
+    petrel/types_impl.cpp
 HEADERS += qweenmainwindow.h \
     twitter.h \
     qweensettings.h \
@@ -69,7 +71,9 @@ HEADERS += qweenmainwindow.h \
     forwardruledialog.h \
     tabsettingsdialog.h \
     usersmodel.h \
-    hashtagmodel.h
+    hashtagmodel.h \
+    petrel/petrel.h \
+    petrel/types.h
 FORMS += qweenmainwindow.ui \
     aboutdialog.ui \
     settingdialog.ui \
