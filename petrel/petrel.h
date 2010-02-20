@@ -28,6 +28,7 @@ public:
         foreach(QNetworkReply *r, m_replies){
             r->abort();
         }
+        m_replies.clear();
     }
 
     virtual ~Petrel();
