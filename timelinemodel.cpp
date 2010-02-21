@@ -195,7 +195,7 @@ void TimelineModel::setFav(int index, bool fav){
     if(index > m_itemList.count() || index < 0) return;
     Twitter::TwitterItem *item = m_itemList.at(index);
     item->setFav(fav);
-    QModelIndex idx = this->index(index,0,QModelIndex());
+    QModelIndex idx = this->index(index,3,QModelIndex());
     emit dataChanged(idx, idx);
 }
 

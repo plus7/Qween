@@ -258,7 +258,10 @@ void QweenMainWindow::makeConnections(){
             this, SLOT(OnCreateFriendshipReceived(user_t&)));
     connect(m_petrelLib, SIGNAL(destroyFriendshipReceived(user_t&)),
             this, SLOT(OnDestroyFriendshipReceived(user_t&)));
-
+    connect(m_petrelLib, SIGNAL(createFavoriteReceived(status_t&)),
+            this, SLOT(OnCreateFavoriteReceived(status_t&)));
+    connect(m_petrelLib, SIGNAL(destroyFavoriteReceived(status_t&)),
+            this, SLOT(OnDestroyFavoriteReceived(status_t&)));
     connect(m_petrelLib, SIGNAL(error(int,QDomElement)),
             this, SLOT(OnError(int,QDomElement)));
 
@@ -396,6 +399,16 @@ void QweenMainWindow::OnCreateFriendshipReceived(user_t& user){
 void QweenMainWindow::OnDestroyFriendshipReceived(user_t& user){
     if(!user.screen_name.isEmpty())
         QMessageBox::information(this, "Remove", tr("@%1 をRemoveしました。").arg(user.screen_name));
+}
+
+void QweenMainWindow::OnCreateFavoriteReceived(status_t& status){
+   quint64 id = status.id;
+   tabWidget->favorited(id,true);
+}
+
+void QweenMainWindow::OnDestroyFavoriteReceived(status_t& status){
+   quint64 id = status.id;
+   tabWidget->favorited(id,false);
 }
 
 void QweenMainWindow::OnError(int role, QDomElement elm){
@@ -866,4 +879,25 @@ void QweenMainWindow::on_actSendDM_triggered()
     //stub.
     ui->statusText->setCursorPosition(0);
     ui->statusText->insert("D "+tabWidget->currentItem().screenName()+" ");
+}
+
+void QweenMainWindow::on_actReTweet_triggered()
+{
+    Twitter::TwitterItem item =tabWidget->currentItem();
+    if(item.type()==Twitter::Status)
+        m_petrelLib->retweet(item.id());
+}
+
+void QweenMainWindow::on_actFavorite_triggered()
+{
+    Twitter::TwitterItem item =tabWidget->currentItem();
+    if(item.type()==Twitter::Status)
+        m_petrelLib->createFavorite(item.id());
+}
+
+void QweenMainWindow::on_actUnFavorite_triggered()
+{
+    Twitter::TwitterItem item =tabWidget->currentItem();
+    if(item.type()==Twitter::Status)
+        m_petrelLib->destroyFavorite(item.id());
 }

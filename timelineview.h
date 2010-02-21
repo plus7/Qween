@@ -43,6 +43,16 @@ public:
         m_myId = id;
         this->model()->setMyId(id);
     }
+    void favorited(quint64 id, bool faved){
+        TimelineModel* m = model();
+        for(int i=0;i<m->rowCount(QModelIndex());i++){
+             Twitter::TwitterItem item = m->itemAt(i);
+             if(item.id() == id){
+                 item.setFav(faved);
+                 break;
+             }
+        }
+    }
 
 protected:
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected){

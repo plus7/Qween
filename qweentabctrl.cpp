@@ -220,6 +220,14 @@ void QweenTabCtrl::removeTimelineView(int index){
     delete view;
 }
 
+void QweenTabCtrl::favorited(quint64 id, bool faved){
+//case CREATE_FAVORITE:
+    for(int i=0;i<this->count();i++){
+        this->timelineView(i)->favorited(id,faved);
+    }
+    //break;
+}
+
 void QweenTabCtrl::moveTimelineView(int before, int after){
     TimelineView *view = timelineView(before);
     this->removeTab(before);
@@ -262,3 +270,4 @@ void QweenTabCtrl::OnItemSelected(const Twitter::TwitterItem& item){
     m_curItem = item;
     emit itemSelected(item);
 }
+

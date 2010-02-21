@@ -133,6 +133,8 @@ public slots:
     void OnShowUserDetailsReceived(user_t& user);
     void OnCreateFriendshipReceived(user_t& user);
     void OnDestroyFriendshipReceived(user_t& user);
+    void OnCreateFavoriteReceived(status_t& status);
+    void OnDestroyFavoriteReceived(status_t& status);
 
     void OnItemSelected(const Twitter::TwitterItem &item);
     void OnPostModeMenuOpen();
@@ -147,6 +149,9 @@ public slots:
     void OnActReplaceZenkakuSpaceToggled(bool);
 
 private slots:
+    void on_actUnFavorite_triggered();
+    void on_actFavorite_triggered();
+    void on_actReTweet_triggered();
     void on_actSendDM_triggered();
     void on_actAtReply_triggered();
     void on_actTabSettings_triggered();

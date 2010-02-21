@@ -306,11 +306,11 @@
     <addaction name="actAtReply"/>
     <addaction name="action_ALL"/>
     <addaction name="actSendDM"/>
-    <addaction name="actionReTweet"/>
+    <addaction name="actReTweet"/>
     <addaction name="actionReTweet_unofficial"/>
     <addaction name="separator"/>
-    <addaction name="actionFav_F"/>
-    <addaction name="actionFav"/>
+    <addaction name="actFavorite"/>
+    <addaction name="actUnFavorite"/>
     <addaction name="menu"/>
     <addaction name="menu_2"/>
     <addaction name="separator"/>
@@ -514,12 +514,15 @@
     <string>Ctrl+M</string>
    </property>
   </action>
-  <action name="actionReTweet">
+  <action name="actReTweet">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>ReTweet</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+R</string>
    </property>
   </action>
   <action name="actionReTweet_unofficial">
@@ -530,20 +533,26 @@
     <string>ReTweet(unofficial)</string>
    </property>
   </action>
-  <action name="actionFav_F">
+  <action name="actFavorite">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Fav追加(&amp;F)</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
-  <action name="actionFav">
+  <action name="actUnFavorite">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Fav削除</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
   <action name="action_13">

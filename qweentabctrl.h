@@ -52,6 +52,7 @@ signals:
 
 public slots:
     void OnItemSelected(const Twitter::TwitterItem& item);
+    void favorited(quint64 id, bool faved);
 
 private:
     TimelineView* m_homeView;
