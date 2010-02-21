@@ -17,6 +17,7 @@
 */
 //TODO: 全般的に：ステータスバーに表示をしませう
 //TODO: アニメーション
+//TODO: タブの並べ替えは振り分け設定ダイアログと連動
 #include "qweenmainwindow.h"
 #include "ui_qweenmainwindow.h"
 #include "aboutdialog.h"

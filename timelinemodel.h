@@ -42,15 +42,25 @@ public:
     //void insertItem(int index, Twitter::TwitterItem item, bool ignoreId = false);
     Twitter::TwitterItem removeItem(int index);
     Twitter::TwitterItem removeItemById(quint64 id);
-    Twitter::TwitterItem itemAt(int index);
+    Twitter::TwitterItem itemAt(int index) const;
     void setFav(int index, bool fav=true);
     void setRead(int index, bool read=true);
     void setMyId(quint64 id);//{ m_myId = id; }
     quint64 myId() const { return m_myId; }
     void setNewestId(quint64 id) { m_newestId = id; }
     quint64 newestId() const { return m_newestId; }
-    void setBaseIndex(int i){ m_baseIndex = i; }
-    int baseIndex(){ return m_baseIndex; }
+    void setBaseIndex(int i){
+        m_baseIndex = i;
+        /*Twitter::TwitterItem *baseItem = m_itemList.at(m_baseIndex);
+        for(int j=0;j<m_itemList.count();j++){
+            Twitter::TwitterItem *item = m_itemList.at(j);
+            if(item->userId() == baseItem->userId()){
+                QModelIndex idx = index(j,0,QModelIndex());
+                emit dataChanged(idx, idx);
+            }
+        }*/
+    }
+    int baseIndex() const { return m_baseIndex; }
 //    void setData(int index, Returnables::StatusElement *newData);
 
 signals:

@@ -64,6 +64,7 @@ protected:
             Twitter::TwitterItem item = model->itemAt(selected.indexes().at(0).row());
             emit itemSelected(item);
         }
+        dataChanged(indexAt(QPoint(0,0)),indexAt(QPoint(width(),height())));
     }
 
 signals:

@@ -30,11 +30,16 @@ TimelineItemDelegate::TimelineItemDelegate(IconManager *iconMgr, QWidget *parent
 void TimelineItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Twitter::TwitterItem *item = (Twitter::TwitterItem *)index.internalPointer();
-    QStyleOptionViewItem myOption = option;
+
+    QStyleOptionViewItemV4 myOption = option;
+    initStyleOption(&myOption, index);
+
     if(!item->read())
         myOption.font.setBold(true);
+
     if(item->userId() == item->parent()->myId())
         myOption.palette.setColor(QPalette::Text, QColor(255,0,0));
+
     if(index.row() == item->parent()->baseIndex()){
         myOption.decorationSize.setHeight(16);
         myOption.decorationSize.setWidth(16);

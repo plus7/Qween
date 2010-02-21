@@ -20,7 +20,7 @@
 #include "iconmanager.h"
 
 TimelineModel::TimelineModel(IconManager *iconMgr, QObject *parent)
-     : QAbstractItemModel(parent), m_iconMgr(iconMgr), m_myId(0), m_newestId(0)
+     : QAbstractItemModel(parent), m_iconMgr(iconMgr), m_baseIndex(-1), m_myId(0), m_newestId(0)
  {
     connect(m_iconMgr, SIGNAL(iconDownloaded(quint64,QIcon)),
             this, SLOT(OnIconDownloaded(quint64,QIcon)));
@@ -86,6 +86,20 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
             }
         default:
             return QIcon();
+        }
+    }else if(role == Qt::BackgroundRole){
+        /*
+    if(model->baseIndex() >= 0){
+        baseUserId = model->itemAt(model->baseIndex()).userId();
+        if(baseUserId == item->userId())
+            myOption.backgroundBrush.setColor(QColor(255,255,0));
+             //myOption.palette.setColor(QPalette::Base, QColor(255,255,0));
+    }*/
+        quint64 baseUserId;
+        if(this->baseIndex() >= 0){
+            baseUserId = itemAt(baseIndex()).userId();
+            if(baseUserId == item->userId())
+                return QBrush(QColor(255,255,0));
         }
     }
     return QVariant();
@@ -175,7 +189,7 @@ Twitter::TwitterItem TimelineModel::removeItem(int index)
     return rv;
 }
 
-Twitter::TwitterItem TimelineModel::itemAt(int index)
+Twitter::TwitterItem TimelineModel::itemAt(int index) const
 {
     Twitter::TwitterItem *p = m_itemList.at(index);
     //Twitter::TwitterItem rv(*p);
