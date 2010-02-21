@@ -15,7 +15,8 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+//TODO: 全般的に：ステータスバーに表示をしませう
+//TODO: アニメーション
 #include "qweenmainwindow.h"
 #include "ui_qweenmainwindow.h"
 #include "aboutdialog.h"
@@ -99,6 +100,7 @@ void QweenMainWindow::makeWidgets(){
     m_trayIcon = new QSystemTrayIcon(this);
 
     m_postModeMenu = new QMenu(this);
+    m_iconMenu = new QMenu(this);
 
     tabWidget = new QweenTabCtrl(ui->splitter);
     tabWidget->setTabPosition(QTabWidget::South);
@@ -171,6 +173,21 @@ void QweenMainWindow::setupMenus()
     m_postModeMenu->addAction(m_actReplaceZenkakuSpace);
 
     ui->postButton->setMenu(m_postModeMenu);
+
+    m_actShowIconInBrowser = new QAction(QIcon(), tr("画像をブラウザで表示"), this);
+    connect(m_actShowIconInBrowser, SIGNAL(triggered()),
+            this, SLOT(OnShowIconInBrowser()));
+    m_iconMenu->addAction(m_actShowIconInBrowser);
+
+    m_actSaveIcon = new QAction(QIcon(), tr("アイコンを保存..."), this);
+    connect(m_actSaveIcon, SIGNAL(triggered()),
+            this, SLOT(OnSaveIcon()));
+    m_iconMenu->addAction(m_actSaveIcon);
+
+    ui->userIconLabel->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->userIconLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(OnIconContextMenu(const QPoint &)));
+
 }
 
 void QweenMainWindow::setupTabs(){
@@ -521,6 +538,7 @@ void QweenMainWindow::doPost(){
     ui->statusText->setEnabled(false);
     ui->postButton->setEnabled(false);
     m_petrelLib->update(postText + tr(" ") + settings->statusSuffix(),m_in_reply_to_status_id,"",""); // TODO:クライアント名"Qween"を付加 OAuth対応後
+    //TODO: Outputz対応?
 }
 
 void QweenMainWindow::makeReplyOrDirectStatus(bool isAuto, bool isReply, bool isAll){
@@ -549,25 +567,29 @@ void QweenMainWindow::on_postButton_clicked()
 
 void QweenMainWindow::OnTimelineTimerTimeout()
 {
+    //TODO: if not IsNetworkAvailable() exit
     m_petrelLib->homeTimeline(m_newestFriendsStatus,0,200,0);
 }
 
-
 void QweenMainWindow::OnDmTimerTimeout(){
+    //TODO: if not IsNetworkAvailable() exit
     m_petrelLib->sentDirectMessages(m_newestSentDM,0,0,1);
     m_petrelLib->directMessages(m_newestRecvDM,0,0,1);
 }
 
 void QweenMainWindow::OnReplyTimerTimeout(){
+    //TODO: if not IsNetworkAvailable() exit
     m_petrelLib->mentions(m_newestReply,0,0,0);
 }
 
 void QweenMainWindow::OnFavTimerTimeout(){
+    //TODO: if not IsNetworkAvailable() exit
     m_petrelLib->favorites(0,0);
 }
 
 void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
 {
+    m_detailItem = item;
     switch(item.type()){
     case Twitter::Status:
     {
@@ -587,7 +609,7 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
                 }
                 QString str2 = str;
                 str2.remove(0,1);
-                QUrl url("http://twitter/");
+                QUrl url("http://twitter.com/");
                 url.setFragment("search?q=%23"+str2);
                 anchor = QString("<a href=\"%2\">%1</a>")
                          .arg(str,url.toString());
@@ -648,6 +670,27 @@ void QweenMainWindow::OnUriShortened(const QString& src, const QString& dest){
 void QweenMainWindow::OnIconDownloaded(quint64 userid, const QIcon &icon){
     Q_UNUSED(userid)
     ui->userIconLabel->setPixmap(icon.pixmap(50,50,QIcon::Normal,QIcon::On));
+}
+
+void QweenMainWindow::OnIconContextMenu(const QPoint &pt){
+    m_iconMenu->exec(ui->userIconLabel->mapToGlobal(pt));
+}
+
+void QweenMainWindow::OnShowIconInBrowser(){
+    if(m_detailItem.type()!=Twitter::Undefined){
+        QString uri(m_detailItem.iconUri());
+        QRegExp rx("_normal(\\..+)$");
+        if(rx.indexIn(uri,0)>=0){
+            uri.replace(rx,rx.cap(1));
+            QDesktopServices::openUrl(QUrl(uri));
+        }
+    }
+}
+
+void QweenMainWindow::OnSaveIcon(){
+    if(m_detailItem.type()!=Twitter::Undefined){
+
+    }
 }
 
 void QweenMainWindow::OnMessageClicked(){
@@ -896,6 +939,7 @@ void QweenMainWindow::on_actSendDM_triggered()
 
 void QweenMainWindow::on_actReTweet_triggered()
 {
+    //TODO: Protectedの場合は拒否
     Twitter::TwitterItem item =tabWidget->currentItem();
     if(item.type()==Twitter::Status)
         m_petrelLib->retweet(item.id());
@@ -904,6 +948,7 @@ void QweenMainWindow::on_actReTweet_triggered()
 void QweenMainWindow::on_actFavorite_triggered()
 {
     Twitter::TwitterItem item =tabWidget->currentItem();
+    //TODO: RTの場合はretweeted_statusのidを使う
     if(item.type()==Twitter::Status)
         m_petrelLib->createFavorite(item.id());
 }

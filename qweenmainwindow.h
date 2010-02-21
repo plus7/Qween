@@ -83,6 +83,9 @@ private:
     QAction *m_actReplaceZenkakuSpace;
     QAction *m_actDivideUriFromZenkaku;
     QAction *m_actAvoidApiCommand;
+    QMenu *m_iconMenu;
+    QAction *m_actShowIconInBrowser;
+    QAction *m_actSaveIcon;
 
     QSystemTrayIcon *m_trayIcon;
     QIcon *m_normalIcon;
@@ -117,6 +120,9 @@ private:
     quint64 m_newestReply;
     quint64 m_newestFav;
 
+    //詳細表示しているitem
+    Twitter::TwitterItem m_detailItem;
+
 public slots:
     void OnError(int role, QDomElement elm);
     void OnExit();
@@ -140,6 +146,9 @@ public slots:
     void OnPostModeMenuOpen();
     void OnUriShortened(const QString& src, const QString& dest);
     void OnIconDownloaded(quint64 userid, const QIcon& icon);
+    void OnIconContextMenu(const QPoint &);
+    void OnShowIconInBrowser();
+    void OnSaveIcon();
     void OnMessageClicked();
     void OnIconActivated(QSystemTrayIcon::ActivationReason reason);
     void OnUriShorteningFinished();
