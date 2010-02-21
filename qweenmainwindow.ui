@@ -368,7 +368,6 @@
     <addaction name="actQweenHomepage"/>
     <addaction name="separator"/>
     <addaction name="actCheckUpdate"/>
-    <addaction name="action_26"/>
     <addaction name="separator"/>
     <addaction name="actApiInfo"/>
     <addaction name="actTwitterNews"/>
