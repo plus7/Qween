@@ -251,8 +251,8 @@ void QweenMainWindow::makeConnections(){
             this, SLOT(OnMentionsReceived(statuses_t&)));
     connect(m_petrelLib, SIGNAL(userTimelineReceived(statuses_t&)),
             this, SLOT(OnUserTimelineReceived(statuses_t&)));
-    connect(m_petrelLib, SIGNAL(existsFriendshipsReceived(friends_t&)),
-            this, SLOT(OnExistsFriendshipsReceived(friends_t&)));
+    connect(m_petrelLib, SIGNAL(showFriendshipsReceived(relationship_t&)),
+            this, SLOT(OnShowFriendshipsReceived(relationship_t&)));
     connect(m_petrelLib, SIGNAL(showUsersReceived(user_t&)),
             this, SLOT(OnShowUserDetailsReceived(user_t&)));
     connect(m_petrelLib, SIGNAL(createFriendshipReceived(user_t&)),
@@ -372,10 +372,21 @@ void QweenMainWindow::OnUserTimelineReceived(statuses_t& s){
         QMessageBox::information(this,tr("@twj の最新のTweet"),st->text);
 }
 
-void QweenMainWindow::OnExistsFriendshipsReceived(friends_t& friends){
-    if(friends.value)
+void QweenMainWindow::OnShowFriendshipsReceived(relationship_t& r){
+    QString arrow;
+    QString msg;
+    if(r.source->followed_by && r.source->following){
+        arrow = r.source->screen_name + " <-> " + r.target->screen_name;
+    }else if(r.source->followed_by){
+        arrow = r.source->screen_name + " <- " + r.target->screen_name;
+    }else if(r.source->following){
+        arrow = r.source->screen_name + " -> " + r.target->screen_name;
+    }else{
         QMessageBox::information(this, tr("友達関係"),
-                                 tr("相互にフォローしています。")); //TODO: existsじゃなくてshowを使う
+                                 tr("フォロー関係はありません。"));
+        return;
+    }
+    QMessageBox::information(this, tr("友達関係"), arrow);
 }
 
 void QweenMainWindow::OnShowUserDetailsReceived(user_t& user){
@@ -395,6 +406,7 @@ void QweenMainWindow::OnShowUserDetailsReceived(user_t& user){
 void QweenMainWindow::OnCreateFriendshipReceived(user_t& user){
     if(!user.screen_name.isEmpty())
         QMessageBox::information(this, "Follow", tr("@%1 をFollow開始しました。").arg(user.screen_name));
+    //TODO: エラーの場合は失敗とちゃんと言う！
 }
 
 void QweenMainWindow::OnDestroyFriendshipReceived(user_t& user){
@@ -810,7 +822,7 @@ void QweenMainWindow::on_actShowFriendships_triggered()
     bool ok;
     QString rv = QInputDialog::getText(this, tr("フォロー関係を調べる"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
     if(ok){
-        m_petrelLib->existsFriendships(settings->userid(), rv);
+        m_petrelLib->showFriendships(0,settings->userid(),0,rv);
     }
 }
 

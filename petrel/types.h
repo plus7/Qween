@@ -121,6 +121,15 @@ public:
   geo_t(QDomElement element);
   QString georss_point;
 };
+class source_t {
+public:
+  source_t(QDomElement element);
+  bool following;
+  QString notifications_enabled;
+  bool followed_by;
+  quint64 id;
+  QString screen_name;
+};
 class target_t {
 public:
   target_t(QDomElement element);
@@ -223,7 +232,7 @@ public:
 class relationship_t {
 public:
   relationship_t(QDomElement element);
-  QString source;
+  QSharedPointer<source_t> source;
   QSharedPointer<target_t> target;
 };
 class matching_trends_t {

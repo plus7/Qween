@@ -189,6 +189,24 @@ geo_t::geo_t(QDomElement element){
     }
   }
 }
+source_t::source_t(QDomElement element){
+  QDomElement child = element.firstChildElement();
+  QString tagName;
+  for (; !child.isNull(); child = child.nextSiblingElement()) {
+    tagName = child.tagName();
+    if(tagName == "following"){
+        following = getBoolValue(child);
+    }else if(tagName == "notifications_enabled"){
+        notifications_enabled = getStrValue(child);
+    }else if(tagName == "followed_by"){
+        followed_by = getBoolValue(child);
+    }else if(tagName == "id"){
+        id = getUInt64Value(child);
+    }else if(tagName == "screen_name"){
+        screen_name = getStrValue(child);
+    }
+  }
+}
 target_t::target_t(QDomElement element){
   QDomElement child = element.firstChildElement();
   QString tagName;
@@ -393,7 +411,7 @@ relationship_t::relationship_t(QDomElement element){
   for (; !child.isNull(); child = child.nextSiblingElement()) {
     tagName = child.tagName();
     if(tagName == "source"){
-        source = getStrValue(child);
+        source = QSharedPointer<source_t>(new source_t(child));
     }else if(tagName == "target"){
       target = QSharedPointer<target_t>(new target_t(child));
     }

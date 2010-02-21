@@ -129,7 +129,7 @@ public slots:
     void OnMentionsReceived(statuses_t& statuses);
     void OnFavoritesReceived(statuses_t& statuses);
     void OnUserTimelineReceived(statuses_t& statuses);
-    void OnExistsFriendshipsReceived(friends_t& friends);
+    void OnShowFriendshipsReceived(relationship_t& relationship);
     void OnShowUserDetailsReceived(user_t& user);
     void OnCreateFriendshipReceived(user_t& user);
     void OnDestroyFriendshipReceived(user_t& user);
