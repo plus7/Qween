@@ -309,21 +309,22 @@ void QweenMainWindow::OnExit()
 }
 
 void QweenMainWindow::OnHomeTimelineReceived(statuses_t& s){
-        QString popupText;
-        QString title(tr("新着 ") + QString::number(s.status.count()) + tr("件\n"));
-        foreach(QSharedPointer<status_t> ptr, s.status){
-            Twitter::TwitterItem item(Twitter::Status, ptr, HOME_TIMELINE, false);
-            if(m_newestFriendsStatus < item.id()) m_newestFriendsStatus = item.id();
-            popupText.append(QString("%1 : %2\n").arg(item.userName(), item.status()));
-            if(!m_usersModel->userExists(item.userId()))
-                m_usersModel->appendItem(item);
-            tabWidget->addItem(item);
-        }
-        //TODO: dm, reply, sound
-        //バルーン・サウンドは最初は抑制するようだ
-        //設定項目があるのでそこを見るべし
-        m_trayIcon->showMessage(title, popupText, QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information),
-                                5 * 1000);
+    if(s.status.count()==0) return;
+    QString popupText;
+    QString title(tr("新着 ") + QString::number(s.status.count()) + tr("件\n"));
+    foreach(QSharedPointer<status_t> ptr, s.status){
+        Twitter::TwitterItem item(Twitter::Status, ptr, HOME_TIMELINE, false);
+        if(m_newestFriendsStatus < item.id()) m_newestFriendsStatus = item.id();
+        popupText.append(QString("%1 : %2\n").arg(item.userName(), item.status()));
+        if(!m_usersModel->userExists(item.userId()))
+            m_usersModel->appendItem(item);
+        tabWidget->addItem(item);
+    }
+    //TODO: dm, reply, sound
+    //バルーン・サウンドは最初は抑制するようだ
+    //設定項目があるのでそこを見るべし
+    m_trayIcon->showMessage(title, popupText, QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information),
+                            5 * 1000);
 }
 
 void QweenMainWindow::OnVerifyCredentialsReceived(user_t& user){
