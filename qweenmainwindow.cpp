@@ -210,6 +210,7 @@ void QweenMainWindow::setupTwitter(){
     m_petrelLib->abort();
     //m_twitLib->Logout(); TODO: EndSessionで置き換える
     m_petrelLib->setLoginInfo(settings->userid(), settings->password());
+    m_petrelLib->verifyCredentials();
 }
 
 void QweenMainWindow::makeConnections(){
