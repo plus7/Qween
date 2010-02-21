@@ -744,12 +744,12 @@
   </action>
   <action name="actionTest_bitly">
    <property name="text">
-    <string>test bitly</string>
+    <string>Q極Z対破壊</string>
    </property>
   </action>
   <action name="actionTest_iconmanager">
    <property name="text">
-    <string>test iconmanager</string>
+    <string>全自動麻薬取引</string>
    </property>
   </action>
   <action name="actionHoge">
@@ -759,7 +759,7 @@
   </action>
   <action name="actionTest_icon">
    <property name="text">
-    <string>test icon</string>
+    <string>P2Pモード起動</string>
    </property>
   </action>
   <action name="action">
