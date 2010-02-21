@@ -130,9 +130,13 @@ void QweenMainWindow::applySettings(){
 }
 
 bool QweenMainWindow::isNetworkAvailable(){
-    //stub
-    //TODO: implement
-    return true;
+    foreach(const QNetworkInterface &intf, QNetworkInterface::allInterfaces()) {
+        if (!intf.isValid()) continue;
+        if (intf.flags() & QNetworkInterface::IsLoopBack) continue;
+        if (intf.hardwareAddress().isEmpty()) continue;
+        if (intf.flags() & QNetworkInterface::IsUp && intf.flags() & QNetworkInterface::IsRunning ) return true;
+    }
+    return false;
 }
 
 void QweenMainWindow::save(){
@@ -983,4 +987,12 @@ void QweenMainWindow::on_actUnFavorite_triggered()
     Twitter::TwitterItem item =tabWidget->currentItem();
     if(item.type()==Twitter::Status)
         m_petrelLib->destroyFavorite(item.id());
+}
+
+void QweenMainWindow::on_actionTest_network_triggered()
+{
+    if(isNetworkAvailable())
+        QMessageBox::information(this,"",tr("Network is available"));
+    else
+        QMessageBox::information(this,"",tr("Network is not available"));
 }

@@ -367,6 +367,7 @@
      <addaction name="actionTest_bitly"/>
      <addaction name="actionTest_iconmanager"/>
      <addaction name="actionTest_icon"/>
+     <addaction name="actionTest_network"/>
     </widget>
     <addaction name="actQweenHomepage"/>
     <addaction name="separator"/>
@@ -848,6 +849,11 @@
   <action name="actExplosion">
    <property name="text">
     <string>俺以外押すな 超危険</string>
+   </property>
+  </action>
+  <action name="actionTest_network">
+   <property name="text">
+    <string>メテオ</string>
    </property>
   </action>
  </widget>
