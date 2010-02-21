@@ -110,6 +110,7 @@ private:
 
     //最新のIDたち
     quint64 m_idAsUInt64;
+    quint64 m_in_reply_to_status_id;
     quint64 m_newestFriendsStatus;
     quint64 m_newestRecvDM;
     quint64 m_newestSentDM;
@@ -117,7 +118,7 @@ private:
     quint64 m_newestFav;
 
 public slots:
-    //void OnError(QString error);
+    void OnError(int role, QDomElement elm);
     void OnExit();
     void OnHomeTimelineReceived(statuses_t& s);
     void OnVerifyCredentialsReceived(user_t& user);

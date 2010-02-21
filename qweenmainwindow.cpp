@@ -36,7 +36,7 @@
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::QweenMainWindow),m_firstShow(true),m_postAfterShorten(false),m_usersModel(NULL),
-    m_completer(NULL), m_urisvc(NULL), m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),
+    m_completer(NULL), m_urisvc(NULL), m_idAsUInt64(0), m_in_reply_to_status_id(0), m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),
     m_newestReply(0),m_newestFav(0)
 {
     ui->setupUi(this);
@@ -259,6 +259,9 @@ void QweenMainWindow::makeConnections(){
     connect(m_petrelLib, SIGNAL(destroyFriendshipReceived(user_t&)),
             this, SLOT(OnDestroyFriendshipReceived(user_t&)));
 
+    connect(m_petrelLib, SIGNAL(error(int,QDomElement)),
+            this, SLOT(OnError(int,QDomElement)));
+
     //Tab
     connect(tabWidget, SIGNAL(itemSelected(Twitter::TwitterItem)),
             this, SLOT(OnItemSelected(Twitter::TwitterItem)));
@@ -324,6 +327,7 @@ void QweenMainWindow::OnUpdateReceived(status_t& status){
     ui->statusText->setText("");
     ui->statusText->setEnabled(true);
     ui->postButton->setEnabled(true);
+    m_in_reply_to_status_id = 0;
     QSharedPointer<status_t> s(new status_t(status));
     tabWidget->addItem(Twitter::TwitterItem(Twitter::Status, s, UPDATE, false));
 }
@@ -392,6 +396,19 @@ void QweenMainWindow::OnCreateFriendshipReceived(user_t& user){
 void QweenMainWindow::OnDestroyFriendshipReceived(user_t& user){
     if(!user.screen_name.isEmpty())
         QMessageBox::information(this, "Remove", tr("@%1 をRemoveしました。").arg(user.screen_name));
+}
+
+void QweenMainWindow::OnError(int role, QDomElement elm){
+    switch(role){
+    case UPDATE:
+      {
+        ui->statusText->setEnabled(true);
+        ui->postButton->setEnabled(true);
+        break;
+      }
+    default:
+        break;
+    }
 }
 
 void QweenMainWindow::changeEvent(QEvent *e)
@@ -477,7 +494,7 @@ void QweenMainWindow::doPost(){
     }
     ui->statusText->setEnabled(false);
     ui->postButton->setEnabled(false);
-    m_petrelLib->update(postText + tr(" ") + settings->statusSuffix(),0,"",""); // TODO:クライアント名"Qween"を付加 OAuth対応後
+    m_petrelLib->update(postText + tr(" ") + settings->statusSuffix(),m_in_reply_to_status_id,"",""); // TODO:クライアント名"Qween"を付加 OAuth対応後
 }
 
 void QweenMainWindow::makeReplyOrDirectStatus(bool isAuto, bool isReply, bool isAll){
@@ -841,6 +858,7 @@ void QweenMainWindow::on_actAtReply_triggered()
     //TODO: なにやら複雑な処理
     ui->statusText->setCursorPosition(0);
     ui->statusText->insert("@"+tabWidget->currentItem().screenName()+" ");
+    m_in_reply_to_status_id = tabWidget->currentItem().id();
 }
 
 void QweenMainWindow::on_actSendDM_triggered()
