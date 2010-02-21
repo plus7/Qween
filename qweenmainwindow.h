@@ -19,6 +19,7 @@
 #ifndef QWEENMAINWINDOW_H
 #define QWEENMAINWINDOW_H
 #include <QtGui>
+#include <QtNetwork>
 #include <QMainWindow>
 #include "twitter.h"
 #include "petrel/petrel.h"
@@ -111,6 +112,9 @@ private:
     //DEBUG
     AbstractUriShortener *m_urisvc;
 
+    //アイコンのダウンロードに使う
+    QNetworkAccessManager *m_networkMan;
+
     //最新のIDたち
     quint64 m_idAsUInt64;
     quint64 m_in_reply_to_status_id;
@@ -149,6 +153,7 @@ public slots:
     void OnIconContextMenu(const QPoint &);
     void OnShowIconInBrowser();
     void OnSaveIcon();
+    void OnIconOriginalImageDownloaded(QNetworkReply*);
     void OnMessageClicked();
     void OnIconActivated(QSystemTrayIcon::ActivationReason reason);
     void OnUriShorteningFinished();

@@ -37,7 +37,7 @@
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::QweenMainWindow),m_firstShow(true),m_postAfterShorten(false),m_usersModel(NULL),
-    m_completer(NULL), m_urisvc(NULL), m_idAsUInt64(0), m_in_reply_to_status_id(0), m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),
+    m_completer(NULL), m_urisvc(NULL), m_networkMan(NULL), m_idAsUInt64(0), m_in_reply_to_status_id(0), m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),
     m_newestReply(0),m_newestFav(0)
 {
     ui->setupUi(this);
@@ -118,6 +118,8 @@ void QweenMainWindow::makeWidgets(){
 
     m_completer = new QCompleter(m_proxyModel, this);
     ui->statusText->setCompleter(m_completer);
+
+    m_networkMan = new QNetworkAccessManager(this);
 }
 
 void QweenMainWindow::applySettings(){
@@ -289,6 +291,10 @@ void QweenMainWindow::makeConnections(){
     //StatusText
     connect(ui->statusText, SIGNAL(uriShorteningFinished()),
             this, SLOT(OnUriShorteningFinished()));
+
+    //Icon
+    connect(m_networkMan, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(OnIconOriginalImageDownloaded(QNetworkReply*)));
 }
 
 void QweenMainWindow::OnExit()
@@ -689,8 +695,27 @@ void QweenMainWindow::OnShowIconInBrowser(){
 
 void QweenMainWindow::OnSaveIcon(){
     if(m_detailItem.type()!=Twitter::Undefined){
-
+        QString uri(m_detailItem.iconUri());
+        QRegExp rx("_normal(\\..+)$");
+        if(rx.indexIn(uri,0)>=0){
+            uri.replace(rx,rx.cap(1));
+            int pos = uri.lastIndexOf('/');
+            QString fileName = QFileDialog::getSaveFileName(this, tr("ファイルを保存"),
+                                                              uri.right(pos+1),
+                                                              tr("すべてのファイル (*.*)"));
+            QNetworkRequest req(uri);
+            req.setAttribute(QNetworkRequest::User, fileName);
+            m_networkMan->get(req);
+        }
     }
+}
+
+void QweenMainWindow::OnIconOriginalImageDownloaded(QNetworkReply* r){
+    QFile file(r->request().attribute(QNetworkRequest::User).toString());
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+             return;
+    file.write(r->readAll());
+    file.close();
 }
 
 void QweenMainWindow::OnMessageClicked(){
