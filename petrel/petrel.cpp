@@ -1,3 +1,20 @@
+/*
+  This file is part of Qween.
+  Copyright (C) 2009-2010 NOSE Takafumi <ahya365@gmail.com>
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 #include "petrel.h"
 
 Petrel::Petrel(const QString& userid, const QString& pass)
@@ -23,14 +40,20 @@ void Petrel::issueGetRequest(QNetworkRequest& req){
 void Petrel::issuePostRequest(QNetworkRequest& req, QByteArray& data){
     QByteArray auth = m_userid.toUtf8() + ":" + m_pass.toUtf8();
     req.setRawHeader( "Authorization", auth.toBase64().prepend( "Basic " ) );
-    QNetworkReply *r = m_manager->post(req,data);
+    //TODO: getでも同様なのか？
+    QString tmp(data);
+    tmp.replace('+',"%2B");
+    QNetworkReply *r = m_manager->post(req,QByteArray(tmp.toAscii()));
     m_replies.append(r);
 }
 
 void Petrel::issuePutRequest(QNetworkRequest& req, QByteArray& data){
     QByteArray auth = m_userid.toUtf8() + ":" + m_pass.toUtf8();
     req.setRawHeader( "Authorization", auth.toBase64().prepend( "Basic " ) );
-    QNetworkReply *r = m_manager->put(req,data);
+    //TODO: getでも同様なのか？
+    QString tmp(data);
+    tmp.replace('+',"%2B");
+    QNetworkReply *r = m_manager->put(req,QByteArray(tmp.toAscii()));
     m_replies.append(r);
 }
 

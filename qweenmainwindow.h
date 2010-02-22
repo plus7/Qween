@@ -163,6 +163,7 @@ public slots:
     void OnActReplaceZenkakuSpaceToggled(bool);
 
 private slots:
+    void on_actionTest_url_triggered();
     void on_actionTest_network_triggered();
     void on_actUnFavorite_triggered();
     void on_actFavorite_triggered();

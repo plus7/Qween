@@ -368,6 +368,7 @@
      <addaction name="actionTest_iconmanager"/>
      <addaction name="actionTest_icon"/>
      <addaction name="actionTest_network"/>
+     <addaction name="actionTest_url"/>
     </widget>
     <addaction name="actQweenHomepage"/>
     <addaction name="separator"/>
@@ -854,6 +855,11 @@
   <action name="actionTest_network">
    <property name="text">
     <string>メテオ</string>
+   </property>
+  </action>
+  <action name="actionTest_url">
+   <property name="text">
+    <string>腐海が広がる</string>
    </property>
   </action>
  </widget>

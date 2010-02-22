@@ -22,6 +22,7 @@
 #include "twitter.h"
 #include <QtGui>
 class IconManager;
+class QweenSettings;
 class TimelineModel : public QAbstractItemModel
 {
 Q_OBJECT
@@ -70,6 +71,7 @@ public slots:
 
 private:
     IconManager *m_iconMgr;
+    QweenSettings *m_settings;
     int m_baseIndex;
     quint64 m_myId;
     quint64 m_newestId;

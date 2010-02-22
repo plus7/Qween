@@ -998,3 +998,13 @@ void QweenMainWindow::on_actionTest_network_triggered()
     else
         QMessageBox::information(this,"",tr("Network is not available"));
 }
+
+void QweenMainWindow::on_actionTest_url_triggered()
+{
+    QUrl url("http://mozilla.org/query.cgi");
+    url.addQueryItem("numa",tr("++++と&と のテスト"));
+    QMessageBox::information(this,"",url.encodedQuery());
+    QString tmp(url.encodedQuery());
+    tmp.replace('+',"%2B");
+    QMessageBox::information(this,"",tmp.toAscii());
+}
