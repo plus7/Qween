@@ -187,6 +187,21 @@ namespace Twitter{
                 return false;
             }
         }
+        bool isProtected() const {
+            switch(m_type){
+            case Twitter::Status:
+                return m_statusPtr->user->protected_;
+                break;
+            case Twitter::DirectMessage:
+                return m_dmPtr->sender->protected_;
+                break;
+            case Twitter::BasicUserInfo:
+                return false;
+                break;
+            default:
+                return false;
+            }
+        }
         TimelineModel *parent() const { return m_parent; }
         void setParent(TimelineModel *parent){ m_parent = parent; }
         enum ItemType type() const { return m_type; }

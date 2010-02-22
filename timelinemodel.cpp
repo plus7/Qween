@@ -85,6 +85,12 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
                 m_iconMgr->fetchIcon(item->userId(), item->iconUri());
                 return QIcon();
             }
+        case 1:
+            if(item->isProtected()){
+                return QIcon(":/res/lock.png");
+            }else{
+                return QIcon();
+            }
         default:
             return QIcon();
         }
