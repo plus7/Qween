@@ -523,7 +523,7 @@
          <item row="3" column="2">
           <widget class="QPushButton" name="pushButton">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="text">
             <string>フォント</string>
@@ -533,7 +533,7 @@
          <item row="4" column="2">
           <widget class="QPushButton" name="pushButton_2">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="text">
             <string>フォント</string>
@@ -543,7 +543,7 @@
          <item row="10" column="2">
           <widget class="QPushButton" name="pushButton_4">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="text">
             <string>背景色</string>
@@ -553,7 +553,7 @@
          <item row="11" column="2">
           <widget class="QPushButton" name="pushButton_5">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="text">
             <string>フォント</string>
@@ -563,7 +563,7 @@
          <item row="12" column="2">
           <widget class="QPushButton" name="pushButton_6">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="text">
             <string>背景色</string>
@@ -573,7 +573,7 @@
          <item row="14" column="2">
           <widget class="QPushButton" name="pushButton_7">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="text">
             <string>フォント</string>
@@ -624,6 +624,9 @@
          </item>
          <item row="8" column="2">
           <widget class="QPushButton" name="pushButton_8">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>背景色</string>
            </property>
@@ -645,6 +648,9 @@
          </item>
          <item row="6" column="2">
           <widget class="QPushButton" name="pushButton_9">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>背景色</string>
            </property>
@@ -666,6 +672,9 @@
          </item>
          <item row="5" column="2">
           <widget class="QPushButton" name="pushButton_3">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>フォント</string>
            </property>
@@ -712,7 +721,7 @@
          <item row="18" column="2">
           <widget class="QPushButton" name="btnInputFont">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="text">
             <string>フォント</string>
