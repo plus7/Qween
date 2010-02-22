@@ -76,7 +76,7 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
         default:
             return QVariant();
         }
-    }else if(role == Qt::DecorationRole){
+        }else if(role == Qt::DecorationRole){
         switch(index.column()){
         case 0:
             if(m_iconMgr->isIconAvailable(item->userId())){
@@ -85,12 +85,14 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
                 m_iconMgr->fetchIcon(item->userId(), item->iconUri());
                 return QIcon();
             }
+            break;
         case 1:
             if(item->isProtected()){
                 return QIcon(":/res/lock.png");
             }else{
                 return QIcon();
             }
+            break;
         default:
             return QIcon();
         }
