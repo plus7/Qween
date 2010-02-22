@@ -553,6 +553,18 @@ void QweenMainWindow::doPost(){
     //TODO: Outputz対応?
 }
 
+void QweenMainWindow::postOutputz(const QString& str){
+    QString entryPoint("http://outputz.com/api/post");
+    /*
+     * key : 設定ページに表示されている復活の呪文（他人に知られていはいけない）
+     * uri : アウトプットの URI
+     * size : アウトプットの文字数
+     */
+    QString key;
+    QString uri("http://twitter.com/");
+    int size = str.length();
+}
+
 void QweenMainWindow::makeReplyOrDirectStatus(bool isAuto, bool isReply, bool isAll){
     Q_UNUSED(isAuto)
     Q_UNUSED(isReply)
@@ -1007,4 +1019,17 @@ void QweenMainWindow::on_actionTest_url_triggered()
     QString tmp(url.encodedQuery());
     tmp.replace('+',"%2B");
     QMessageBox::information(this,"",tmp.toAscii());
+}
+
+void QweenMainWindow::on_actionTest_rx_triggered()
+{
+    QRegExp rx1(ATREPLY_RX_DATA_2);
+
+    QString hoge("@mozilla @mozilla/enemy mozilla");
+    hoge.indexOf(rx1);
+    QStringList list;
+    for(int i=0;i<rx1.captureCount()+1;i++){
+        list << rx1.cap(i);
+    }
+    QMessageBox::information(this,"",QString::number(rx1.captureCount(),10) + ":" + list.join(" & "));
 }

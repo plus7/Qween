@@ -108,7 +108,7 @@ public:
     bool avoidApiCmd() const { return m_avoidApiCmd; }
     void setAvoidApiCmd(bool val) { m_avoidApiCmd = val; }
 
-    QString statusViewStyle() { return "margin:0px;padding:0px;font-size:12px;font-family:monospace;"; } //stub monospaceとかの設定を反映する
+    QString statusViewStyle() { return "margin:0px;padding:0px;font-size:12px;"; } //stub monospaceとかの設定を反映する
 
     static QweenSettings* globalSettings();
 

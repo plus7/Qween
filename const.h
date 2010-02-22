@@ -37,4 +37,6 @@
 
 #define LINK_RX_DATA "(" HASHTAG_RX_DATA ")|(" ATREPLY_RX_DATA ")|(" URLRXDATA ")"
 
+#define ATREPLY_RX_DATA_2 "(^|[^a-zA-Z0-9_])[@＠]([a-zA-Z0-9_]{1,20})(/[a-zA-Z0-9_\\-]{1,24}[a-zA-Z0-9_])?"
+
 #endif // CONST_H

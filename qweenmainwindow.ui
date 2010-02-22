@@ -369,6 +369,7 @@
      <addaction name="actionTest_icon"/>
      <addaction name="actionTest_network"/>
      <addaction name="actionTest_url"/>
+     <addaction name="actionTest_rx"/>
     </widget>
     <addaction name="actQweenHomepage"/>
     <addaction name="separator"/>
@@ -860,6 +861,11 @@
   <action name="actionTest_url">
    <property name="text">
     <string>腐海が広がる</string>
+   </property>
+  </action>
+  <action name="actionTest_rx">
+   <property name="text">
+    <string>クリーネ・エターナル・コンバッション</string>
    </property>
   </action>
  </widget>

@@ -19,7 +19,8 @@
 #ifndef TWITTER_H
 #define TWITTER_H
 
-#include <QObject>
+#include <QtCore>
+#include "const.h"
 #include "petrel/petrel.h"
 class TimelineModel;
 namespace Twitter{
@@ -38,7 +39,17 @@ namespace Twitter{
         TwitterItem(ItemType type, QSharedPointer<status_t> ptr, enum ROLE_TYPE origin,
                     bool read, TimelineModel *parent = 0)
             :m_type(type), m_statusPtr(ptr), m_origin(origin), m_read(read),m_parent(parent)
-        {}
+        {
+            QRegExp rx(ATREPLY_RX_DATA_2);
+            QString text(ptr->text);
+            int pos=0;
+            while((pos = text.indexOf(rx,pos)) != -1){
+                if(rx.cap(3).isEmpty()){
+                    m_replyToList.append(rx.cap(2));
+                }
+                pos += rx.matchedLength();
+            }
+        }
 
         TwitterItem(ItemType type, QSharedPointer<direct_message_t> ptr, enum ROLE_TYPE origin,
                     bool read, TimelineModel *parent = 0)
@@ -194,11 +205,21 @@ namespace Twitter{
                 return;
             }
         }
+        quint64 inReplyToId(){
+            if(m_type == Twitter::Status){
+                return m_statusPtr->in_reply_to_status_id;
+            }else{
+                return 0;
+            }
+        }
+
+        QList<QString> replyToList(){ return m_replyToList; }
     private:
         enum ItemType m_type;
         QSharedPointer<status_t> m_statusPtr;
         QSharedPointer<direct_message_t> m_dmPtr;
         QSharedPointer<user_t> m_userPtr;
+        QList<QString> m_replyToList;
         enum ROLE_TYPE m_origin;
         bool m_read;
         TimelineModel *m_parent;

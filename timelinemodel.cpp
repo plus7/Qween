@@ -91,9 +91,19 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
     }else if(role == Qt::BackgroundRole){
         quint64 baseUserId;
         if(this->baseIndex() >= 0){
-            baseUserId = itemAt(baseIndex()).userId();
-            if(baseUserId == item->userId())
+            Twitter::TwitterItem baseItem = itemAt(baseIndex());
+            if(item->id() == baseItem.inReplyToId())
+                return QBrush(QColor(255,192,192)); //@先
+            else if(baseItem.userId() == item->userId())
                 return QBrush(QColor(255,255,0));
+            //else if(item->screenName() == baseItem.screenName())
+            //    return QBrush(QColor(192,255,192));
+            else if(item->replyToList().indexOf(QweenSettings::globalSettings()->userid())>=0)
+                return QBrush(QColor(255,192,255));
+            else if(baseItem.replyToList().indexOf(item->screenName())>=0)
+                return QBrush(QColor(192,192,255));
+            else if(item->replyToList().indexOf(baseItem.screenName())>=0)
+                return QBrush(QColor(192,255,192));
         }
     }else if(role == Qt::ForegroundRole){
         if(item->userId() == myId())

@@ -57,6 +57,7 @@ private:
     void makeConnections();
     void makeWidgets();
     void doPost();
+    void postOutputz(const QString& str);
     void makeReplyOrDirectStatus(bool isAuto, bool isReply, bool isAll);
 
     int getRestStatusCount(const QString& str, bool footer = true);
@@ -163,6 +164,7 @@ public slots:
     void OnActReplaceZenkakuSpaceToggled(bool);
 
 private slots:
+    void on_actionTest_rx_triggered();
     void on_actionTest_url_triggered();
     void on_actionTest_network_triggered();
     void on_actUnFavorite_triggered();
