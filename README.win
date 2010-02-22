@@ -9,6 +9,19 @@ Qween‚ÍTweenƒ‰ƒCƒN‚ÈAQt»TwitterƒNƒ‰ƒCƒAƒ“ƒg‚Å‚·Bƒ‰ƒCƒZƒ“ƒX‚ÍGPL3+OpenSSL—áŠO‚
 * ‚»‚Ì‘¼‚½‚­‚³‚ñ
 
 ¡—š—ð
+2010-02-22  v0.0.4
+* Ý’è‰æ–Ê‚Ì“®ìƒ^ƒu‚Ìƒ`ƒFƒbƒNƒ{ƒbƒNƒX‚ªˆê•”‚ÌŠÂ‹«‚Åd‚È‚Á‚Ä‚¢‚½‚Ì‚ðC³B
+* friendships/exists ‚Ì‚©‚í‚è‚É friendships/show ‚ðŽg‚¤‚æ‚¤‚É‚µ‚½B
+* tweetÚ×•\Ž¦ƒyƒCƒ“‚Ì–³‘Ê‚Èü‚ðÁ‚µ‚½B
+* Ú×‚µ‚Ä‚¢‚étweet‚ÌƒAƒCƒRƒ“‚ð•Û‘¶‚·‚éƒƒjƒ…[‚ð’Ç‰ÁB
+* Ú×‚µ‚Ä‚¢‚étweet‚ÌƒAƒCƒRƒ“‚ðƒuƒ‰ƒEƒU‚ÅŠJ‚­ƒƒjƒ…[‚ð’Ç‰ÁB
+* V’…‚ªƒ[ƒ‚Å‚à\‚í‚¸V’…ƒ|ƒbƒvƒAƒbƒv‚ªo‚Ä‚«‚ÄŸT“©‚µ‚¢‚Ì‚ðC³B
+* '+'‚ª”¼ŠpƒXƒy[ƒXˆµ‚¢‚Å“Še‚³‚ê‚é‚Ì‚ðC³B
+* GPLƒ‰ƒCƒZƒ“ƒXƒuƒƒbƒN‚ª‘«‚è‚Ä‚È‚©‚Á‚½‚Ì‚Å‚¢‚­‚Â‚©‚Ìƒtƒ@ƒCƒ‹‚É’Ç‰ÁB
+* ƒŠƒXƒg‚ÌF•ª‚¯‚É‘Î‰žBÝ’è‚Í‚Ü‚¾‚Å‚«‚È‚¢B
+* ƒvƒƒeƒNƒg‚³‚ê‚Ä‚¢‚éƒ†[ƒU‚Ìtweet‚ÉŒ®ƒAƒCƒRƒ“‚ð•\Ž¦‚·‚é‚æ‚¤‚É‚µ‚½B
+* ƒfƒoƒbƒOƒƒjƒ…[‚ªc
+
 2010-02-21  v0.0.3
 * QTwitLib‚Ö‚ÌˆË‘¶‚ðŠ®‘S‚É‚È‚­‚µ‚½B•sˆÀ’è‚É‚È‚Á‚Ä‚é‰Â”\«‘å
 * ƒXƒvƒŠƒbƒ^‚ÌˆÊ’u‚ð•Û‘¶^•œŒ³‚·‚é‚æ‚¤‚É‚µ‚½
