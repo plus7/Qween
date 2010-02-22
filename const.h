@@ -21,7 +21,7 @@
 
 #define QWEEN_VERSION_MAJOR 0
 #define QWEEN_VERSION_MINOR 0
-#define QWEEN_VERSION_REV   4
+#define QWEEN_VERSION_REV   5
 
 #define URLRXDATA "http://(?:(?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9])\\."\
            ")*(?:[a-zA-Z]|[a-zA-Z][-a-zA-Z0-9]*[a-zA-Z0-9])\\.?|[0-9]+\\.[0-9]+\\"\
