@@ -39,8 +39,25 @@ void SettingDialog::updateUi(){
     ui->edtPassword->setText(m_password);
     m_id = settings->userid();
     ui->edtUserid->setText(m_id);
+    //Color
     m_inputBgColor = settings->inputBgColor();
     setLineEditBgColor(ui->edtInputBgColorSample, m_inputBgColor);
+    m_atReplyColor = settings->atReplyColor();
+    setLineEditBgColor(ui->edtAtReplyColor, m_atReplyColor);
+    m_selUserColor = settings->selUserColor();
+    setLineEditBgColor(ui->edtSelUserColor, m_selUserColor);
+    m_selfColor = settings->selfColor();
+    ui->edtMyselfColor->setStyleSheet(QString(" *{color:rgb(%0,%1,%2);}")
+                                      .arg(m_selfColor.red())
+                                      .arg(m_selfColor.green())
+                                      .arg(m_selfColor.blue()));
+    m_replyToMeColor = settings->replyToMeColor();
+    setLineEditBgColor(ui->edtReplyToMeColor, m_replyToMeColor);
+    m_sel2ReplyColor = settings->sel2ReplyColor();
+    setLineEditBgColor(ui->edtSel2ReplyColor, m_sel2ReplyColor);
+    m_reply2SelColor = settings->reply2SelColor();
+    setLineEditBgColor(ui->edtReply2SelColor, m_reply2SelColor);
+
     ui->chkRequireCtrlOnEnter->setChecked(settings->requireCtrlOnEnter());
     ui->chkAutoShortenUri->setChecked(settings->uriAutoShorten());
     ui->edtStatusSuffix->setText(settings->statusSuffix());
@@ -61,7 +78,15 @@ void SettingDialog::accept(){
         settings->setUserid(ui->edtUserid->text());
         m_loginInfoChanged = true;
     }
+    //Color
     settings->setInputBgColor(m_inputBgColor);
+    settings->setAtReplyColor(m_atReplyColor);
+    settings->setSelUserColor(m_selUserColor);
+    settings->setReplyToMeColor(m_replyToMeColor);
+    settings->setSel2ReplyColor(m_sel2ReplyColor);
+    settings->setReply2SelColor(m_reply2SelColor);
+    settings->setSelfColor(m_selfColor);
+
     settings->setStatusSuffix(ui->edtStatusSuffix->text());
     settings->setRequireCtrlOnEnter(ui->chkRequireCtrlOnEnter->checkState() == Qt::Checked);
     settings->setUriAutoShorten(ui->chkAutoShortenUri->checkState() == Qt::Checked);
@@ -93,6 +118,14 @@ void SettingDialog::setLineEditBgColor(QLineEdit *edit, const QColor& color){
             .arg(color.blue()));
 }
 
+void SettingDialog::on_btnInputFont_clicked()
+{
+    QFontDialog dlg;
+    //dlg.setCurrentFont();
+    dlg.exec();
+}
+
+//TODO: なんだかここの羅列があまりにも芸がないので、専用のコントロール作ってバインドしたいところ
 void SettingDialog::on_btnInputBgColor_clicked()
 {
     QColorDialog dlg(this);
@@ -103,9 +136,65 @@ void SettingDialog::on_btnInputBgColor_clicked()
     }
 }
 
-void SettingDialog::on_btnInputFont_clicked()
+void SettingDialog::on_btnAtReplyColor_clicked()
 {
-    QFontDialog dlg;
-    //dlg.setCurrentFont();
-    dlg.exec();
+    QColorDialog dlg(this);
+    dlg.setCurrentColor(m_atReplyColor);
+    if(dlg.exec() == QDialog::Accepted){
+        setLineEditBgColor(ui->edtAtReplyColor, dlg.selectedColor());
+        m_atReplyColor = dlg.selectedColor();
+    }
+}
+
+void SettingDialog::on_btnSelUserColor_clicked()
+{
+    QColorDialog dlg(this);
+    dlg.setCurrentColor(m_selUserColor);
+    if(dlg.exec() == QDialog::Accepted){
+        setLineEditBgColor(ui->edtSelUserColor, dlg.selectedColor());
+        m_selUserColor = dlg.selectedColor();
+    }
+}
+
+void SettingDialog::on_btnMyselfColor_clicked()
+{
+    QColorDialog dlg(this);
+    dlg.setCurrentColor(m_selfColor);
+    if(dlg.exec() == QDialog::Accepted){
+        m_selfColor = dlg.selectedColor();
+        ui->edtMyselfColor->setStyleSheet(QString(" *{color:rgb(%0,%1,%2);}")
+                                          .arg(m_selfColor.red())
+                                          .arg(m_selfColor.green())
+                                          .arg(m_selfColor.blue()));
+    }
+}
+
+void SettingDialog::on_btnReplyToMeColor_clicked()
+{
+    QColorDialog dlg(this);
+    dlg.setCurrentColor(m_replyToMeColor);
+    if(dlg.exec() == QDialog::Accepted){
+        setLineEditBgColor(ui->edtReplyToMeColor, dlg.selectedColor());
+        m_replyToMeColor = dlg.selectedColor();
+    }
+}
+
+void SettingDialog::on_btnSel2ReplyColor_clicked()
+{
+    QColorDialog dlg(this);
+    dlg.setCurrentColor(m_sel2ReplyColor);
+    if(dlg.exec() == QDialog::Accepted){
+        setLineEditBgColor(ui->edtSel2ReplyColor, dlg.selectedColor());
+        m_sel2ReplyColor = dlg.selectedColor();
+    }
+}
+
+void SettingDialog::on_btnReply2SelColor_clicked()
+{
+    QColorDialog dlg(this);
+    dlg.setCurrentColor(m_reply2SelColor);
+    if(dlg.exec() == QDialog::Accepted){
+        setLineEditBgColor(ui->edtReply2SelColor, dlg.selectedColor());
+        m_reply2SelColor = dlg.selectedColor();
+    }
 }

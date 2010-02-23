@@ -39,6 +39,14 @@ void QweenSettings::load(){
     m_tlUpdateIntv = ini.value("interval/timeline", 60).toInt();
     m_replyUpdateIntv = ini.value("interval/reply", 240).toInt();
     m_dmUpdateIntv = ini.value("interval/dm", 600).toInt();
+
+    m_atReplyColor = ini.value("color/atreply",QColor(255,192,192)).value<QColor>();
+    m_selUserColor = ini.value("color/selecteduser",QColor(255,255,0)).value<QColor>();
+    m_replyToMeColor = ini.value("color/reply_to_me",QColor(255,192,255)).value<QColor>();
+    m_sel2ReplyColor = ini.value("color/selected2reply",QColor(192,192,255)).value<QColor>();
+    m_reply2SelColor = ini.value("color/reply2selected",QColor(192,255,192)).value<QColor>();
+    m_selfColor = ini.value("color/myself",QColor(255,0,0)).value<QColor>();
+
     //startup/recentpages
     //startup/replypages
     //startup/dmpages
@@ -73,6 +81,13 @@ void QweenSettings::save(){
     ini.setValue("input/replace_zenkaku_space", m_replaceZenkakuSpace);
     ini.setValue("input/divide_uri_from_zenkaku", m_divideUriFromZenkaku);
     ini.setValue("input/avoid_api", m_avoidApiCmd);
+
+    ini.setValue("color/atreply", m_atReplyColor);
+    ini.setValue("color/selecteduser", m_selUserColor);
+    ini.setValue("color/reply_to_me", m_replyToMeColor);
+    ini.setValue("color/selected2reply", m_sel2ReplyColor);
+    ini.setValue("color/reply2selected", m_reply2SelColor);
+    ini.setValue("color/myself", m_selfColor);
 }
 
 QString QweenSettings::inputStyle(){

@@ -37,6 +37,7 @@ class AbstractUriShortener;
 class UsersModel;
 class QCompleter;
 class QSortFilterProxyModel;
+class XAuth;
 class QweenMainWindow : public QMainWindow {
     Q_OBJECT
 public:
@@ -112,6 +113,7 @@ private:
 
     //DEBUG
     AbstractUriShortener *m_urisvc;
+    XAuth *m_xauth;
 
     //アイコンのダウンロードに使う
     QNetworkAccessManager *m_networkMan;
@@ -164,6 +166,12 @@ public slots:
     void OnActReplaceZenkakuSpaceToggled(bool);
 
 private slots:
+    void on_actionTest_xauth_triggered();
+    void on_actUnu_triggered();
+    void on_actTwurl_triggered();
+    void on_actBitly_triggered();
+    void on_actIsgd_triggered();
+    void on_actTinyURL_triggered();
     void on_actionTest_rx_triggered();
     void on_actionTest_url_triggered();
     void on_actionTest_network_triggered();
@@ -179,7 +187,6 @@ private slots:
     void on_actRemove_triggered();
     void on_actFollow_triggered();
     void on_actShowFriendships_triggered();
-    void on_actShortenUri_triggered();
     void on_actExplosion_triggered();
     void on_actCopyIdUri_triggered();
     void on_actCopyStot_triggered();

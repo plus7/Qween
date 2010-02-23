@@ -30,22 +30,20 @@ enum ATTR_TYPE {
 enum ROLE_TYPE {
     AVAILABLE_TRENDS,BLOCKING_IDS_BLOCKS,CREATE_BLOCK,CREATE_FAVORITE,CREATE_FRIENDSHIP,CREATE_SAVED_SEARCH,DELETE_LIST_ID,DELETE_LIST_MEMBER,DELETE_LIST_SUBSCRIBER,DESTROY,DESTROY_BLOCK,DESTROY_DIRECT_MESSAGE,DESTROY_FAVORITE,DESTROY_FRIENDSHIP,DESTROY_SAVED_SEARCH,DIRECT_MESSAGES,EXISTS_FRIENDSHIPS,FAVORITES,FOLLOW_NOTIFICATION,FOLLOWERS,FRIENDS,FRIENDS_TIMELINE,GET_LIST_ID,GET_LIST_MEMBERS,GET_LIST_MEMBERS_ID,GET_LIST_MEMBERSHIPS,GET_LIST_STATUSES,GET_LIST_SUBSCRIBERS,GET_LIST_SUBSCRIBERS_ID,GET_LIST_SUBSCRIPTIONS,GET_LISTS,HOME_TIMELINE,IDS_FOLLOWERS,IDS_FRIENDS,LEAVE_NOTIFICATION,LOCATION_TRENDS,MENTIONS,NEW_DIRECT_MESSAGE,POST_LIST,POST_LIST_MEMBER,POST_LIST_SUBSCRIBER,POST_LISTS_ID,PUBLIC_TIMELINE,RATE_LIMIT_STATUS,REPORT_SPAM,RETWEET,RETWEETED_BY_ME,RETWEETED_TO_ME,RETWEETS,RETWEETS_OF_ME,SAVED_SEARCHES,SEARCH_USERS,SENT_DIRECT_MESSAGES,SHOW,SHOW_FRIENDSHIPS,SHOW_SAVED_SEARCH,SHOW_USERS,TEST_HELP,UPDATE,UPDATE_DELIVERY_DEVICE,UPDATE_PROFILE,UPDATE_PROFILE_BACKGROUND_IMAGE,UPDATE_PROFILE_COLOR,UPDATE_PROFILE_IMAGE,USER_TIMELINE,VERIFY_CREDENTIALS
 };
-
+class XAuth;
 class Petrel : public QObject
 {
     Q_OBJECT
 public:
     Petrel(const QString& userid, const QString& pass);
-    void setLoginInfo(const QString& userid, const QString& pass){
-        m_userid = userid;
-        m_pass = pass;
-    }
+    void setLoginInfo(const QString& userid, const QString& pass, bool xauth);
     void abort(){
         foreach(QNetworkReply *r, m_replies){
             r->abort();
         }
         m_replies.clear();
     }
+    bool useXAuth() const { return m_useXAuth; }
 
     virtual ~Petrel();
     //BEGIN auto generated methods
@@ -117,8 +115,8 @@ public:
     void verifyCredentials();
     //END auto generated methods
     void issueGetRequest(QNetworkRequest& req);
-    void issuePostRequest(QNetworkRequest& req, QByteArray& data);
-    void issuePutRequest(QNetworkRequest& req, QByteArray& data);
+    void issuePostRequest(QNetworkRequest& req);
+    void issuePutRequest(QNetworkRequest& req);
     void issueDeleteRequest(QNetworkRequest& req);
 signals:
     //BEGIN auto generated signals
@@ -194,11 +192,16 @@ signals:
 
 public slots:
     void replyFinished( QNetworkReply* );
+    void accessKeyReceived();
 private:
     QNetworkAccessManager *m_manager;
     QList<QNetworkReply*> m_replies;
     QString m_userid;
     QString m_pass;
+    bool m_useXAuth;
+    XAuth *m_xauth;
+    int m_xauth_limit;
+    int m_xauth_remaining;
 };
 
 #endif // PETREL_H

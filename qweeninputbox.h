@@ -40,7 +40,7 @@ public:
     void setUriShortenSvc(const QString& name);
     QString getUriShortenSvc(){ return m_shortenSvcName; }
 
-    void shortenUri();
+    void shortenUri(const QString& svcName = "");
     void doShorten();
 signals:
     void uriShorteningFinished();

@@ -34,11 +34,12 @@
 #include "forwardruledialog.h"
 #include "usersmodel.h"
 #include "const.h"
+#include "xauth.h"
 
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::QweenMainWindow),m_firstShow(true),m_postAfterShorten(false),m_usersModel(NULL),
-    m_completer(NULL), m_urisvc(NULL), m_networkMan(NULL), m_idAsUInt64(0), m_in_reply_to_status_id(0), m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),
+    m_completer(NULL), m_urisvc(NULL), m_xauth(NULL), m_networkMan(NULL), m_idAsUInt64(0), m_in_reply_to_status_id(0), m_newestFriendsStatus(0),m_newestRecvDM(0),m_newestSentDM(0),
     m_newestReply(0),m_newestFav(0)
 {
     ui->setupUi(this);
@@ -233,8 +234,7 @@ void QweenMainWindow::setupTrayIcon(){
 void QweenMainWindow::setupTwitter(){
     m_petrelLib->abort();
     //m_twitLib->Logout(); TODO: EndSessionで置き換える
-    m_petrelLib->setLoginInfo(settings->userid(), settings->password());
-    m_petrelLib->verifyCredentials();
+    m_petrelLib->setLoginInfo(settings->userid(), settings->password(),true);
 }
 
 void QweenMainWindow::makeConnections(){
@@ -462,6 +462,7 @@ void QweenMainWindow::OnError(int role, QDomElement elm){
         break;
       }
     default:
+        QMessageBox::information(this,"error",elm.toText().nodeValue());
         break;
     }
 }
@@ -505,7 +506,7 @@ void QweenMainWindow::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event)
     if(isNetworkAvailable() && m_firstShow){
-        m_petrelLib->verifyCredentials();
+        //m_petrelLib->verifyCredentials();
         m_firstShow = false;
     //TODO: version check
     /*
@@ -881,11 +882,6 @@ void QweenMainWindow::on_actExplosion_triggered()
     QMessageBox::information(this, tr("ゴルァ"), tr("だからやめれっての"));
 }
 
-void QweenMainWindow::on_actShortenUri_triggered()
-{
-    ui->statusText->shortenUri();
-}
-
 void QweenMainWindow::OnActDivideUriFromZenkakuToggled(bool val){
     settings->setDivideUriFromZenkaku(val);
 }
@@ -1032,4 +1028,34 @@ void QweenMainWindow::on_actionTest_rx_triggered()
         list << rx1.cap(i);
     }
     QMessageBox::information(this,"",QString::number(rx1.captureCount(),10) + ":" + list.join(" & "));
+}
+
+void QweenMainWindow::on_actTinyURL_triggered()
+{
+    ui->statusText->shortenUri("tinyurl");
+}
+
+void QweenMainWindow::on_actIsgd_triggered()
+{
+    ui->statusText->shortenUri("isgd");
+}
+
+void QweenMainWindow::on_actBitly_triggered()
+{
+    ui->statusText->shortenUri("bitly");
+}
+
+void QweenMainWindow::on_actTwurl_triggered()
+{
+    ui->statusText->shortenUri("twurl");
+}
+
+void QweenMainWindow::on_actUnu_triggered()
+{
+    ui->statusText->shortenUri("unu");
+}
+
+void QweenMainWindow::on_actionTest_xauth_triggered()
+{
+    //残骸 TODO:削除?
 }

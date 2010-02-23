@@ -101,21 +101,21 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
         if(this->baseIndex() >= 0){
             Twitter::TwitterItem baseItem = itemAt(baseIndex());
             if(item->id() == baseItem.inReplyToId())
-                return QBrush(QColor(255,192,192)); //@先
+                return QBrush(QweenSettings::globalSettings()->atReplyColor()); //@先
             else if(baseItem.userId() == item->userId())
-                return QBrush(QColor(255,255,0));
+                return QBrush(QweenSettings::globalSettings()->selUserColor());
             //else if(item->screenName() == baseItem.screenName())
             //    return QBrush(QColor(192,255,192));
             else if(item->replyToList().indexOf(QweenSettings::globalSettings()->userid())>=0)
-                return QBrush(QColor(255,192,255));
+                return QBrush(QweenSettings::globalSettings()->replyToMeColor());
             else if(baseItem.replyToList().indexOf(item->screenName())>=0)
-                return QBrush(QColor(192,192,255));
+                return QBrush(QweenSettings::globalSettings()->sel2ReplyColor());
             else if(item->replyToList().indexOf(baseItem.screenName())>=0)
-                return QBrush(QColor(192,255,192));
+                return QBrush(QweenSettings::globalSettings()->reply2SelColor());
         }
     }else if(role == Qt::ForegroundRole){
         if(item->userId() == myId())
-            return QBrush(QColor(255,0,0));
+            return QBrush(QweenSettings::globalSettings()->selfColor());
     }
     return QVariant();
 }

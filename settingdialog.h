@@ -46,10 +46,22 @@ private:
     Ui::SettingDialog *ui;
     QweenSettings *settings;
     QColor m_inputBgColor;
+    QColor m_atReplyColor;
+    QColor m_selUserColor;
+    QColor m_replyToMeColor;
+    QColor m_sel2ReplyColor;
+    QColor m_reply2SelColor;
+    QColor m_selfColor;
     QString m_password;
     QString m_id;
     bool m_loginInfoChanged;
 private slots:
+    void on_btnReply2SelColor_clicked();
+    void on_btnSel2ReplyColor_clicked();
+    void on_btnReplyToMeColor_clicked();
+    void on_btnMyselfColor_clicked();
+    void on_btnSelUserColor_clicked();
+    void on_btnAtReplyColor_clicked();
     void on_btnInputFont_clicked();
     void on_btnInputBgColor_clicked();
 };

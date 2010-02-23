@@ -10,6 +10,7 @@ TARGET = Qween
 TEMPLATE = app
 INCLUDEPATH += ./shorturi
 DEPENDPATH += ./shorturi
+LIBS += -lssl
 
 # Kilroy was here
 SOURCES += main.cpp \
@@ -37,7 +38,10 @@ SOURCES += main.cpp \
     usersmodel.cpp \
     hashtagmodel.cpp \
     petrel/petrel.cpp \
-    petrel/types_impl.cpp
+    petrel/types_impl.cpp \
+    shorturi/shorturicache.cpp \
+    xauth.cpp \
+    util.cpp
 HEADERS += qweenmainwindow.h \
     twitter.h \
     qweensettings.h \
@@ -69,7 +73,10 @@ HEADERS += qweenmainwindow.h \
     usersmodel.h \
     hashtagmodel.h \
     petrel/petrel.h \
-    petrel/types.h
+    petrel/types.h \
+    shorturi/shorturicache.h \
+    xauth.h \
+    util.h
 FORMS += qweenmainwindow.ui \
     aboutdialog.ui \
     settingdialog.ui \

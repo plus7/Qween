@@ -50,11 +50,19 @@ QCompleter* QweenInputBox::completer() const { return m_completer; }
 
 void QweenInputBox::setUriShortenSvc(const QString& name){
     if(m_uriShortenSvc) {
+        disconnect(m_uriShortenSvc, SIGNAL(uriShortened(QString,QString)),
+                this, SLOT(OnUriShortened(QString,QString)));
+        disconnect(m_uriShortenSvc, SIGNAL(failed(QString,int)),
+                this, SLOT(OnUriShorteningFailed(QString,int)));
         delete m_uriShortenSvc;
         m_uriShortenSvc = NULL;
     }
     m_shortenSvcName = name;
     m_uriShortenSvc = getUriShortenService(m_shortenSvcName, this);
+    connect(m_uriShortenSvc, SIGNAL(uriShortened(QString,QString)),
+            this, SLOT(OnUriShortened(QString,QString)));
+    connect(m_uriShortenSvc, SIGNAL(failed(QString,int)),
+            this, SLOT(OnUriShorteningFailed(QString,int)));
 }
 
 void QweenInputBox::insertCompletion(const QString& completion)
@@ -164,6 +172,7 @@ void QweenInputBox::keyPressEvent(QKeyEvent *event)
 void QweenInputBox::doShorten(){
     QRegExp rx(URLRXDATA);
     int begin;
+    if(!m_uriShortenSvc) return;
     if((begin=rx.indexIn(text(),m_pos))!=-1){
         m_pos = begin;
         m_uriShortenSvc->shortenAsync(rx.capturedTexts().at(0));
@@ -174,7 +183,11 @@ void QweenInputBox::doShorten(){
     }
 }
 
-void QweenInputBox::shortenUri(){
+void QweenInputBox::shortenUri(const QString& svcName){
+    if(svcName.isEmpty())
+        setUriShortenSvc("bitly");
+    else
+        setUriShortenSvc(svcName);
     this->setEnabled(false);
     doShorten();
 }

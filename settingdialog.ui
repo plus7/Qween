@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -459,7 +459,7 @@
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>【急募】牛肉</string>
+            <string>Haskell Curry</string>
            </property>
           </widget>
          </item>
@@ -476,47 +476,47 @@
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>RT @someone: 【急募】 牛肉</string>
+            <string>Alan Turing</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <widget class="QLineEdit" name="edtMyselfColor">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>Stephen Cook</string>
            </property>
           </widget>
          </item>
          <item row="10" column="1">
-          <widget class="QLineEdit" name="lineEdit_8">
+          <widget class="QLineEdit" name="edtReplyToMeColor">
            <property name="enabled">
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>回鍋肉うめえ</string>
+            <string>Charles Babbage</string>
            </property>
           </widget>
          </item>
          <item row="11" column="1">
-          <widget class="QLineEdit" name="lineEdit_9">
+          <widget class="QLineEdit" name="edtSel2ReplyColor">
            <property name="enabled">
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>@me あそこの回鍋肉うまいね</string>
+            <string>Alan Kay</string>
            </property>
           </widget>
          </item>
-         <item row="12" column="1">
-          <widget class="QLineEdit" name="lineEdit_10">
+         <item row="13" column="1">
+          <widget class="QLineEdit" name="edtReply2SelColor">
            <property name="enabled">
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>あの店は炸醤麺もおすすめ</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="1">
-          <widget class="QLineEdit" name="lineEdit_11">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="text">
-            <string>@friend こんど試してみるわ</string>
+            <string>Edsger Dijkstra</string>
            </property>
           </widget>
          </item>
@@ -540,10 +540,20 @@
            </property>
           </widget>
          </item>
-         <item row="10" column="2">
-          <widget class="QPushButton" name="pushButton_4">
+         <item row="9" column="2">
+          <widget class="QPushButton" name="btnMyselfColor">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
+           </property>
+           <property name="text">
+            <string>色</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="2">
+          <widget class="QPushButton" name="btnReplyToMeColor">
+           <property name="enabled">
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>背景色</string>
@@ -551,105 +561,71 @@
           </widget>
          </item>
          <item row="11" column="2">
-          <widget class="QPushButton" name="pushButton_5">
+          <widget class="QPushButton" name="btnSel2ReplyColor">
            <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>フォント</string>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="2">
-          <widget class="QPushButton" name="pushButton_6">
-           <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>背景色</string>
            </property>
           </widget>
          </item>
-         <item row="14" column="2">
-          <widget class="QPushButton" name="pushButton_7">
+         <item row="13" column="2">
+          <widget class="QPushButton" name="btnReply2SelColor">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
-            <string>フォント</string>
+            <string>背景色</string>
            </property>
           </widget>
          </item>
-         <item row="10" column="0">
+         <item row="9" column="0">
           <widget class="QLabel" name="label_15">
            <property name="text">
             <string>自分</string>
            </property>
           </widget>
          </item>
-         <item row="11" column="0">
+         <item row="10" column="0">
           <widget class="QLabel" name="label_16">
            <property name="text">
             <string>自分への@返信</string>
            </property>
           </widget>
          </item>
-         <item row="12" column="0">
+         <item row="11" column="0">
           <widget class="QLabel" name="label_17">
            <property name="text">
-            <string>返信してきた人</string>
+            <string>選択中の発言で話かけている人</string>
            </property>
           </widget>
          </item>
-         <item row="14" column="0">
+         <item row="13" column="0">
           <widget class="QLabel" name="label_18">
            <property name="text">
-            <string>返信してきた人への返信</string>
+            <string>選択中の発言の人に絡んでいる人</string>
            </property>
           </widget>
          </item>
-         <item row="8" column="0">
+         <item row="7" column="0">
           <widget class="QLabel" name="label_24">
            <property name="text">
-            <string>選択中の発言の@先の人</string>
+            <string>選択中の発言の人</string>
            </property>
           </widget>
          </item>
-         <item row="8" column="1">
-          <widget class="QLineEdit" name="lineEdit_4">
+         <item row="7" column="1">
+          <widget class="QLineEdit" name="edtSelUserColor">
            <property name="text">
-            <string>神戸でも可</string>
+            <string>Claude Shannon</string>
            </property>
           </widget>
          </item>
-         <item row="8" column="2">
-          <widget class="QPushButton" name="pushButton_8">
+         <item row="7" column="2">
+          <widget class="QPushButton" name="btnSelUserColor">
            <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>背景色</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="label_25">
-           <property name="text">
-            <string>選択中の発言</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLineEdit" name="lineEdit_14">
-           <property name="text">
-            <string>@someone 三重県逝け</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2">
-          <widget class="QPushButton" name="pushButton_9">
-           <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>背景色</string>
@@ -659,66 +635,66 @@
          <item row="5" column="0">
           <widget class="QLabel" name="label_23">
            <property name="text">
-            <string>選択中の発言の@先</string>
+            <string>選択中の発言の明示的な@先</string>
            </property>
           </widget>
          </item>
          <item row="5" column="1">
-          <widget class="QLineEdit" name="lineEdit_3">
+          <widget class="QLineEdit" name="edtAtReplyColor">
            <property name="text">
-            <string>【急募】牛肉</string>
+            <string>Alonzo Church</string>
            </property>
           </widget>
          </item>
          <item row="5" column="2">
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="btnAtReplyColor">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
-            <string>フォント</string>
+            <string>背景色</string>
            </property>
           </widget>
          </item>
-         <item row="17" column="0">
+         <item row="16" column="0">
           <widget class="QLabel" name="label_10">
            <property name="text">
             <string>入力欄アクティブ時背景色</string>
            </property>
           </widget>
          </item>
-         <item row="17" column="1">
+         <item row="16" column="1">
           <widget class="QLineEdit" name="edtInputBgColorSample">
            <property name="text">
-            <string>ATOKは快適だなあ</string>
+            <string>Edgar Codd</string>
            </property>
           </widget>
          </item>
-         <item row="17" column="2">
+         <item row="16" column="2">
           <widget class="QPushButton" name="btnInputBgColor">
            <property name="text">
             <string>背景色</string>
            </property>
           </widget>
          </item>
-         <item row="18" column="0">
+         <item row="17" column="0">
           <widget class="QLabel" name="label_11">
            <property name="text">
             <string>入力欄フォント</string>
            </property>
           </widget>
          </item>
-         <item row="18" column="1">
+         <item row="17" column="1">
           <widget class="QLineEdit" name="edtInputFontSample">
            <property name="enabled">
             <bool>true</bool>
            </property>
            <property name="text">
-            <string>ATOKは快適だなあ</string>
+            <string>itojun</string>
            </property>
           </widget>
          </item>
-         <item row="18" column="2">
+         <item row="17" column="2">
           <widget class="QPushButton" name="btnInputFont">
            <property name="enabled">
             <bool>false</bool>
@@ -728,7 +704,7 @@
            </property>
           </widget>
          </item>
-         <item row="19" column="0">
+         <item row="18" column="0">
           <spacer name="verticalSpacer_2">
            <property name="orientation">
             <enum>Qt::Vertical</enum>

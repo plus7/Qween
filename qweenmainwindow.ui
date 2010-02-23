@@ -345,7 +345,17 @@
     <property name="title">
      <string>その他機能(&amp;C)</string>
     </property>
-    <addaction name="actShortenUri"/>
+    <widget class="QMenu" name="menu_URL">
+     <property name="title">
+      <string>入力欄のURLを短縮変換</string>
+     </property>
+     <addaction name="actTinyURL"/>
+     <addaction name="actIsgd"/>
+     <addaction name="actBitly"/>
+     <addaction name="actTwurl"/>
+     <addaction name="actUnu"/>
+    </widget>
+    <addaction name="menu_URL"/>
     <addaction name="action_22"/>
     <addaction name="actionBlackFav"/>
     <addaction name="separator"/>
@@ -370,6 +380,7 @@
      <addaction name="actionTest_network"/>
      <addaction name="actionTest_url"/>
      <addaction name="actionTest_rx"/>
+     <addaction name="actionTest_xauth"/>
     </widget>
     <addaction name="actQweenHomepage"/>
     <addaction name="separator"/>
@@ -657,11 +668,6 @@
     <string>タブ削除(&amp;D)</string>
    </property>
   </action>
-  <action name="actShortenUri">
-   <property name="text">
-    <string>入力欄のURLを短縮変換</string>
-   </property>
-  </action>
   <action name="action_22">
    <property name="enabled">
     <bool>false</bool>
@@ -866,6 +872,36 @@
   <action name="actionTest_rx">
    <property name="text">
     <string>クリーネ・エターナル・コンバッション</string>
+   </property>
+  </action>
+  <action name="actTinyURL">
+   <property name="text">
+    <string>TinyURL</string>
+   </property>
+  </action>
+  <action name="actIsgd">
+   <property name="text">
+    <string>is.gd</string>
+   </property>
+  </action>
+  <action name="actBitly">
+   <property name="text">
+    <string>bit.ly</string>
+   </property>
+  </action>
+  <action name="actTwurl">
+   <property name="text">
+    <string>twurl.nl</string>
+   </property>
+  </action>
+  <action name="actUnu">
+   <property name="text">
+    <string>u.nu</string>
+   </property>
+  </action>
+  <action name="actionTest_xauth">
+   <property name="text">
+    <string>凶箱</string>
    </property>
   </action>
  </widget>

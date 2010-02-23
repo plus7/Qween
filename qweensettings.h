@@ -49,6 +49,12 @@ private:
     bool m_divideUriFromZenkaku;
     bool m_avoidApiCmd;
 
+    QColor m_atReplyColor;
+    QColor m_selUserColor;
+    QColor m_replyToMeColor;
+    QColor m_sel2ReplyColor;
+    QColor m_reply2SelColor;
+    QColor m_selfColor;
 public:
     explicit QweenSettings(QObject *parent = 0);
 
@@ -109,6 +115,19 @@ public:
     void setAvoidApiCmd(bool val) { m_avoidApiCmd = val; }
 
     QString statusViewStyle() { return "margin:0px;padding:0px;font-size:12px;"; } //stub monospaceとかの設定を反映する
+
+    QColor atReplyColor(){ return m_atReplyColor; }
+    QColor selUserColor(){ return m_selUserColor; }
+    QColor replyToMeColor(){ return m_replyToMeColor; }
+    QColor sel2ReplyColor(){ return m_sel2ReplyColor; }
+    QColor reply2SelColor(){ return m_reply2SelColor; }
+    QColor selfColor(){ return m_selfColor; }
+    void setAtReplyColor(const QColor& color){ m_atReplyColor = color; }
+    void setSelUserColor(const QColor& color){ m_selUserColor = color; }
+    void setReplyToMeColor(const QColor& color){ m_replyToMeColor = color; }
+    void setSel2ReplyColor(const QColor& color){ m_sel2ReplyColor = color; }
+    void setReply2SelColor(const QColor& color){ m_reply2SelColor = color; }
+    void setSelfColor(const QColor& color)     { m_selfColor = color; }
 
     static QweenSettings* globalSettings();
 
