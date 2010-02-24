@@ -128,6 +128,12 @@ void QweenMainWindow::makeWidgets(){
 void QweenMainWindow::applySettings(){
     ui->statusText->setStyleSheet(settings->inputStyle());
     ui->statusText->setRequireCtrlOnEnter(settings->requireCtrlOnEnter());
+    int size = settings->iconSize()*8 + 8;
+    if(size==8) size=0;
+    for(int i=0;i<tabWidget->count();i++){
+        TimelineView* view = tabWidget->timelineView(i);
+        view->setIconSize(QSize(size,size));
+    }
     updateWindowTitle();
     updateTrayIconTitle();
     setupTimers();

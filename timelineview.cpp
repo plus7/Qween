@@ -17,6 +17,7 @@
 */
 
 #include "timelineview.h"
+#include "qweensettings.h"
 #include <QtXml>
 TimelineView::TimelineView(QWidget *parent) :
     QTreeView(parent),m_myId(0)
@@ -25,6 +26,9 @@ TimelineView::TimelineView(QWidget *parent) :
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setRootIsDecorated(false);
     setAlternatingRowColors(true);
+    int size = QweenSettings::globalSettings()->iconSize()*8 + 8;
+    if(size==8) size=0;
+    setIconSize(QSize(size,size));
 }
 
 

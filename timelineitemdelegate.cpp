@@ -20,6 +20,7 @@
 #include "timelinemodel.h"
 #include "twitter.h"
 #include "iconmanager.h"
+#include "qweensettings.h"
 #include <QtGui>
 
 TimelineItemDelegate::TimelineItemDelegate(IconManager *iconMgr, QWidget *parent) :
@@ -38,10 +39,12 @@ void TimelineItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
         myOption.font.setBold(true);
 
     if(index.row() == item->parent()->baseIndex()){
-        myOption.decorationSize.setHeight(16);
-        myOption.decorationSize.setWidth(16);
         //myOption.palette.setColor(QPalette::Highlight, QColor(255,255,0));
     }
+    /*int size = QweenSettings::globalSettings()->iconSize()*8+8;
+    myOption.decorationSize.setHeight(size);
+    myOption.decorationSize.setWidth(size);
+    myOption.rect.setHeight(qMax(myOption.rect.height(),size));*/
     QStyledItemDelegate::paint(painter, myOption, index);
 }
 
