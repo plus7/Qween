@@ -55,6 +55,17 @@ private:
     QColor m_sel2ReplyColor;
     QColor m_reply2SelColor;
     QColor m_selfColor;
+
+    //view
+    int m_notifyBaloonName;
+    bool m_showUserInTitle;
+    bool m_notifyOnlyMinimized;
+    int m_showWhatInTitle;
+    QString m_dateTimeFormat;
+    int m_iconSize;
+    bool m_showUnreadIconInTab;
+    bool m_setReadMyPost;
+
 public:
     explicit QweenSettings(QObject *parent = 0);
 
@@ -128,6 +139,31 @@ public:
     void setSel2ReplyColor(const QColor& color){ m_sel2ReplyColor = color; }
     void setReply2SelColor(const QColor& color){ m_reply2SelColor = color; }
     void setSelfColor(const QColor& color)     { m_selfColor = color; }
+
+
+    int notifyBaloonName(){ return m_notifyBaloonName; }
+    void setNotifyBaloonName(int value){ m_notifyBaloonName = value; }
+
+    bool showUserInTitle(){ return m_showUserInTitle; }
+    void setShowUserInTitle(bool value){ m_showUserInTitle = value; }
+
+    bool notifyOnlyMinimized(){ return m_notifyOnlyMinimized; }
+    void setNotifyOnlyMinimized(bool value){ m_notifyOnlyMinimized = value; }
+
+    int showWhatInTitle(){ return m_showWhatInTitle; }
+    void setShowWhatInTitle(int value){ m_showWhatInTitle = value; }
+
+    QString dateTimeFormat(){ return m_dateTimeFormat; }
+    void setDateTimeFormat(const QString& value){ m_dateTimeFormat = value; }
+
+    int iconSize(){ return m_iconSize; }
+    void setIconSize(int value){ m_iconSize = value; }
+
+    bool showUnreadIconInTab(){ return m_showUnreadIconInTab; }
+    void setShowUnreadIconInTab(bool value){ m_showUnreadIconInTab = value; }
+
+    bool setReadMyPost(){ return m_setReadMyPost; }
+    void setSetReadMyPost(bool value){ m_setReadMyPost = value; }
 
     static QweenSettings* globalSettings();
 

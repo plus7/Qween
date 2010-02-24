@@ -60,6 +60,15 @@ void QweenSettings::load(){
     m_divideUriFromZenkaku = ini.value("input/divide_uri_from_zenkaku", QVariant(false)).toBool();
     m_avoidApiCmd = ini.value("input/avoid_api", QVariant(true)).toBool();
 
+    m_notifyBaloonName = ini.value("view/name_in_baloon", QVariant(2)).toInt();
+    m_showUserInTitle = ini.value("view/show_user_in_title", QVariant(false)).toBool();
+    m_notifyOnlyMinimized = ini.value("view/notify_only_min", QVariant(true)).toBool();
+    m_showWhatInTitle = ini.value("view/show_what_in_title", QVariant(2)).toInt();
+    m_dateTimeFormat = ini.value("view/datetime_fmt", QVariant("yyyy/MM/dd H:mm:ss")).toString();
+    m_iconSize = ini.value("view/iconsize", QVariant(1)).toInt();
+    m_showUnreadIconInTab = ini.value("view/unread_icon_tab", QVariant(true)).toBool();
+    m_setReadMyPost = ini.value("view/set_read_my_post", QVariant(true)).toBool();
+
 }
 
 void QweenSettings::save(){
@@ -88,6 +97,15 @@ void QweenSettings::save(){
     ini.setValue("color/selected2reply", m_sel2ReplyColor);
     ini.setValue("color/reply2selected", m_reply2SelColor);
     ini.setValue("color/myself", m_selfColor);
+
+    ini.setValue("view/name_in_baloon", m_notifyBaloonName);
+    ini.setValue("view/show_user_in_title", m_showUserInTitle);
+    ini.setValue("view/notify_only_min", m_notifyOnlyMinimized);
+    ini.setValue("view/show_what_in_title", m_showWhatInTitle);
+    ini.setValue("view/datetime_fmt", m_dateTimeFormat);
+    ini.setValue("view/iconsize", m_iconSize);
+    ini.setValue("view/unread_icon_tab", m_showUnreadIconInTab);
+    ini.setValue("view/set_read_my_post", m_setReadMyPost);
 }
 
 QString QweenSettings::inputStyle(){

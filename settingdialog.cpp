@@ -58,6 +58,16 @@ void SettingDialog::updateUi(){
     m_reply2SelColor = settings->reply2SelColor();
     setLineEditBgColor(ui->edtReply2SelColor, m_reply2SelColor);
 
+    //view
+    ui->cboNotifyBaloonName->setCurrentIndex(settings->notifyBaloonName());
+    ui->chkShowUserInTitle->setChecked(settings->showUserInTitle());
+    ui->chkNotifyOnlyMin->setChecked(settings->notifyOnlyMinimized());
+    ui->cboShowWhatInTitle->setCurrentIndex(settings->showWhatInTitle());
+    ui->cboDateTimeFmt->setEditText(settings->dateTimeFormat());
+    ui->cboIconSize->setCurrentIndex(settings->iconSize());
+    ui->chkShowUnreadIcon->setChecked(settings->showUnreadIconInTab());
+    ui->chkSetReadMyPost->setChecked(settings->setReadMyPost());
+
     ui->chkRequireCtrlOnEnter->setChecked(settings->requireCtrlOnEnter());
     ui->chkAutoShortenUri->setChecked(settings->uriAutoShorten());
     ui->edtStatusSuffix->setText(settings->statusSuffix());
@@ -86,6 +96,16 @@ void SettingDialog::accept(){
     settings->setSel2ReplyColor(m_sel2ReplyColor);
     settings->setReply2SelColor(m_reply2SelColor);
     settings->setSelfColor(m_selfColor);
+
+    //view
+    settings->setNotifyBaloonName(ui->cboNotifyBaloonName->currentIndex());
+    settings->setShowUserInTitle(ui->chkShowUserInTitle->checkState() == Qt::Checked);
+    settings->setNotifyOnlyMinimized(ui->chkNotifyOnlyMin->checkState() == Qt::Checked);
+    settings->setShowWhatInTitle(ui->cboShowWhatInTitle->currentIndex());
+    settings->setDateTimeFormat(ui->cboDateTimeFmt->lineEdit()->text());
+    settings->setIconSize(ui->cboIconSize->currentIndex());
+    settings->setShowUnreadIconInTab(ui->chkShowUnreadIcon->checkState() == Qt::Checked);
+    settings->setSetReadMyPost(ui->chkSetReadMyPost->checkState() == Qt::Checked);
 
     settings->setStatusSuffix(ui->edtStatusSuffix->text());
     settings->setRequireCtrlOnEnter(ui->chkRequireCtrlOnEnter->checkState() == Qt::Checked);

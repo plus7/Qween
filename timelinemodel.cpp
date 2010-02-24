@@ -58,7 +58,7 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
             return item->status();
             break;
         case 2:
-            return item->createdAt();
+            return item->createdAt().toLocalTime().toString(QweenSettings::globalSettings()->dateTimeFormat());
             break;
         case 3:
             if(item->favorited()){

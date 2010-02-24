@@ -60,9 +60,12 @@ private:
     void doPost();
     void postOutputz(const QString& str);
     void makeReplyOrDirectStatus(bool isAuto, bool isReply, bool isAll);
-
     int getRestStatusCount(const QString& str, bool footer = true);
-
+    void doFollowCommand(const QString& name);
+    void doRemoveCommand(const QString& name);
+    void doFriendshipCommand(const QString& name);
+    void updateWindowTitle();
+    void updateTrayIconTitle();
 
 protected:
     void changeEvent(QEvent *e);
@@ -130,6 +133,9 @@ private:
     //詳細表示しているitem
     Twitter::TwitterItem m_detailItem;
 
+    //最新の自発言
+    QString m_latestMyPost;
+
 public slots:
     void OnError(int role, QDomElement elm);
     void OnExit();
@@ -164,6 +170,9 @@ public slots:
     void OnActAvoidApiCommandToggled(bool);
     void OnActAutoShortenUriToggled(bool);
     void OnActReplaceZenkakuSpaceToggled(bool);
+    void OnFollowCommand(const QString& name);
+    void OnRemoveCommand(const QString& name);
+    void OnFriendshipCommand(const QString& name);
 
 private slots:
     void on_actionTest_xauth_triggered();

@@ -172,7 +172,7 @@
               </layout>
              </item>
              <item>
-              <widget class="QTextBrowser" name="textBrowser">
+              <widget class="StatusBrowser" name="textBrowser">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -911,6 +911,11 @@
    <class>QweenInputBox</class>
    <extends>QLineEdit</extends>
    <header>qweeninputbox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>StatusBrowser</class>
+   <extends>QTextBrowser</extends>
+   <header>statusbrowser.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

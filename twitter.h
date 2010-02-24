@@ -93,19 +93,19 @@ namespace Twitter{
             }
         }
 
-        QString createdAt() const {
+        QDateTime createdAt() const {
             switch(m_type){
             case Twitter::Status:
-                return m_statusPtr->created_at.toString();
+                return m_statusPtr->created_at;
                 break;
             case Twitter::DirectMessage:
-                return m_dmPtr->created_at.toString();
+                return m_dmPtr->created_at;
                 break;
             case Twitter::BasicUserInfo:
-                return m_userPtr->status->created_at.toString();
+                return m_userPtr->status->created_at;
                 break;
             default:
-                return QString();
+                return QDateTime();
             }
         }
 

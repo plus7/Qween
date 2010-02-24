@@ -22,6 +22,7 @@
 #include <QHeaderView>
 #include "qweentabctrl.h"
 #include "qweenapplication.h"
+#include "qweensettings.h"
 #include "tabinfo.h"
 #include "timelinemodel.h"
 #include "timelineview.h"
@@ -161,6 +162,8 @@ void QweenTabCtrl::fixLackingTabs(){
 }
 
 void QweenTabCtrl::addItem(Twitter::TwitterItem item){
+    if(QweenSettings::globalSettings()->setReadMyPost() &&
+       item.screenName() == QweenSettings::globalSettings()->userid()) item.setRead(true);
     switch(item.origin()){
     case HOME_TIMELINE:
         if(m_homeView) m_homeView->model()->appendItem(item);

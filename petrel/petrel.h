@@ -44,6 +44,8 @@ public:
         m_replies.clear();
     }
     bool useXAuth() const { return m_useXAuth; }
+    QString userid(){ return m_userid; }
+    QString pass(){ return m_pass; }
 
     virtual ~Petrel();
     //BEGIN auto generated methods
@@ -189,7 +191,6 @@ signals:
     //END auto generated signals
 
     void error(int role, QDomElement elm);
-
 public slots:
     void replyFinished( QNetworkReply* );
     void accessKeyReceived();

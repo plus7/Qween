@@ -49,8 +49,8 @@ void Petrel::issueGetRequest(QNetworkRequest& req){
 }
 
 void Petrel::issuePostRequest(QNetworkRequest& req){
-    QMessageBox::information(NULL, "", QString(req.url().toEncoded()));
-    QUrl url(req.url().toString().replace("#","%23"));
+    //QMessageBox::information(NULL, "", QString(req.url().toEncoded()));
+    QUrl url(req.url().toString().replace("#","%23")); //FIXME
     if(m_useXAuth){
         QString sig = m_xauth->getSignature("POST", url);
         req.setRawHeader( "Authorization", sig.prepend( "OAuth " ).toAscii() );

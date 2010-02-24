@@ -55,6 +55,7 @@ private:
     QString m_password;
     QString m_id;
     bool m_loginInfoChanged;
+
 private slots:
     void on_btnReply2SelColor_clicked();
     void on_btnSel2ReplyColor_clicked();

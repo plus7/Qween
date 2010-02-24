@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -388,16 +388,6 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QCheckBox" name="checkBox_5">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>Fav結果の厳密チェック（通信量が増えるため非推奨）</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QCheckBox" name="checkBox_6">
            <property name="enabled">
             <bool>false</bool>
@@ -438,6 +428,236 @@
       <attribute name="title">
        <string>表示</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <layout class="QFormLayout" name="formLayout_5">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>新着バルーンのユーザー名</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="cboNotifyBaloonName">
+           <property name="currentIndex">
+            <number>2</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>なし</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ユーザーID</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>ニックネーム</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_25">
+           <property name="text">
+            <string>タイトルバーとツールチップ</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QCheckBox" name="chkShowUserInTitle">
+           <property name="text">
+            <string>ユーザー名を表示</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_26">
+           <property name="text">
+            <string>バルーン表示制限</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QCheckBox" name="chkNotifyOnlyMin">
+           <property name="text">
+            <string>画面最小化・アイコン時のみ表示</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_27">
+           <property name="text">
+            <string>タイトルバー</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QComboBox" name="cboShowWhatInTitle">
+           <item>
+            <property name="text">
+             <string>なし</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>バージョン</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>最終発言</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>@未読数</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>未読数</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>未読数(@未読数)</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>全未読/全発言数</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_28">
+           <property name="text">
+            <string>リストの日時フォーマット</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QComboBox" name="cboDateTimeFmt">
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>yyyy/MM/dd H:mm:ss</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>yy/M/d H:mm:ss</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>H:mm:ss yy/M/d</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>M/d H:mm:ss</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>M/d H:mm</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>H:mm:ss M/d</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>H:mm:ss</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>H:mm</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_29">
+           <property name="text">
+            <string>リストのアイコンサイズ</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QComboBox" name="cboIconSize">
+           <property name="currentIndex">
+            <number>1</number>
+           </property>
+           <item>
+            <property name="text">
+             <string>なし</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>16</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>24</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>32</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>48</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_30">
+           <property name="text">
+            <string>タブの未読アイコン表示</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QCheckBox" name="chkShowUnreadIcon">
+           <property name="text">
+            <string>表示する</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_31">
+           <property name="text">
+            <string>自発言の既読化</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QCheckBox" name="chkSetReadMyPost">
+           <property name="text">
+            <string>既読にする</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">

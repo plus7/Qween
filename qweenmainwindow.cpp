@@ -35,6 +35,7 @@
 #include "usersmodel.h"
 #include "const.h"
 #include "xauth.h"
+#include "statusbrowser.h"
 
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -127,7 +128,8 @@ void QweenMainWindow::makeWidgets(){
 void QweenMainWindow::applySettings(){
     ui->statusText->setStyleSheet(settings->inputStyle());
     ui->statusText->setRequireCtrlOnEnter(settings->requireCtrlOnEnter());
-
+    updateWindowTitle();
+    updateTrayIconTitle();
     setupTimers();
 }
 
@@ -247,6 +249,15 @@ void QweenMainWindow::makeConnections(){
     //StatusText->postButton
     connect(ui->statusText,SIGNAL(returnPressed()),
             ui->postButton,SLOT(click()));
+
+    //StatusBrowser
+    connect(ui->textBrowser,SIGNAL(followCommand(QString)),
+            this, SLOT(OnFollowCommand(QString)));
+    connect(ui->textBrowser,SIGNAL(removeCommand(QString)),
+            this, SLOT(OnRemoveCommand(QString)));
+    connect(ui->textBrowser,SIGNAL(friendshipCommand(QString)),
+            this, SLOT(OnFriendshipCommand(QString)));
+
     //TrayIcon
     connect(m_trayIcon, SIGNAL(messageClicked()), this, SLOT(OnMessageClicked()));
     connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
@@ -312,10 +323,21 @@ void QweenMainWindow::OnHomeTimelineReceived(statuses_t& s){
     if(s.status.count()==0) return;
     QString popupText;
     QString title(tr("新着 ") + QString::number(s.status.count()) + tr("件\n"));
+    if(settings->showUserInTitle()) title.prepend(m_petrelLib->userid()+" - ");
     foreach(QSharedPointer<status_t> ptr, s.status){
         Twitter::TwitterItem item(Twitter::Status, ptr, HOME_TIMELINE, false);
         if(m_newestFriendsStatus < item.id()) m_newestFriendsStatus = item.id();
-        popupText.append(QString("%1 : %2\n").arg(item.userName(), item.status()));
+        switch(settings->notifyBaloonName()){
+        case 0:
+            popupText.append(QString("%1\n").arg(item.status()));
+            break;
+        case 1:
+            popupText.append(QString("%1 : %2\n").arg(item.screenName(), item.status()));
+            break;
+        case 2:
+            popupText.append(QString("%1 : %2\n").arg(item.userName(), item.status()));
+            break;
+        }
         if(!m_usersModel->userExists(item.userId()))
             m_usersModel->appendItem(item);
         tabWidget->addItem(item);
@@ -323,6 +345,7 @@ void QweenMainWindow::OnHomeTimelineReceived(statuses_t& s){
     //TODO: dm, reply, sound
     //バルーン・サウンドは最初は抑制するようだ
     //設定項目があるのでそこを見るべし
+    if(settings->notifyOnlyMinimized() && !isMinimized() && isVisible()) return;
     m_trayIcon->showMessage(title, popupText, QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information),
                             5 * 1000);
 }
@@ -361,10 +384,11 @@ void QweenMainWindow::OnUpdateReceived(status_t& status){
     ui->statusText->setEnabled(true);
     ui->postButton->setEnabled(true);
     m_in_reply_to_status_id = 0;
+    m_latestMyPost = status.text;
     QSharedPointer<status_t> s(new status_t(status));
     tabWidget->addItem(Twitter::TwitterItem(Twitter::Status, s, UPDATE, false));
+    updateWindowTitle();
 }
-
 
 void QweenMainWindow::OnRateLimitStatusReceived(hash_t& hash){
     QMessageBox::information(this,tr("API情報"),
@@ -664,7 +688,7 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
                                  .arg(settings->statusViewStyle()) +
                                  status + tr("</body></html>"));
         ui->lblNameId->setText(item.screenName() + "/" + item.userName());
-        ui->lblUpdateDatetime->setText(item.createdAt());
+        ui->lblUpdateDatetime->setText(item.createdAt().toString());
         if(QweenApplication::iconManager()->isIconAvailable(item.userId())){
             QIcon icon(QweenApplication::iconManager()->getIcon(item.userId()));
             ui->userIconLabel->setPixmap(icon.pixmap(50,50,QIcon::Normal,QIcon::On));
@@ -901,31 +925,19 @@ void QweenMainWindow::OnActReplaceZenkakuSpaceToggled(bool val){
 void QweenMainWindow::on_actShowFriendships_triggered()
 {
     QString name = tabWidget->currentItem().screenName();
-    bool ok;
-    QString rv = QInputDialog::getText(this, tr("フォロー関係を調べる"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
-    if(ok){
-        m_petrelLib->showFriendships(0,settings->userid(),0,rv);
-    }
+    doFriendshipCommand(name);
 }
 
 void QweenMainWindow::on_actFollow_triggered()
 {
     QString name = tabWidget->currentItem().screenName();
-    bool ok;
-    QString rv = QInputDialog::getText(this, tr("Follow"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
-    if(ok){
-        m_petrelLib->createFriendship(0,0,rv,false);
-    }
+    doFollowCommand(name);
 }
 
 void QweenMainWindow::on_actRemove_triggered()
 {
     QString name = tabWidget->currentItem().screenName();
-    bool ok;
-    QString rv = QInputDialog::getText(this, tr("Follow"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
-    if(ok){
-        m_petrelLib->destroyFriendship(0,0,rv);
-    }
+    doRemoveCommand(name);
 }
 
 void QweenMainWindow::on_actCreateTab_triggered()
@@ -1058,4 +1070,71 @@ void QweenMainWindow::on_actUnu_triggered()
 void QweenMainWindow::on_actionTest_xauth_triggered()
 {
     //残骸 TODO:削除?
+}
+
+void QweenMainWindow::OnFollowCommand(const QString& name){
+    doFollowCommand(name);
+}
+
+void QweenMainWindow::OnRemoveCommand(const QString& name){
+    doRemoveCommand(name);
+}
+
+void QweenMainWindow::OnFriendshipCommand(const QString& name){
+    doFriendshipCommand(name);
+}
+
+void QweenMainWindow::doFollowCommand(const QString& name){
+    bool ok;
+    QString rv = QInputDialog::getText(this, tr("Follow"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
+    if(ok){
+        m_petrelLib->createFriendship(0,0,rv,false);
+    }
+}
+
+void QweenMainWindow::doRemoveCommand(const QString& name){
+    bool ok;
+    QString rv = QInputDialog::getText(this, tr("Follow"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
+    if(ok){
+        m_petrelLib->destroyFriendship(0,0,rv);
+    }
+}
+
+void QweenMainWindow::doFriendshipCommand(const QString& name){
+    bool ok;
+    QString rv = QInputDialog::getText(this, tr("フォロー関係を調べる"), tr("IDを入力してください"), QLineEdit::Normal, name, &ok);
+    if(ok){
+        m_petrelLib->showFriendships(0,settings->userid(),0,rv);
+    }
+}
+
+void QweenMainWindow::updateWindowTitle(){
+    QString t;
+    if(settings->showUserInTitle() && !settings->userid().isEmpty()){
+        t.append(settings->userid()+" - ");
+    }
+    t.append("Qween");
+    if(settings->showWhatInTitle()!=0){
+        t.append(" ");
+        switch(settings->showWhatInTitle()){
+        case 1:
+            t.append(QString("%0.%1.%2").arg(QWEEN_VERSION_MAJOR).arg(QWEEN_VERSION_MINOR).arg(QWEEN_VERSION_REV));
+            break;
+        case 2:
+            t.append(m_latestMyPost);
+            break;
+        case 3: // TODO
+            break;
+        }
+    }
+    this->setWindowTitle(t);
+}
+
+void QweenMainWindow::updateTrayIconTitle(){
+    QString t;
+    if(settings->showUserInTitle() && !settings->userid().isEmpty()){
+        t.append(m_petrelLib->userid()+" - ");
+    }
+    t.append("Qween");
+    m_trayIcon->setToolTip(t);
 }
