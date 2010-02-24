@@ -35,10 +35,13 @@ Petrel::~Petrel()
 }
 
 //HTTP
-void Petrel::issueGetRequest(QNetworkRequest& req){
+void Petrel::issueGetRequest(int role, QString url, QList<QPair<QString,QString> > queryItems){
+    QUrl u(url);
+    u.setEncodedQuery(QByteArray(util::encodeQuery(queryItems).toAscii()));
+    QNetworkRequest req(u);
+    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), role);
     if(m_useXAuth){
-        QUrl url(req.url());
-        QString sig = m_xauth->getSignature("GET", url);
+        QString sig = m_xauth->getSignature("GET", url, queryItems);
         req.setRawHeader( "Authorization", sig.prepend( "OAuth " ).toAscii() );
     }else{
         QByteArray auth = m_userid.toUtf8() + ":" + m_pass.toUtf8();
@@ -48,43 +51,45 @@ void Petrel::issueGetRequest(QNetworkRequest& req){
     m_replies.append(r);
 }
 
-void Petrel::issuePostRequest(QNetworkRequest& req){
+void Petrel::issuePostRequest(int role, QString url, QList<QPair<QString,QString> > queryItems){
     //QMessageBox::information(NULL, "", QString(req.url().toEncoded()));
-    QUrl url(req.url().toString().replace("#","%23")); //FIXME
+    QUrl u(url);
+    QNetworkRequest req(u);
+    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), role);
     if(m_useXAuth){
-        QString sig = m_xauth->getSignature("POST", url);
+        QString sig = m_xauth->getSignature("POST", url, queryItems);
         req.setRawHeader( "Authorization", sig.prepend( "OAuth " ).toAscii() );
     }else{
         QByteArray auth = m_userid.toUtf8() + ":" + m_pass.toUtf8();
         req.setRawHeader( "Authorization", auth.toBase64().prepend( "Basic " ) );
     }
-    //TODO: getでも同様なのか？
-    QString tmp(util::encodeQuery(url.queryItems()));
-    req.setUrl(QUrl(req.url().toString(QUrl::RemoveQuery)));
-    QNetworkReply *r = m_manager->post(req,QByteArray(tmp.toAscii()));
+    QNetworkReply *r = m_manager->post(req,QByteArray(util::encodeQuery(queryItems).toAscii()));
     m_replies.append(r);
 }
 
-void Petrel::issuePutRequest(QNetworkRequest& req){
+void Petrel::issuePutRequest(int role, QString url, QList<QPair<QString,QString> > queryItems){
+    //QMessageBox::information(NULL, "", QString(req.url().toEncoded()));
+    QUrl u(url);
+    QNetworkRequest req(u);
+    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), role);
     if(m_useXAuth){
-        QUrl url(req.url());
-        QString sig = m_xauth->getSignature("POST", url);
+        QString sig = m_xauth->getSignature("PUT", url, queryItems);
         req.setRawHeader( "Authorization", sig.prepend( "OAuth " ).toAscii() );
     }else{
         QByteArray auth = m_userid.toUtf8() + ":" + m_pass.toUtf8();
         req.setRawHeader( "Authorization", auth.toBase64().prepend( "Basic " ) );
     }
-    //TODO: getでも同様なのか？
-    QString tmp(util::encodeQuery(req.url().queryItems()));
-    req.setUrl(QUrl(req.url().toString(QUrl::RemoveQuery)));
-    QNetworkReply *r = m_manager->put(req,QByteArray(tmp.toAscii()));
+    QNetworkReply *r = m_manager->put(req,QByteArray(util::encodeQuery(queryItems).toAscii()));
     m_replies.append(r);
 }
 
-void Petrel::issueDeleteRequest(QNetworkRequest& req){
+void Petrel::issueDeleteRequest(int role, QString url, QList<QPair<QString,QString> > queryItems){
+    QUrl u(url);
+    u.setEncodedQuery(QByteArray(util::encodeQuery(queryItems).toAscii()));
+    QNetworkRequest req(u);
+    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), role);
     if(m_useXAuth){
-        QUrl url(req.url());
-        QString sig = m_xauth->getSignature("DELETE", url);
+        QString sig = m_xauth->getSignature("DELETE", url, queryItems);
         req.setRawHeader( "Authorization", sig.prepend( "OAuth " ).toAscii() );
     }else{
         QByteArray auth = m_userid.toUtf8() + ":" + m_pass.toUtf8();
@@ -121,49 +126,49 @@ void Petrel::accessKeyReceived(){
 void Petrel::availableTrends(const QString& lat, const QString& long_){
 
     QString requestStr("http://api.twitter.com/1/trends/available.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(lat!="") requestUrl.addQueryItem("lat",lat);
-    if(long_!="") requestUrl.addQueryItem("long",long_);
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), AVAILABLE_TRENDS);
-    issueGetRequest(req);
+    if(lat!="") propBag.addQueryItem("lat",lat);
+    if(long_!="") propBag.addQueryItem("long",long_);
+
+
+    issueGetRequest(AVAILABLE_TRENDS, requestStr, propBag.items);
 
 }
 void Petrel::blocking_IdsBlocks(){
 
     QString requestStr("http://api.twitter.com/1/blocks/blocking/ids.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), BLOCKING_IDS_BLOCKS);
-    issueGetRequest(req);
+
+
+    issueGetRequest(BLOCKING_IDS_BLOCKS, requestStr, propBag.items);
 
 }
 void Petrel::createBlock(quint64 id, quint64 user_id, const QString& screen_name){
 
     QString requestStr("http://api.twitter.com/1/blocks/create/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(user_id!=0) requestUrl.addQueryItem("user_id",QString::number(user_id,10));
-    if(screen_name!="") requestUrl.addQueryItem("screen_name",screen_name);
+    if(user_id!=0) propBag.addQueryItem("user_id",QString::number(user_id,10));
+    if(screen_name!="") propBag.addQueryItem("screen_name",screen_name);
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), CREATE_BLOCK);
-    issuePostRequest(req);
+
+
+    issuePostRequest(CREATE_BLOCK, requestStr, propBag.items);
 
 }
 void Petrel::createFavorite(quint64 id){
 
     QString requestStr("http://api.twitter.com/1/favorites/create/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), CREATE_FAVORITE);
-    issuePostRequest(req);
+
+
+    issuePostRequest(CREATE_FAVORITE, requestStr, propBag.items);
 
 }
 void Petrel::createFriendship(quint64 id, quint64 user_id, const QString& screen_name, const QString& follow){
@@ -173,106 +178,106 @@ void Petrel::createFriendship(quint64 id, quint64 user_id, const QString& screen
     else
         requestStr = "http://api.twitter.com/1/friendships/create/"+QString::number(id,10)+".xml";
 
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(user_id!=0) requestUrl.addQueryItem("user_id",QString::number(user_id,10));
-    if(screen_name!="") requestUrl.addQueryItem("screen_name",screen_name);
-    if(follow!="") requestUrl.addQueryItem("follow",follow);
+    if(user_id!=0) propBag.addQueryItem("user_id",QString::number(user_id,10));
+    if(screen_name!="") propBag.addQueryItem("screen_name",screen_name);
+    if(follow!="") propBag.addQueryItem("follow",follow);
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), CREATE_FRIENDSHIP);
-    issuePostRequest(req);
+
+
+    issuePostRequest(CREATE_FRIENDSHIP, requestStr, propBag.items);
 
 }
 void Petrel::createSavedSearch(const QString& query){
 
     QString requestStr("http://api.twitter.com/1/saved_searches/create.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(query!="") requestUrl.addQueryItem("query",query);
+    if(query!="") propBag.addQueryItem("query",query);
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), CREATE_SAVED_SEARCH);
-    issuePostRequest(req);
+
+
+    issuePostRequest(CREATE_SAVED_SEARCH, requestStr, propBag.items);
 
 }
 void Petrel::deleteListId(quint64 id, quint64 list_id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/lists/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(list_id!=0) requestUrl.addQueryItem("list_id",QString::number(list_id,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), DELETE_LIST_ID);
-    issueDeleteRequest(req);
+    if(list_id!=0) propBag.addQueryItem("list_id",QString::number(list_id,10));
+
+
+    issueDeleteRequest(DELETE_LIST_ID, requestStr, propBag.items);
 
 }
 void Petrel::deleteListMember(quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/"+QString::number(list_id,10)+"/members.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), DELETE_LIST_MEMBER);
-    issueDeleteRequest(req);
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+
+
+    issueDeleteRequest(DELETE_LIST_MEMBER, requestStr, propBag.items);
 
 }
 void Petrel::deleteListSubscriber(const QString& user, quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/"+QString::number(list_id,10)+"/subscribers.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(user!="") requestUrl.addQueryItem("user",user);
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), DELETE_LIST_SUBSCRIBER);
-    issueDeleteRequest(req);
+    if(user!="") propBag.addQueryItem("user",user);
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+
+
+    issueDeleteRequest(DELETE_LIST_SUBSCRIBER, requestStr, propBag.items);
 
 }
 void Petrel::destroy(quint64 id){
 
     QString requestStr("http://api.twitter.com/1/statuses/destroy/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), DESTROY);
-    issueDeleteRequest(req);
+
+
+    issueDeleteRequest(DESTROY, requestStr, propBag.items);
 
 }
 void Petrel::destroyBlock(quint64 id, quint64 user_id, const QString& screen_name){
 
     QString requestStr("http://api.twitter.com/1/blocks/destroy/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(user_id!=0) requestUrl.addQueryItem("user_id",QString::number(user_id,10));
-    if(screen_name!="") requestUrl.addQueryItem("screen_name",screen_name);
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), DESTROY_BLOCK);
-    issueDeleteRequest(req);
+    if(user_id!=0) propBag.addQueryItem("user_id",QString::number(user_id,10));
+    if(screen_name!="") propBag.addQueryItem("screen_name",screen_name);
+
+
+    issueDeleteRequest(DESTROY_BLOCK, requestStr, propBag.items);
 
 }
 void Petrel::destroyDirectMessage(quint64 id){
 
     QString requestStr("http://api.twitter.com/1/direct_messages/destroy/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), DESTROY_DIRECT_MESSAGE);
-    issueDeleteRequest(req);
+
+
+    issueDeleteRequest(DESTROY_DIRECT_MESSAGE, requestStr, propBag.items);
 
 }
 void Petrel::destroyFavorite(quint64 id){
 
     QString requestStr("http://api.twitter.com/1/favorites/destroy/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), DESTROY_FAVORITE);
-    issueDeleteRequest(req);
+
+
+    issueDeleteRequest(DESTROY_FAVORITE, requestStr, propBag.items);
 
 }
 void Petrel::destroyFriendship(quint64 id, quint64 user_id, const QString& screen_name){
@@ -283,611 +288,611 @@ void Petrel::destroyFriendship(quint64 id, quint64 user_id, const QString& scree
     else
         requestStr = "http://api.twitter.com/1/friendships/destroy/"+QString::number(id,10)+".xml";
 
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(user_id!=0) requestUrl.addQueryItem("user_id",QString::number(user_id,10));
-    if(screen_name!="") requestUrl.addQueryItem("screen_name",screen_name);
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), DESTROY_FRIENDSHIP);
-    issueDeleteRequest(req);
+    if(user_id!=0) propBag.addQueryItem("user_id",QString::number(user_id,10));
+    if(screen_name!="") propBag.addQueryItem("screen_name",screen_name);
+
+
+    issueDeleteRequest(DESTROY_FRIENDSHIP, requestStr, propBag.items);
 
 }
 void Petrel::destroySavedSearch(quint64 id){
 
     QString requestStr("http://api.twitter.com/1/saved_searches/destroy/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), DESTROY_SAVED_SEARCH);
-    issueDeleteRequest(req);
+
+
+    issueDeleteRequest(DESTROY_SAVED_SEARCH, requestStr, propBag.items);
 
 }
 void Petrel::directMessages(quint64 since_id, quint64 max_id, int count, int page){
 
     QString requestStr("http://api.twitter.com/1/direct_messages.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(since_id!=0) requestUrl.addQueryItem("since_id",QString::number(since_id,10));
-    if(max_id!=0) requestUrl.addQueryItem("max_id",QString::number(max_id,10));
-    if(count!=0) requestUrl.addQueryItem("count",QString::number(count,10));
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), DIRECT_MESSAGES);
-    issueGetRequest(req);
+    if(since_id!=0) propBag.addQueryItem("since_id",QString::number(since_id,10));
+    if(max_id!=0) propBag.addQueryItem("max_id",QString::number(max_id,10));
+    if(count!=0) propBag.addQueryItem("count",QString::number(count,10));
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+
+
+    issueGetRequest(DIRECT_MESSAGES, requestStr, propBag.items);
 
 }
 void Petrel::existsFriendships(const QString& user_a, const QString& user_b){
 
     QString requestStr("http://api.twitter.com/1/friendships/exists.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(user_a!="") requestUrl.addQueryItem("user_a",user_a);
-    if(user_b!="") requestUrl.addQueryItem("user_b",user_b);
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), EXISTS_FRIENDSHIPS);
-    issueGetRequest(req);
+    if(user_a!="") propBag.addQueryItem("user_a",user_a);
+    if(user_b!="") propBag.addQueryItem("user_b",user_b);
+
+
+    issueGetRequest(EXISTS_FRIENDSHIPS, requestStr, propBag.items);
 
 }
 void Petrel::favorites(quint64 id, int page){
 
     QString requestStr("http://api.twitter.com/1/favorites.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), FAVORITES);
-    issueGetRequest(req);
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+
+
+    issueGetRequest(FAVORITES, requestStr, propBag.items);
 
 }
 void Petrel::followNotification(quint64 id, quint64 user_id, const QString& screen_name){
 
     QString requestStr("http://api.twitter.com/1/notifications/follow/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(user_id!=0) requestUrl.addQueryItem("user_id",QString::number(user_id,10));
-    if(screen_name!="") requestUrl.addQueryItem("screen_name",screen_name);
+    if(user_id!=0) propBag.addQueryItem("user_id",QString::number(user_id,10));
+    if(screen_name!="") propBag.addQueryItem("screen_name",screen_name);
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), FOLLOW_NOTIFICATION);
-    issuePostRequest(req);
+
+
+    issuePostRequest(FOLLOW_NOTIFICATION, requestStr, propBag.items);
 
 }
 void Petrel::followers(quint64 id, quint64 user_id, const QString& screen_name, qint64 cursor){
 
     QString requestStr("http://api.twitter.com/1/statuses/followers.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    if(user_id!=0) requestUrl.addQueryItem("user_id",QString::number(user_id,10));
-    if(screen_name!="") requestUrl.addQueryItem("screen_name",screen_name);
-    if(cursor!=0) requestUrl.addQueryItem("cursor",QString::number(cursor,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), FOLLOWERS);
-    issueGetRequest(req);
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+    if(user_id!=0) propBag.addQueryItem("user_id",QString::number(user_id,10));
+    if(screen_name!="") propBag.addQueryItem("screen_name",screen_name);
+    if(cursor!=0) propBag.addQueryItem("cursor",QString::number(cursor,10));
+
+
+    issueGetRequest(FOLLOWERS, requestStr, propBag.items);
 
 }
 void Petrel::friends(quint64 id, quint64 user_id, const QString& screen_name, qint64 cursor){
 
     QString requestStr("http://api.twitter.com/1/statuses/friends.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    if(user_id!=0) requestUrl.addQueryItem("user_id",QString::number(user_id,10));
-    if(screen_name!="") requestUrl.addQueryItem("screen_name",screen_name);
-    if(cursor!=0) requestUrl.addQueryItem("cursor",QString::number(cursor,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), FRIENDS);
-    issueGetRequest(req);
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+    if(user_id!=0) propBag.addQueryItem("user_id",QString::number(user_id,10));
+    if(screen_name!="") propBag.addQueryItem("screen_name",screen_name);
+    if(cursor!=0) propBag.addQueryItem("cursor",QString::number(cursor,10));
+
+
+    issueGetRequest(FRIENDS, requestStr, propBag.items);
 
 }
 void Petrel::friendsTimeline(quint64 since_id, quint64 max_id, int count, int page){
 
     QString requestStr("http://api.twitter.com/1/statuses/friends_timeline.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(since_id!=0) requestUrl.addQueryItem("since_id",QString::number(since_id,10));
-    if(max_id!=0) requestUrl.addQueryItem("max_id",QString::number(max_id,10));
-    if(count!=0) requestUrl.addQueryItem("count",QString::number(count,10));
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), FRIENDS_TIMELINE);
-    issueGetRequest(req);
+    if(since_id!=0) propBag.addQueryItem("since_id",QString::number(since_id,10));
+    if(max_id!=0) propBag.addQueryItem("max_id",QString::number(max_id,10));
+    if(count!=0) propBag.addQueryItem("count",QString::number(count,10));
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+
+
+    issueGetRequest(FRIENDS_TIMELINE, requestStr, propBag.items);
 
 }
 void Petrel::getListId(quint64 id, quint64 list_id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/lists/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(list_id!=0) requestUrl.addQueryItem("list_id",QString::number(list_id,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), GET_LIST_ID);
-    issueGetRequest(req);
+    if(list_id!=0) propBag.addQueryItem("list_id",QString::number(list_id,10));
+
+
+    issueGetRequest(GET_LIST_ID, requestStr, propBag.items);
 
 }
 void Petrel::getListMembers(quint64 list_id, qint64 cursor, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/"+QString::number(list_id,10)+"/members.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(cursor!=0) requestUrl.addQueryItem("cursor",QString::number(cursor,10));
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), GET_LIST_MEMBERS);
-    issueGetRequest(req);
+    if(cursor!=0) propBag.addQueryItem("cursor",QString::number(cursor,10));
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+
+
+    issueGetRequest(GET_LIST_MEMBERS, requestStr, propBag.items);
 
 }
 void Petrel::getListMembersId(quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/"+QString::number(list_id,10)+"/members/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), GET_LIST_MEMBERS_ID);
-    issueGetRequest(req);
+
+
+    issueGetRequest(GET_LIST_MEMBERS_ID, requestStr, propBag.items);
 
 }
 void Petrel::getListMemberships(qint64 cursor, quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/lists/memberships.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(cursor!=0) requestUrl.addQueryItem("cursor",QString::number(cursor,10));
-    if(list_id!=0) requestUrl.addQueryItem("list_id",QString::number(list_id,10));
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), GET_LIST_MEMBERSHIPS);
-    issueGetRequest(req);
+    if(cursor!=0) propBag.addQueryItem("cursor",QString::number(cursor,10));
+    if(list_id!=0) propBag.addQueryItem("list_id",QString::number(list_id,10));
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+
+
+    issueGetRequest(GET_LIST_MEMBERSHIPS, requestStr, propBag.items);
 
 }
 void Petrel::getListStatuses(quint64 since_id, quint64 max_id, const QString& per_page, int page, quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/lists/"+QString::number(list_id,10)+"/statuses.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(since_id!=0) requestUrl.addQueryItem("since_id",QString::number(since_id,10));
-    if(max_id!=0) requestUrl.addQueryItem("max_id",QString::number(max_id,10));
-    if(per_page!="") requestUrl.addQueryItem("per_page",per_page);
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), GET_LIST_STATUSES);
-    issueGetRequest(req);
+    if(since_id!=0) propBag.addQueryItem("since_id",QString::number(since_id,10));
+    if(max_id!=0) propBag.addQueryItem("max_id",QString::number(max_id,10));
+    if(per_page!="") propBag.addQueryItem("per_page",per_page);
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+
+
+    issueGetRequest(GET_LIST_STATUSES, requestStr, propBag.items);
 
 }
 void Petrel::getListSubscribers(quint64 list_id, qint64 cursor, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/"+QString::number(list_id,10)+"/subscribers.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(cursor!=0) requestUrl.addQueryItem("cursor",QString::number(cursor,10));
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), GET_LIST_SUBSCRIBERS);
-    issueGetRequest(req);
+    if(cursor!=0) propBag.addQueryItem("cursor",QString::number(cursor,10));
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+
+
+    issueGetRequest(GET_LIST_SUBSCRIBERS, requestStr, propBag.items);
 
 }
 void Petrel::getListSubscribersId(const QString& user, quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/"+QString::number(list_id,10)+"/subscribers/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(user!="") requestUrl.addQueryItem("user",user);
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), GET_LIST_SUBSCRIBERS_ID);
-    issueGetRequest(req);
+    if(user!="") propBag.addQueryItem("user",user);
+
+
+    issueGetRequest(GET_LIST_SUBSCRIBERS_ID, requestStr, propBag.items);
 
 }
 void Petrel::getListSubscriptions(qint64 cursor, quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/lists/subscriptions.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(cursor!=0) requestUrl.addQueryItem("cursor",QString::number(cursor,10));
-    if(list_id!=0) requestUrl.addQueryItem("list_id",QString::number(list_id,10));
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), GET_LIST_SUBSCRIPTIONS);
-    issueGetRequest(req);
+    if(cursor!=0) propBag.addQueryItem("cursor",QString::number(cursor,10));
+    if(list_id!=0) propBag.addQueryItem("list_id",QString::number(list_id,10));
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+
+
+    issueGetRequest(GET_LIST_SUBSCRIPTIONS, requestStr, propBag.items);
 
 }
 void Petrel::getLists(qint64 cursor, quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/lists.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(cursor!=0) requestUrl.addQueryItem("cursor",QString::number(cursor,10));
-    if(list_id!=0) requestUrl.addQueryItem("list_id",QString::number(list_id,10));
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), GET_LISTS);
-    issueGetRequest(req);
+    if(cursor!=0) propBag.addQueryItem("cursor",QString::number(cursor,10));
+    if(list_id!=0) propBag.addQueryItem("list_id",QString::number(list_id,10));
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+
+
+    issueGetRequest(GET_LISTS, requestStr, propBag.items);
 
 }
 void Petrel::homeTimeline(quint64 since_id, quint64 max_id, int count, int page){
 
     QString requestStr("http://api.twitter.com/1/statuses/home_timeline.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(since_id!=0) requestUrl.addQueryItem("since_id",QString::number(since_id,10));
-    if(max_id!=0) requestUrl.addQueryItem("max_id",QString::number(max_id,10));
-    if(count!=0) requestUrl.addQueryItem("count",QString::number(count,10));
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), HOME_TIMELINE);
-    issueGetRequest(req);
+    if(since_id!=0) propBag.addQueryItem("since_id",QString::number(since_id,10));
+    if(max_id!=0) propBag.addQueryItem("max_id",QString::number(max_id,10));
+    if(count!=0) propBag.addQueryItem("count",QString::number(count,10));
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+
+
+    issueGetRequest(HOME_TIMELINE, requestStr, propBag.items);
 
 }
 void Petrel::idsFollowers(qint64 cursor){
 
     QString requestStr("http://api.twitter.com/1/followers/ids.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(cursor!=0) requestUrl.addQueryItem("cursor",QString::number(cursor,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), IDS_FOLLOWERS);
-    issueGetRequest(req);
+    if(cursor!=0) propBag.addQueryItem("cursor",QString::number(cursor,10));
+
+
+    issueGetRequest(IDS_FOLLOWERS, requestStr, propBag.items);
 
 }
 void Petrel::idsFriends(qint64 cursor){
 
     QString requestStr("http://api.twitter.com/1/friends/ids.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(cursor!=0) requestUrl.addQueryItem("cursor",QString::number(cursor,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), IDS_FRIENDS);
-    issueGetRequest(req);
+    if(cursor!=0) propBag.addQueryItem("cursor",QString::number(cursor,10));
+
+
+    issueGetRequest(IDS_FRIENDS, requestStr, propBag.items);
 
 }
 void Petrel::leaveNotification(quint64 id, quint64 user_id, const QString& screen_name){
 
     QString requestStr("http://api.twitter.com/1/notifications/leave/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(user_id!=0) requestUrl.addQueryItem("user_id",QString::number(user_id,10));
-    if(screen_name!="") requestUrl.addQueryItem("screen_name",screen_name);
+    if(user_id!=0) propBag.addQueryItem("user_id",QString::number(user_id,10));
+    if(screen_name!="") propBag.addQueryItem("screen_name",screen_name);
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), LEAVE_NOTIFICATION);
-    issuePostRequest(req);
+
+
+    issuePostRequest(LEAVE_NOTIFICATION, requestStr, propBag.items);
 
 }
 void Petrel::locationTrends(const QString& woeid){
 
     QString requestStr("http://api.twitter.com/1/trends/"+woeid+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), LOCATION_TRENDS);
-    issueGetRequest(req);
+
+
+    issueGetRequest(LOCATION_TRENDS, requestStr, propBag.items);
 
 }
 void Petrel::mentions(quint64 since_id, quint64 max_id, int count, int page){
 
     QString requestStr("http://api.twitter.com/1/statuses/mentions.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(since_id!=0) requestUrl.addQueryItem("since_id",QString::number(since_id,10));
-    if(max_id!=0) requestUrl.addQueryItem("max_id",QString::number(max_id,10));
-    if(count!=0) requestUrl.addQueryItem("count",QString::number(count,10));
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), MENTIONS);
-    issueGetRequest(req);
+    if(since_id!=0) propBag.addQueryItem("since_id",QString::number(since_id,10));
+    if(max_id!=0) propBag.addQueryItem("max_id",QString::number(max_id,10));
+    if(count!=0) propBag.addQueryItem("count",QString::number(count,10));
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+
+
+    issueGetRequest(MENTIONS, requestStr, propBag.items);
 
 }
 void Petrel::newDirectMessage(const QString& user, const QString& text){
 
     QString requestStr("http://api.twitter.com/1/direct_messages/new.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(user!="") requestUrl.addQueryItem("user",user);
-    if(text!="") requestUrl.addQueryItem("text",text);
+    if(user!="") propBag.addQueryItem("user",user);
+    if(text!="") propBag.addQueryItem("text",text);
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), NEW_DIRECT_MESSAGE);
-    issuePostRequest(req);
+
+
+    issuePostRequest(NEW_DIRECT_MESSAGE, requestStr, propBag.items);
 
 }
 void Petrel::postList(const QString& name, const QString& mode, const QString& description, quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/lists.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(name!="") requestUrl.addQueryItem("name",name);
-    if(mode!="") requestUrl.addQueryItem("mode",mode);
-    if(description!="") requestUrl.addQueryItem("description",description);
-    if(list_id!=0) requestUrl.addQueryItem("list_id",QString::number(list_id,10));
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
+    if(name!="") propBag.addQueryItem("name",name);
+    if(mode!="") propBag.addQueryItem("mode",mode);
+    if(description!="") propBag.addQueryItem("description",description);
+    if(list_id!=0) propBag.addQueryItem("list_id",QString::number(list_id,10));
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), POST_LIST);
-    issuePostRequest(req);
+
+
+    issuePostRequest(POST_LIST, requestStr, propBag.items);
 
 }
 void Petrel::postListMember(quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/"+QString::number(list_id,10)+"/members.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), POST_LIST_MEMBER);
-    issuePostRequest(req);
+
+
+    issuePostRequest(POST_LIST_MEMBER, requestStr, propBag.items);
 
 }
 void Petrel::postListSubscriber(quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/"+QString::number(list_id,10)+"/subscribers.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), POST_LIST_SUBSCRIBER);
-    issuePostRequest(req);
+
+
+    issuePostRequest(POST_LIST_SUBSCRIBER, requestStr, propBag.items);
 
 }
 void Petrel::postListsId(const QString& name, const QString& mode, const QString& description, quint64 list_id, quint64 id){
 
     QString requestStr("http://api.twitter.com/1/"+m_userid+"/lists/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(name!="") requestUrl.addQueryItem("name",name);
-    if(mode!="") requestUrl.addQueryItem("mode",mode);
-    if(description!="") requestUrl.addQueryItem("description",description);
-    if(list_id!=0) requestUrl.addQueryItem("list_id",QString::number(list_id,10));
+    if(name!="") propBag.addQueryItem("name",name);
+    if(mode!="") propBag.addQueryItem("mode",mode);
+    if(description!="") propBag.addQueryItem("description",description);
+    if(list_id!=0) propBag.addQueryItem("list_id",QString::number(list_id,10));
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), POST_LISTS_ID);
-    issuePutRequest(req);
+
+
+    issuePutRequest(POST_LISTS_ID, requestStr, propBag.items);
 
 }
 void Petrel::publicTimeline(){
 
     QString requestStr("http://api.twitter.com/1/statuses/public_timeline.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), PUBLIC_TIMELINE);
-    issueGetRequest(req);
+
+
+    issueGetRequest(PUBLIC_TIMELINE, requestStr, propBag.items);
 
 }
 void Petrel::rateLimitStatus(){
 
     QString requestStr("http://api.twitter.com/1/account/rate_limit_status.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), RATE_LIMIT_STATUS);
-    issueGetRequest(req);
+
+
+    issueGetRequest(RATE_LIMIT_STATUS, requestStr, propBag.items);
 
 }
 void Petrel::reportSpam(quint64 id, quint64 user_id, const QString& screen_name){
 
     QString requestStr("http://api.twitter.com/1/report_spam.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    if(user_id!=0) requestUrl.addQueryItem("user_id",QString::number(user_id,10));
-    if(screen_name!="") requestUrl.addQueryItem("screen_name",screen_name);
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+    if(user_id!=0) propBag.addQueryItem("user_id",QString::number(user_id,10));
+    if(screen_name!="") propBag.addQueryItem("screen_name",screen_name);
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), REPORT_SPAM);
-    issuePostRequest(req);
+
+
+    issuePostRequest(REPORT_SPAM, requestStr, propBag.items);
 
 }
 void Petrel::retweet(quint64 id){
 
     QString requestStr("http://api.twitter.com/1/statuses/retweet/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), RETWEET);
-    issuePostRequest(req);
+
+
+    issuePostRequest(RETWEET, requestStr, propBag.items);
 
 }
 void Petrel::retweetedByMe(quint64 since_id, quint64 max_id, int count, int page){
 
     QString requestStr("http://api.twitter.com/1/statuses/retweeted_by_me.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(since_id!=0) requestUrl.addQueryItem("since_id",QString::number(since_id,10));
-    if(max_id!=0) requestUrl.addQueryItem("max_id",QString::number(max_id,10));
-    if(count!=0) requestUrl.addQueryItem("count",QString::number(count,10));
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), RETWEETED_BY_ME);
-    issueGetRequest(req);
+    if(since_id!=0) propBag.addQueryItem("since_id",QString::number(since_id,10));
+    if(max_id!=0) propBag.addQueryItem("max_id",QString::number(max_id,10));
+    if(count!=0) propBag.addQueryItem("count",QString::number(count,10));
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+
+
+    issueGetRequest(RETWEETED_BY_ME, requestStr, propBag.items);
 
 }
 void Petrel::retweetedToMe(quint64 since_id, quint64 max_id, int count, int page){
 
     QString requestStr("http://api.twitter.com/1/statuses/retweeted_to_me.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(since_id!=0) requestUrl.addQueryItem("since_id",QString::number(since_id,10));
-    if(max_id!=0) requestUrl.addQueryItem("max_id",QString::number(max_id,10));
-    if(count!=0) requestUrl.addQueryItem("count",QString::number(count,10));
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), RETWEETED_TO_ME);
-    issueGetRequest(req);
+    if(since_id!=0) propBag.addQueryItem("since_id",QString::number(since_id,10));
+    if(max_id!=0) propBag.addQueryItem("max_id",QString::number(max_id,10));
+    if(count!=0) propBag.addQueryItem("count",QString::number(count,10));
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+
+
+    issueGetRequest(RETWEETED_TO_ME, requestStr, propBag.items);
 
 }
 void Petrel::retweets(quint64 id, int count){
 
     QString requestStr("http://api.twitter.com/1/statuses/retweets/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(count!=0) requestUrl.addQueryItem("count",QString::number(count,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), RETWEETS);
-    issueGetRequest(req);
+    if(count!=0) propBag.addQueryItem("count",QString::number(count,10));
+
+
+    issueGetRequest(RETWEETS, requestStr, propBag.items);
 
 }
 void Petrel::retweetsOfMe(quint64 since_id, quint64 max_id, int count, int page){
 
     QString requestStr("http://api.twitter.com/1/statuses/retweets_of_me.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(since_id!=0) requestUrl.addQueryItem("since_id",QString::number(since_id,10));
-    if(max_id!=0) requestUrl.addQueryItem("max_id",QString::number(max_id,10));
-    if(count!=0) requestUrl.addQueryItem("count",QString::number(count,10));
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), RETWEETS_OF_ME);
-    issueGetRequest(req);
+    if(since_id!=0) propBag.addQueryItem("since_id",QString::number(since_id,10));
+    if(max_id!=0) propBag.addQueryItem("max_id",QString::number(max_id,10));
+    if(count!=0) propBag.addQueryItem("count",QString::number(count,10));
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+
+
+    issueGetRequest(RETWEETS_OF_ME, requestStr, propBag.items);
 
 }
 void Petrel::savedSearches(){
 
     QString requestStr("http://api.twitter.com/1/saved_searches.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), SAVED_SEARCHES);
-    issueGetRequest(req);
+
+
+    issueGetRequest(SAVED_SEARCHES, requestStr, propBag.items);
 
 }
 void Petrel::searchUsers(const QString& q, const QString& per_page, int page){
 
     QString requestStr("http://api.twitter.com/1/users/search.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(q!="") requestUrl.addQueryItem("q",q);
-    if(per_page!="") requestUrl.addQueryItem("per_page",per_page);
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), SEARCH_USERS);
-    issueGetRequest(req);
+    if(q!="") propBag.addQueryItem("q",q);
+    if(per_page!="") propBag.addQueryItem("per_page",per_page);
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+
+
+    issueGetRequest(SEARCH_USERS, requestStr, propBag.items);
 
 }
 void Petrel::sentDirectMessages(quint64 since_id, quint64 max_id, int count, int page){
 
     QString requestStr("http://api.twitter.com/1/direct_messages/sent.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(since_id!=0) requestUrl.addQueryItem("since_id",QString::number(since_id,10));
-    if(max_id!=0) requestUrl.addQueryItem("max_id",QString::number(max_id,10));
-    if(count!=0) requestUrl.addQueryItem("count",QString::number(count,10));
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), SENT_DIRECT_MESSAGES);
-    issueGetRequest(req);
+    if(since_id!=0) propBag.addQueryItem("since_id",QString::number(since_id,10));
+    if(max_id!=0) propBag.addQueryItem("max_id",QString::number(max_id,10));
+    if(count!=0) propBag.addQueryItem("count",QString::number(count,10));
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+
+
+    issueGetRequest(SENT_DIRECT_MESSAGES, requestStr, propBag.items);
 
 }
 void Petrel::show(quint64 id){
 
     QString requestStr("http://api.twitter.com/1/statuses/show/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), SHOW);
-    issueGetRequest(req);
+
+
+    issueGetRequest(SHOW, requestStr, propBag.items);
 
 }
 void Petrel::showFriendships(quint64 source_id, const QString& source_screen_name, quint64 target_id, const QString& target_screen_name){
 
     QString requestStr("http://api.twitter.com/1/friendships/show.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(source_id!=0) requestUrl.addQueryItem("source_id",QString::number(source_id,10));
-    if(source_screen_name!="") requestUrl.addQueryItem("source_screen_name",source_screen_name);
-    if(target_id!=0) requestUrl.addQueryItem("target_id",QString::number(target_id,10));
-    if(target_screen_name!="") requestUrl.addQueryItem("target_screen_name",target_screen_name);
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), SHOW_FRIENDSHIPS);
-    issueGetRequest(req);
+    if(source_id!=0) propBag.addQueryItem("source_id",QString::number(source_id,10));
+    if(source_screen_name!="") propBag.addQueryItem("source_screen_name",source_screen_name);
+    if(target_id!=0) propBag.addQueryItem("target_id",QString::number(target_id,10));
+    if(target_screen_name!="") propBag.addQueryItem("target_screen_name",target_screen_name);
+
+
+    issueGetRequest(SHOW_FRIENDSHIPS, requestStr, propBag.items);
 
 }
 void Petrel::showSavedSearch(quint64 id){
 
     QString requestStr("http://api.twitter.com/1/saved_searches/show/"+QString::number(id,10)+".xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), SHOW_SAVED_SEARCH);
-    issueGetRequest(req);
+
+
+    issueGetRequest(SHOW_SAVED_SEARCH, requestStr, propBag.items);
 
 }
 void Petrel::showUsers(quint64 id, quint64 user_id, const QString& screen_name){
 
     QString requestStr("http://api.twitter.com/1/users/show.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    if(user_id!=0) requestUrl.addQueryItem("user_id",QString::number(user_id,10));
-    if(screen_name!="") requestUrl.addQueryItem("screen_name",screen_name);
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), SHOW_USERS);
-    issueGetRequest(req);
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+    if(user_id!=0) propBag.addQueryItem("user_id",QString::number(user_id,10));
+    if(screen_name!="") propBag.addQueryItem("screen_name",screen_name);
+
+
+    issueGetRequest(SHOW_USERS, requestStr, propBag.items);
 
 }
 void Petrel::testHelp(){
 
     QString requestStr("http://api.twitter.com/1/help/test.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), TEST_HELP);
-    issueGetRequest(req);
+
+
+    issueGetRequest(TEST_HELP, requestStr, propBag.items);
 
 }
 void Petrel::update(const QString& status, quint64 in_reply_to_status_id, const QString& lat, const QString& long_){
 
     QString requestStr("http://api.twitter.com/1/statuses/update.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(status!="") requestUrl.addQueryItem("status",status);
-    if(in_reply_to_status_id!=0) requestUrl.addQueryItem("in_reply_to_status_id",QString::number(in_reply_to_status_id,10));
-    if(lat!="") requestUrl.addQueryItem("lat",lat);
-    if(long_!="") requestUrl.addQueryItem("long",long_);
+    if(status!="") propBag.addQueryItem("status",status);
+    if(in_reply_to_status_id!=0) propBag.addQueryItem("in_reply_to_status_id",QString::number(in_reply_to_status_id,10));
+    if(lat!="") propBag.addQueryItem("lat",lat);
+    if(long_!="") propBag.addQueryItem("long",long_);
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), UPDATE);
-    issuePostRequest(req);
+
+
+    issuePostRequest(UPDATE, requestStr, propBag.items);
 
 }
 void Petrel::updateDeliveryDevice(const QString& device){
 
     QString requestStr("http://api.twitter.com/1/account/update_delivery_device.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(device!="") requestUrl.addQueryItem("device",device);
+    if(device!="") propBag.addQueryItem("device",device);
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), UPDATE_DELIVERY_DEVICE);
-    issuePostRequest(req);
+
+
+    issuePostRequest(UPDATE_DELIVERY_DEVICE, requestStr, propBag.items);
 
 }
 void Petrel::updateProfile(const QString& name, const QString& url, const QString& location, const QString& description){
 
     QString requestStr("http://api.twitter.com/1/account/update_profile.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(name!="") requestUrl.addQueryItem("name",name);
-    if(url!="") requestUrl.addQueryItem("url",url);
-    if(location!="") requestUrl.addQueryItem("location",location);
-    if(description!="") requestUrl.addQueryItem("description",description);
+    if(name!="") propBag.addQueryItem("name",name);
+    if(url!="") propBag.addQueryItem("url",url);
+    if(location!="") propBag.addQueryItem("location",location);
+    if(description!="") propBag.addQueryItem("description",description);
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), UPDATE_PROFILE);
-    issuePostRequest(req);
+
+
+    issuePostRequest(UPDATE_PROFILE, requestStr, propBag.items);
 
 }
 void Petrel::updateProfileBackgroundImage(const QString& image, const QString& tile){
@@ -896,17 +901,17 @@ void Petrel::updateProfileBackgroundImage(const QString& image, const QString& t
 void Petrel::updateProfileColor(const QString& profile_background_color, const QString& profile_text_color, const QString& profile_link_color, const QString& profile_sidebar_fill_color, const QString& profile_sidebar_border_color){
 
     QString requestStr("http://api.twitter.com/1/account/update_profile_colors.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(profile_background_color!="") requestUrl.addQueryItem("profile_background_color",profile_background_color);
-    if(profile_text_color!="") requestUrl.addQueryItem("profile_text_color",profile_text_color);
-    if(profile_link_color!="") requestUrl.addQueryItem("profile_link_color",profile_link_color);
-    if(profile_sidebar_fill_color!="") requestUrl.addQueryItem("profile_sidebar_fill_color",profile_sidebar_fill_color);
-    if(profile_sidebar_border_color!="") requestUrl.addQueryItem("profile_sidebar_border_color",profile_sidebar_border_color);
+    if(profile_background_color!="") propBag.addQueryItem("profile_background_color",profile_background_color);
+    if(profile_text_color!="") propBag.addQueryItem("profile_text_color",profile_text_color);
+    if(profile_link_color!="") propBag.addQueryItem("profile_link_color",profile_link_color);
+    if(profile_sidebar_fill_color!="") propBag.addQueryItem("profile_sidebar_fill_color",profile_sidebar_fill_color);
+    if(profile_sidebar_border_color!="") propBag.addQueryItem("profile_sidebar_border_color",profile_sidebar_border_color);
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), UPDATE_PROFILE_COLOR);
-    issuePostRequest(req);
+
+
+    issuePostRequest(UPDATE_PROFILE_COLOR, requestStr, propBag.items);
 
 }
 void Petrel::updateProfileImage(const QString& image){
@@ -915,29 +920,29 @@ void Petrel::updateProfileImage(const QString& image){
 void Petrel::userTimeline(quint64 id, quint64 user_id, const QString& screen_name, quint64 since_id, quint64 max_id, int count, int page){
 
     QString requestStr("http://api.twitter.com/1/statuses/user_timeline.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
-    if(id!=0) requestUrl.addQueryItem("id",QString::number(id,10));
-    if(user_id!=0) requestUrl.addQueryItem("user_id",QString::number(user_id,10));
-    if(screen_name!="") requestUrl.addQueryItem("screen_name",screen_name);
-    if(since_id!=0) requestUrl.addQueryItem("since_id",QString::number(since_id,10));
-    if(max_id!=0) requestUrl.addQueryItem("max_id",QString::number(max_id,10));
-    if(count!=0) requestUrl.addQueryItem("count",QString::number(count,10));
-    if(page!=0) requestUrl.addQueryItem("page",QString::number(page,10));
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), USER_TIMELINE);
-    issueGetRequest(req);
+    if(id!=0) propBag.addQueryItem("id",QString::number(id,10));
+    if(user_id!=0) propBag.addQueryItem("user_id",QString::number(user_id,10));
+    if(screen_name!="") propBag.addQueryItem("screen_name",screen_name);
+    if(since_id!=0) propBag.addQueryItem("since_id",QString::number(since_id,10));
+    if(max_id!=0) propBag.addQueryItem("max_id",QString::number(max_id,10));
+    if(count!=0) propBag.addQueryItem("count",QString::number(count,10));
+    if(page!=0) propBag.addQueryItem("page",QString::number(page,10));
+
+
+    issueGetRequest(USER_TIMELINE, requestStr, propBag.items);
 
 }
 void Petrel::verifyCredentials(){
 
     QString requestStr("http://api.twitter.com/1/account/verify_credentials.xml");
-    QUrl requestUrl(requestStr);
+    PropertyBag propBag;
     //addQueryItem
 
-    QNetworkRequest req(requestUrl.toString());
-    req.setAttribute((QNetworkRequest::Attribute)(QNetworkRequest::User + ATTR_ROLE), VERIFY_CREDENTIALS);
-    issueGetRequest(req);
+
+
+    issueGetRequest(VERIFY_CREDENTIALS, requestStr, propBag.items);
 
 }
 

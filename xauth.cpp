@@ -95,11 +95,9 @@ bool LessThan(const QPair<QString,QString> &p1, const QPair<QString,QString> &p2
 }
 
 QString XAuth::getSignature(const QString& method,
-                            QUrl url)
+                            const QString& url,
+                            QList<QPair<QString, QString> > queryItems)
 {
-                            //const QString& url,
-                            //const QList<QPair<QString,QString> > &queryItems){
-    QList<QPair<QString,QString> > queryItems(url.queryItems());
     QList<QPair<QString,QString> > xauthItems;
     QDateTime now = QDateTime::currentDateTime();
 
@@ -128,7 +126,7 @@ QString XAuth::getSignature(const QString& method,
     qDebug() << params;
 
     QStringList dataList;
-    dataList << method << QUrl::toPercentEncoding(url.toString(QUrl::RemoveQuery)) << QUrl::toPercentEncoding(params);
+    dataList << method << QUrl::toPercentEncoding(url) << QUrl::toPercentEncoding(params);
 
     QByteArray data(dataList.join("&").toAscii());
 

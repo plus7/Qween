@@ -116,10 +116,10 @@ public:
     void userTimeline(quint64 id, quint64 user_id, const QString& screen_name, quint64 since_id, quint64 max_id, int count, int page);
     void verifyCredentials();
     //END auto generated methods
-    void issueGetRequest(QNetworkRequest& req);
-    void issuePostRequest(QNetworkRequest& req);
-    void issuePutRequest(QNetworkRequest& req);
-    void issueDeleteRequest(QNetworkRequest& req);
+    void issueGetRequest(int role, QString url, QList<QPair<QString,QString> > queryItems);
+    void issuePostRequest(int role, QString url, QList<QPair<QString,QString> > queryItems);
+    void issuePutRequest(int role, QString url, QList<QPair<QString,QString> > queryItems);
+    void issueDeleteRequest(int role, QString url, QList<QPair<QString,QString> > queryItems);
 signals:
     //BEGIN auto generated signals
     void availableTrendsReceived(locations_t& locations);

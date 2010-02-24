@@ -17,7 +17,8 @@ public:
     virtual ~XAuth();
     void getAccessToken(const QString& userid, const QString& pass);
     QString getSignature(const QString& method,
-                         QUrl url);
+                         const QString& url,
+                         QList<QPair<QString, QString> > queryItems);
 
     QString consumerKey() const { return m_consumer_key; }
     void setConsumerKey(const QString& key){ m_consumer_key = key; }
