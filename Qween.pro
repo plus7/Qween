@@ -41,7 +41,8 @@ SOURCES += main.cpp \
     petrel/types_impl.cpp \
     shorturi/shorturicache.cpp \
     xauth.cpp \
-    util.cpp
+    util.cpp \
+    statusbrowser.cpp
 HEADERS += qweenmainwindow.h \
     twitter.h \
     qweensettings.h \
@@ -76,7 +77,8 @@ HEADERS += qweenmainwindow.h \
     petrel/types.h \
     shorturi/shorturicache.h \
     xauth.h \
-    util.h
+    util.h \
+    statusbrowser.h
 FORMS += qweenmainwindow.ui \
     aboutdialog.ui \
     settingdialog.ui \
