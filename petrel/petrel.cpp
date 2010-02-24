@@ -18,6 +18,7 @@
 #include "petrel.h"
 #include "xauth.h"
 #include "util.h"
+#include <QMessageBox>
 Petrel::Petrel(const QString& userid, const QString& pass)
         :m_manager(new QNetworkAccessManager( this )),
         m_userid(userid),m_pass(pass),m_useXAuth(false),m_xauth(new XAuth(XAUTH_CONSUMER_KEY, XAUTH_CONSUMER_SECRET,this)),
@@ -48,8 +49,9 @@ void Petrel::issueGetRequest(QNetworkRequest& req){
 }
 
 void Petrel::issuePostRequest(QNetworkRequest& req){
+    QMessageBox::information(NULL, "", QString(req.url().toEncoded()));
+    QUrl url(req.url().toString().replace("#","%23"));
     if(m_useXAuth){
-        QUrl url(req.url());
         QString sig = m_xauth->getSignature("POST", url);
         req.setRawHeader( "Authorization", sig.prepend( "OAuth " ).toAscii() );
     }else{
@@ -57,7 +59,7 @@ void Petrel::issuePostRequest(QNetworkRequest& req){
         req.setRawHeader( "Authorization", auth.toBase64().prepend( "Basic " ) );
     }
     //TODO: getでも同様なのか？
-    QString tmp(util::encodeQuery(req.url().queryItems()));
+    QString tmp(util::encodeQuery(url.queryItems()));
     req.setUrl(QUrl(req.url().toString(QUrl::RemoveQuery)));
     QNetworkReply *r = m_manager->post(req,QByteArray(tmp.toAscii()));
     m_replies.append(r);
