@@ -10,7 +10,14 @@ TARGET = Qween
 TEMPLATE = app
 INCLUDEPATH += ./shorturi
 DEPENDPATH += ./shorturi
-LIBS += -lssl
+win32 { 
+    LIBS += -lssl32 \
+			-leay32
+}
+unix { 
+	LIBS += -lssl
+}
+
 
 # Kilroy was here
 SOURCES += main.cpp \
