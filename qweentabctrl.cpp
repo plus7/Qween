@@ -42,7 +42,7 @@
 
 QweenTabCtrl::QweenTabCtrl(QWidget *parent) :
     QTabWidget(parent),m_homeView(NULL),m_replyView(NULL),
-    m_dmView(NULL),m_favView(NULL)
+    m_dmView(NULL),m_favView(NULL),settings(QweenSettings::globalSettings())
 {
     setMovable(true);
 }
@@ -182,8 +182,8 @@ void QweenTabCtrl::fixLackingTabs(){
 }
 
 void QweenTabCtrl::addItem(Twitter::TwitterItem item){
-    if(QweenSettings::globalSettings()->setReadMyPost() &&
-       item.screenName() == QweenSettings::globalSettings()->userid()) item.setRead(true);
+    if(settings->setReadMyPost() &&
+       item.screenName() == settings->userid()) item.setRead(true);
     switch(item.origin()){
     case HOME_TIMELINE:
         if(m_homeView) {
@@ -256,12 +256,16 @@ void QweenTabCtrl::favorited(quint64 id, bool faved){
 void QweenTabCtrl::OnUnreadCountChanged(int count){
     TimelineView* view = qobject_cast<TimelineView*>(sender());
     int idx=indexOf(view);
-    if(count==0 || !QweenSettings::globalSettings()->manageUnread()){
+    if(count==0 || !settings->manageUnread()){
         setTabText(idx, view->title());
         setTabIcon(idx, QIcon());
     }else{
         setTabText(idx, QString("%0(%1)").arg(view->title()).arg(count));
-        setTabIcon(idx, QIcon(":/res/unread.png"));
+        if(settings->showUnreadIconInTab()){
+            setTabIcon(idx, QIcon(":/res/unread.png"));
+        }else{
+            setTabIcon(idx, QIcon());
+        }
     }
 }
 
@@ -320,7 +324,11 @@ void QweenTabCtrl::setManageUnread(bool val){
                     setTabIcon(i, QIcon());
                 }else{
                     setTabText(i, QString("%0(%1)").arg(view->title()).arg(count));
-                    setTabIcon(i, QIcon(":/res/unread.png"));
+                    if(settings->showUnreadIconInTab()){
+                        setTabIcon(i, QIcon(":/res/unread.png"));
+                    }else{
+                        setTabIcon(i, QIcon());
+                    }
                 }
             }
         }else{

@@ -92,32 +92,12 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
-          <widget class="QCheckBox" name="checkBox_3">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>自動調整する</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="QCheckBox" name="checkBox">
            <property name="enabled">
             <bool>false</bool>
            </property>
            <property name="text">
             <string>投稿時取得</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_2">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string>Reply時同時取得</string>
            </property>
           </widget>
          </item>
@@ -135,45 +115,17 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>DM更新間隔(秒)</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>次ページ取得件数閾値</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="lineEdit_5">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_7">
-           <property name="text">
-            <string>閾値オーバー時の取得ページ</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="lineEdit_6">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="1">
           <widget class="QSpinBox" name="spinReplyUpdateIntv">
            <property name="maximum">
             <number>100000</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>DM更新間隔(秒)</string>
            </property>
           </widget>
          </item>
@@ -184,7 +136,31 @@
            </property>
           </widget>
          </item>
+         <item row="2" column="1">
+          <widget class="QSpinBox" name="spinSearchUpdateIntv"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>検索更新間隔(秒)</string>
+           </property>
+          </widget>
+         </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_2">
+         <property name="text">
+          <string>起動時に取得したPostを既読にする</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="chkVerCheckOnStartup">
+         <property name="text">
+          <string>起動時にバージョンチェックする</string>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="verticalSpacer_6">

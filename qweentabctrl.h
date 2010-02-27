@@ -33,6 +33,7 @@
 #include "twitter.h"
 class TabInfo;
 class TimelineView;
+class QweenSettings;
 class QweenTabCtrl : public QTabWidget
 {
 Q_OBJECT
@@ -75,6 +76,7 @@ private:
     TimelineView* m_replyView;
     TimelineView* m_dmView;
     TimelineView* m_favView;
+
     quint64 m_newestHomeID;
     quint64 m_newestDMID;
     quint64 m_newestReplyID;
@@ -82,6 +84,7 @@ private:
     quint64 m_myID;
     Twitter::TwitterItem m_curItem;
     bool m_manageUnread;
+    QweenSettings *settings;
 };
 
 #endif // QWEENTABCTRL_H

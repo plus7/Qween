@@ -1163,17 +1163,27 @@ void QweenMainWindow::updateWindowTitle(){
             t.append(m_latestMyPost);
             break;
         case 3: // at unread
+            if(!tabWidget->replyView() ||
+               !tabWidget->replyView()->model()) break;
             t.append(QString::number(tabWidget->replyView()->model()->unreadCount()));
             break;
         case 4: // unread
+            if(!tabWidget->homeView() ||
+               !tabWidget->homeView()->model()) break;
             t.append(QString::number(tabWidget->homeView()->model()->unreadCount()));
             break;
         case 5: // unread(at unread)
+            if(!tabWidget->homeView() ||
+               !tabWidget->replyView() ||
+               !tabWidget->homeView()->model() ||
+               !tabWidget->replyView()->model()) break;
             t.append(QString("%0(%1)")
                      .arg(tabWidget->homeView()->model()->unreadCount())
                      .arg(tabWidget->replyView()->model()->unreadCount()));
             break;
         case 6: // unread / all
+            if(!tabWidget->homeView() ||
+               !tabWidget->homeView()->model()) break;
             t.append(QString("%0 / %1")
                      .arg(tabWidget->homeView()->model()->unreadCount())
                      .arg(tabWidget->homeView()->model()->count()));

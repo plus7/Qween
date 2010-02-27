@@ -54,6 +54,10 @@ void SettingDialog::updateUi(){
     ui->chkMinToTray->setChecked(settings->minimizeToTray());
     ui->chkManageUnread->setChecked(settings->manageUnread());
 
+#ifndef VERSION_CHECK
+    ui->chkVerCheckOnStartup->setEnabled(false);
+#endif
+
     //Color
     m_inputBgColor = settings->inputBgColor();
     setLineEditBgColor(ui->edtInputBgColorSample, m_inputBgColor);
@@ -111,6 +115,11 @@ void SettingDialog::accept(){
         settings->setToken("");
         settings->setTokenSecret("");
     }
+
+#ifdef VERSION_CHECK
+    //TODO:
+#endif
+
     settings->setMinimizeToTray(ui->chkMinToTray->checkState() == Qt::Checked);
     settings->setManageUnread(ui->chkManageUnread->checkState() == Qt::Checked);
     //Color
