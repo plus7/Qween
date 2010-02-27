@@ -739,6 +739,7 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
         QweenApplication::iconManager()->fetchIcon(item.userId(), item.iconUri());
     }
     ui->userIconLabel->repaint();
+    updateWindowTitle();
 }
 
 void QweenMainWindow::OnPostModeMenuOpen(){
@@ -1161,7 +1162,7 @@ void QweenMainWindow::updateWindowTitle(){
         case 2:
             t.append(m_latestMyPost);
             break;
-        case 3: // TODO At unread
+        case 3: // at unread
             t.append(QString::number(tabWidget->replyView()->model()->unreadCount()));
             break;
         case 4: // unread
