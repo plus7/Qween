@@ -52,6 +52,7 @@ private:
     QByteArray m_winstate;
     QByteArray m_splitterstate;
     bool m_minOnClose;
+    bool m_minToTray;
     bool m_requireCtrlOnEnter;
     bool m_uriAutoShorten;
     QString m_statusSuffix;
@@ -116,6 +117,9 @@ public:
 
     bool minimizeOnClose() const { return m_minOnClose; }
     void setMinimizeOnClose(bool val) { m_minOnClose = val; }
+
+    bool minimizeToTray() const { return m_minToTray; }
+    void setMinimizeToTray(bool val) { m_minToTray = val; }
 
     bool requireCtrlOnEnter() const { return m_requireCtrlOnEnter; }
     void setRequireCtrlOnEnter(bool val) { m_requireCtrlOnEnter = val; }

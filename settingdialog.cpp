@@ -51,6 +51,8 @@ void SettingDialog::updateUi(){
     ui->edtUserid->setText(m_id);
     m_xauth = settings->useXAuth();
     ui->chkXauth->setChecked(settings->useXAuth());
+    ui->chkMinToTray->setChecked(settings->minimizeToTray());
+
     //Color
     m_inputBgColor = settings->inputBgColor();
     setLineEditBgColor(ui->edtInputBgColorSample, m_inputBgColor);
@@ -108,6 +110,8 @@ void SettingDialog::accept(){
         settings->setToken("");
         settings->setTokenSecret("");
     }
+    settings->setMinimizeToTray(ui->chkMinToTray->checkState() == Qt::Checked);
+
     //Color
     settings->setInputBgColor(m_inputBgColor);
     settings->setAtReplyColor(m_atReplyColor);

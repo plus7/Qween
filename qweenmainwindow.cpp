@@ -521,8 +521,9 @@ void QweenMainWindow::changeEvent(QEvent *e)
         ui->retranslateUi(this);
         break;
     case QEvent::WindowStateChange:
-        //QMessageBox::information(this,"",QString("windowstate %0").arg(windowState()));
-        qDebug() << "hogehogehoge";
+        if(settings->minimizeToTray() && isMinimized() && isVisible()){
+            hide();
+        }
         break;
     default:
         break;
@@ -808,6 +809,7 @@ void QweenMainWindow::OnIconActivated(QSystemTrayIcon::ActivationReason reason)
      case QSystemTrayIcon::Trigger:
      case QSystemTrayIcon::DoubleClick:
         if(!this->isVisible())
+            this->setWindowState(windowState() & ~Qt::WindowMinimized | Qt::WindowActive);
             this->show();
          break;
      case QSystemTrayIcon::MiddleClick:

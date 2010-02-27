@@ -288,9 +288,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_16">
+          <widget class="QCheckBox" name="chkMinToTray">
            <property name="enabled">
-            <bool>false</bool>
+            <bool>true</bool>
            </property>
            <property name="text">
             <string>最小化したときタスクトレイに格納する</string>
