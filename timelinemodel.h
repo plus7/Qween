@@ -74,6 +74,7 @@ public:
     }
     int baseIndex() const { return m_baseIndex; }
     int unreadCount() const { return m_unreadCount; }
+    int count() const { return m_itemList.count(); }
 //    void setData(int index, Returnables::StatusElement *newData);
 
 signals:

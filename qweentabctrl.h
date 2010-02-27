@@ -55,6 +55,12 @@ public:
     void saveState(QIODevice*);
     void restoreState(QIODevice*);
     void fixLackingTabs();
+    void setManageUnread(bool val);
+    bool manageUnread() const { return m_manageUnread; }
+    TimelineView* homeView(){ return m_homeView; }
+    TimelineView* replyView(){ return m_replyView; }
+    TimelineView* dmView(){ return m_dmView; }
+    TimelineView* favView(){ return m_favView; }
 
 signals:
     void itemSelected(const Twitter::TwitterItem& item);
@@ -75,6 +81,7 @@ private:
     quint64 m_newestFavID;
     quint64 m_myID;
     Twitter::TwitterItem m_curItem;
+    bool m_manageUnread;
 };
 
 #endif // QWEENTABCTRL_H

@@ -256,7 +256,7 @@ void QweenTabCtrl::favorited(quint64 id, bool faved){
 void QweenTabCtrl::OnUnreadCountChanged(int count){
     TimelineView* view = qobject_cast<TimelineView*>(sender());
     int idx=indexOf(view);
-    if(count==0){
+    if(count==0 || !QweenSettings::globalSettings()->manageUnread()){
         setTabText(idx, view->title());
         setTabIcon(idx, QIcon());
     }else{
@@ -308,3 +308,27 @@ void QweenTabCtrl::OnItemSelected(const Twitter::TwitterItem& item){
     emit itemSelected(item);
 }
 
+void QweenTabCtrl::setManageUnread(bool val){
+    if(m_manageUnread != val){
+        m_manageUnread = val;
+        if(m_manageUnread){
+            for(int i=0;i<count();i++){
+                TimelineView* view = timelineView(i);
+                int count = view->model()->unreadCount();
+                if(count==0){
+                    setTabText(i, view->title());
+                    setTabIcon(i, QIcon());
+                }else{
+                    setTabText(i, QString("%0(%1)").arg(view->title()).arg(count));
+                    setTabIcon(i, QIcon(":/res/unread.png"));
+                }
+            }
+        }else{
+            for(int i=0;i<count();i++){
+                TimelineView* view = timelineView(i);
+                setTabText(i, view->title());
+                setTabIcon(i, QIcon());
+            }
+        }
+    }
+}

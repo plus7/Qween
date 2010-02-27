@@ -144,6 +144,7 @@ void QweenMainWindow::applySettings(){
         TimelineView* view = tabWidget->timelineView(i);
         view->setIconSize(QSize(size,size));
     }
+    tabWidget->setManageUnread(settings->manageUnread());
     updateWindowTitle();
     updateTrayIconTitle();
     setupTimers();
@@ -1160,7 +1161,21 @@ void QweenMainWindow::updateWindowTitle(){
         case 2:
             t.append(m_latestMyPost);
             break;
-        case 3: // TODO
+        case 3: // TODO At unread
+            t.append(QString::number(tabWidget->replyView()->model()->unreadCount()));
+            break;
+        case 4: // unread
+            t.append(QString::number(tabWidget->homeView()->model()->unreadCount()));
+            break;
+        case 5: // unread(at unread)
+            t.append(QString("%0(%1)")
+                     .arg(tabWidget->homeView()->model()->unreadCount())
+                     .arg(tabWidget->replyView()->model()->unreadCount()));
+            break;
+        case 6: // unread / all
+            t.append(QString("%0 / %1")
+                     .arg(tabWidget->homeView()->model()->unreadCount())
+                     .arg(tabWidget->homeView()->model()->count()));
             break;
         }
     }

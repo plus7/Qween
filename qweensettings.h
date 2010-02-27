@@ -53,6 +53,7 @@ private:
     QByteArray m_splitterstate;
     bool m_minOnClose;
     bool m_minToTray;
+    bool m_manageUnread;
     bool m_requireCtrlOnEnter;
     bool m_uriAutoShorten;
     QString m_statusSuffix;
@@ -120,6 +121,9 @@ public:
 
     bool minimizeToTray() const { return m_minToTray; }
     void setMinimizeToTray(bool val) { m_minToTray = val; }
+
+    bool manageUnread() const { return m_manageUnread; }
+    void setManageUnread(bool val) { m_manageUnread = val; }
 
     bool requireCtrlOnEnter() const { return m_requireCtrlOnEnter; }
     void setRequireCtrlOnEnter(bool val) { m_requireCtrlOnEnter = val; }

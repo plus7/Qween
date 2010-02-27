@@ -50,6 +50,7 @@ void QweenSettings::load(){
     m_splitterstate = ini.value("window/splitter_state", QByteArray()).value<QByteArray>();
     m_minOnClose = ini.value("window/minimize_on_close", QVariant(true)).toBool();
     m_minToTray = ini.value("window/minimize_to_tray", QVariant(false)).toBool();
+    m_manageUnread = ini.value("view/manage_unread", QVariant(true)).toBool();
     m_tlUpdateIntv = ini.value("interval/timeline", 60).toInt();
     m_replyUpdateIntv = ini.value("interval/reply", 240).toInt();
     m_dmUpdateIntv = ini.value("interval/dm", 600).toInt();
@@ -100,6 +101,7 @@ void QweenSettings::save(){
     ini.setValue("window/splitter_state", m_splitterstate);
     ini.setValue("window/minimize_on_close",m_minOnClose);
     ini.setValue("window/minimize_to_tray",m_minToTray);
+    ini.setValue("view/manage_unread",m_manageUnread);
     ini.setValue("tinyurl/auto_shorten", m_uriAutoShorten);
     ini.setValue("interval/timeline", m_tlUpdateIntv);
     ini.setValue("interval/reply", m_replyUpdateIntv);
