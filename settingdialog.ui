@@ -23,7 +23,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -258,7 +258,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_13">
+          <widget class="QCheckBox" name="chkManageUnread">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -268,7 +268,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_14">
+          <widget class="QCheckBox" name="chkClearUnreadOnNewStatus">
            <property name="enabled">
             <bool>false</bool>
            </property>
