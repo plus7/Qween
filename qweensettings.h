@@ -47,6 +47,7 @@ private:
     QString m_password;
     QString m_token;
     QString m_token_secret;
+    bool m_markAsRead1stFetch;
     bool m_xauth;
     QByteArray m_geometry;
     QByteArray m_winstate;
@@ -191,6 +192,9 @@ public:
 
     bool setReadMyPost(){ return m_setReadMyPost; }
     void setSetReadMyPost(bool value){ m_setReadMyPost = value; }
+
+    bool markAsRead1stFetch() const { return m_markAsRead1stFetch; }
+    void setMarkAsRead1stFetch(bool value) { m_markAsRead1stFetch = value; }
 
     static QweenSettings* globalSettings();
 

@@ -145,6 +145,8 @@ private:
 
     //最新の自発言
     QString m_latestMyPost;
+    //ログインして最初の取得か？
+    bool m_firstFetch;
 
 public slots:
     void OnError(int role, const QString& msg);

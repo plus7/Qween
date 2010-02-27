@@ -53,6 +53,7 @@ void SettingDialog::updateUi(){
     ui->chkXauth->setChecked(settings->useXAuth());
     ui->chkMinToTray->setChecked(settings->minimizeToTray());
     ui->chkManageUnread->setChecked(settings->manageUnread());
+    ui->chkMarkAsRead1stFetch->setChecked(settings->markAsRead1stFetch());
 
 #ifndef VERSION_CHECK
     ui->chkVerCheckOnStartup->setEnabled(false);
@@ -122,6 +123,7 @@ void SettingDialog::accept(){
 
     settings->setMinimizeToTray(ui->chkMinToTray->checkState() == Qt::Checked);
     settings->setManageUnread(ui->chkManageUnread->checkState() == Qt::Checked);
+    settings->setMarkAsRead1stFetch(ui->chkMarkAsRead1stFetch->checkState() == Qt::Checked);
     //Color
     settings->setInputBgColor(m_inputBgColor);
     settings->setAtReplyColor(m_atReplyColor);

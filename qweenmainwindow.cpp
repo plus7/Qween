@@ -253,6 +253,7 @@ void QweenMainWindow::setupTrayIcon(){
 void QweenMainWindow::setupTwitter(){
     m_petrelLib->abort();
     //m_twitLib->Logout(); TODO: EndSessionで置き換える
+    m_firstFetch = settings->markAsRead1stFetch();
     if(settings->useXAuth() && !settings->token().isEmpty()){
         m_petrelLib->setToken(settings->token(),settings->tokenSecret());
     }else{
@@ -347,6 +348,7 @@ void QweenMainWindow::OnHomeTimelineReceived(statuses_t& s){
     if(settings->showUserInTitle()) title.prepend(m_petrelLib->userid()+" - ");
     foreach(QSharedPointer<status_t> ptr, s.status){
         Twitter::TwitterItem item(Twitter::Status, ptr, HOME_TIMELINE, false);
+        if(m_firstFetch) item.setRead(true);
         if(m_newestFriendsStatus < item.id()) m_newestFriendsStatus = item.id();
         switch(settings->notifyBaloonName()){
         case 0:
@@ -363,6 +365,7 @@ void QweenMainWindow::OnHomeTimelineReceived(statuses_t& s){
             m_usersModel->appendItem(item);
         tabWidget->addItem(item);
     }
+    m_firstFetch = false;
     //TODO: dm, reply, sound
     //バルーン・サウンドは最初は抑制するようだ
     //設定項目があるのでそこを見るべし
