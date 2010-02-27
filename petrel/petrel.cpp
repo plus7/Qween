@@ -30,9 +30,9 @@
 #include "xauth.h"
 #include "util.h"
 #include <QMessageBox>
-Petrel::Petrel(const QString& userid, const QString& pass)
+Petrel::Petrel()
         :m_manager(new QNetworkAccessManager( this )),
-        m_userid(userid),m_pass(pass),m_useXAuth(false),m_xauth(new XAuth(XAUTH_CONSUMER_KEY, XAUTH_CONSUMER_SECRET,this)),
+        m_useXAuth(false),m_xauth(new XAuth(XAUTH_CONSUMER_KEY, XAUTH_CONSUMER_SECRET,this)),
         m_xauth_limit(0),m_xauth_remaining(0)
 {
     connect(m_manager,SIGNAL(finished(QNetworkReply*)),
@@ -121,6 +121,8 @@ void Petrel::setLoginInfo(const QString& userid, const QString& pass, bool xauth
     if(m_useXAuth){
         m_xauth_limit=0;
         m_xauth_remaining=0;
+        m_xauth->setToken("");
+        m_xauth->setTokenSecret("");
     }
 
     if(m_useXAuth)
@@ -128,6 +130,17 @@ void Petrel::setLoginInfo(const QString& userid, const QString& pass, bool xauth
     else
         verifyCredentials();
 }
+
+void Petrel::setToken(const QString& token, const QString& tokenSecret){
+    m_useXAuth = true;
+    m_xauth->setToken(token);
+    m_xauth->setTokenSecret(tokenSecret);
+    verifyCredentials();
+}
+
+QString Petrel::token(){ return m_xauth->token(); }
+
+QString Petrel::tokenSecret(){ return m_xauth->tokenSecret(); }
 
 void Petrel::accessKeyReceived(){
     verifyCredentials();

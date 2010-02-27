@@ -43,6 +43,8 @@ void QweenSettings::load(){
     m_userid = ini.value("user/id", "").toString();
     m_password = ini.value("user/password", "").toString();
     m_xauth = ini.value("user/xauth",QVariant(true)).toBool();
+    m_token = ini.value("user/token","").toString();
+    m_token_secret = ini.value("user/token_secret","").toString();
     m_geometry = ini.value("window/geometry", QByteArray()).value<QByteArray>();
     m_winstate = ini.value("window/state", QByteArray()).value<QByteArray>();
     m_splitterstate = ini.value("window/splitter_state", QByteArray()).value<QByteArray>();
@@ -90,6 +92,8 @@ void QweenSettings::save(){
     ini.setValue("user/id", m_userid);
     ini.setValue("user/password", m_password);
     ini.setValue("user/xauth",m_xauth);
+    ini.setValue("user/token",m_token);
+    ini.setValue("user/token_secret",m_token_secret);
     ini.setValue("window/geometry", m_geometry);
     ini.setValue("window/state", m_winstate);
     ini.setValue("window/splitter_state", m_splitterstate);

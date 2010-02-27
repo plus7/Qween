@@ -14,6 +14,16 @@
 
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+  In addition, as a special exception, NOSE Takafumi
+  gives permission to link the code of its release of Qween with the
+  OpenSSL project's "OpenSSL" library (or with modified versions of it
+  that use the same license as the "OpenSSL" library), and distribute
+  the linked executables.  You must obey the GNU General Public License
+  in all respects for all of the code used other than "OpenSSL".  If you
+  modify this file, you may extend this exception to your version of the
+  file, but you are not obligated to do so.  If you do not wish to do
+  so, delete this exception statement from your version.
 */
 
 #ifndef QWEENSETTINGS_H
@@ -35,6 +45,8 @@ private:
     QString m_inputFont;
     QString m_userid;
     QString m_password;
+    QString m_token;
+    QString m_token_secret;
     bool m_xauth;
     QByteArray m_geometry;
     QByteArray m_winstate;
@@ -83,11 +95,15 @@ public:
 
     QString userid() { return m_userid; }
     QString password() { return m_password; }
-    bool xauth() { return m_xauth; }
+    bool useXAuth() { return m_xauth; }
+    QString token() { return m_token; }
+    QString tokenSecret() { return m_token_secret; }
 
     void setUserid(const QString& val) { m_userid = val; }
     void setPassword(const QString& val) { m_password = val; }
     void setXauth(bool val) { m_xauth = val; }
+    void setToken(const QString& val) { m_token = val; }
+    void setTokenSecret(const QString& val) { m_token_secret = val; }
 
     QByteArray geometry() { return m_geometry; }
     void setGeometry(const QByteArray& val) { m_geometry = val; }

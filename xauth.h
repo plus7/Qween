@@ -14,6 +14,16 @@
 
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+  In addition, as a special exception, NOSE Takafumi
+  gives permission to link the code of its release of Qween with the
+  OpenSSL project's "OpenSSL" library (or with modified versions of it
+  that use the same license as the "OpenSSL" library), and distribute
+  the linked executables.  You must obey the GNU General Public License
+  in all respects for all of the code used other than "OpenSSL".  If you
+  modify this file, you may extend this exception to your version of the
+  file, but you are not obligated to do so.  If you do not wish to do
+  so, delete this exception statement from your version.
 */
 
 #ifndef XAUTH_H
@@ -44,6 +54,8 @@ public:
     void setConsumerSecret(const QString& secret){ m_consumer_secret = secret; }
     QString tokenSecret() const { return m_token_secret; }
     void setTokenSecret(const QString& secret){ m_token_secret = secret; }
+    QString token() const { return m_token_key; }
+    void setToken(const QString& key){ m_token_key = key; }
 
 signals:
     void accessTokenReceived();

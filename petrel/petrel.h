@@ -45,8 +45,9 @@ class Petrel : public QObject
 {
     Q_OBJECT
 public:
-    Petrel(const QString& userid, const QString& pass);
+    Petrel(/*const QString& userid, const QString& pass, */);
     void setLoginInfo(const QString& userid, const QString& pass, bool xauth);
+    void setToken(const QString& token, const QString& tokenSecret);
     void abort(){
         foreach(QNetworkReply *r, m_replies){
             r->abort();
@@ -56,6 +57,9 @@ public:
     bool useXAuth() const { return m_useXAuth; }
     QString userid(){ return m_userid; }
     QString pass(){ return m_pass; }
+    QString token();
+    QString tokenSecret();
+    XAuth *xauth(){ return m_xauth; }
 
     virtual ~Petrel();
     //BEGIN auto generated methods

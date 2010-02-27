@@ -102,7 +102,7 @@ QweenMainWindow::~QweenMainWindow()
 }
 
 void QweenMainWindow::makeWidgets(){
-    m_petrelLib = new Petrel("","");
+    m_petrelLib = new Petrel();
 
     m_timelineTimer = new QTimer(this);
     m_DMTimer = new QTimer(this);
@@ -252,7 +252,11 @@ void QweenMainWindow::setupTrayIcon(){
 void QweenMainWindow::setupTwitter(){
     m_petrelLib->abort();
     //m_twitLib->Logout(); TODO: EndSessionで置き換える
-    m_petrelLib->setLoginInfo(settings->userid(), settings->password(),settings->xauth());
+    if(settings->useXAuth() && !settings->token().isEmpty()){
+        m_petrelLib->setToken(settings->token(),settings->tokenSecret());
+    }else{
+        m_petrelLib->setLoginInfo(settings->userid(), settings->password(),settings->useXAuth());
+    }
 }
 
 void QweenMainWindow::makeConnections(){
@@ -368,6 +372,8 @@ void QweenMainWindow::OnHomeTimelineReceived(statuses_t& s){
 
 void QweenMainWindow::OnVerifyCredentialsReceived(user_t& user){
     if(user.id!=0){
+        settings->setToken(m_petrelLib->token());
+        settings->setTokenSecret(m_petrelLib->tokenSecret());
         tabWidget->setMyId(user.id);
         m_idAsUInt64 = user.id;
         m_petrelLib->homeTimeline(m_newestFriendsStatus,0,20,0);
