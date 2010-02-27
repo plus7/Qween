@@ -21,7 +21,8 @@
 #include "qweensettings.h"
 
 TimelineModel::TimelineModel(IconManager *iconMgr, QObject *parent)
-     : QAbstractItemModel(parent), m_iconMgr(iconMgr), m_textDoc(new QTextDocument(this)), m_settings(QweenSettings::globalSettings()), m_baseIndex(-1), m_myId(0), m_newestId(0)
+     : QAbstractItemModel(parent), m_iconMgr(iconMgr), m_textDoc(new QTextDocument(this)), m_settings(QweenSettings::globalSettings()), m_baseIndex(-1), m_myId(0), m_newestId(0),
+     m_unreadCount(0)
  {
     connect(m_iconMgr, SIGNAL(iconDownloaded(quint64,QIcon)),
             this, SLOT(OnIconDownloaded(quint64,QIcon)));
@@ -151,6 +152,10 @@ QVariant TimelineModel::headerData(int section, Qt::Orientation orientation, int
 void TimelineModel::appendItem(Twitter::TwitterItem item)//, bool ignoreId)
 {
     int index;
+    if(!item.read()){
+        m_unreadCount++;
+        emit unreadCountChanged(m_unreadCount);
+    }
     if(item.id()>m_newestId){
         m_newestId = item.id();
         index = m_itemList.count();
@@ -198,6 +203,10 @@ Twitter::TwitterItem TimelineModel::removeItem(int index)
 {
     beginRemoveRows(QModelIndex(), index, index);
     Twitter::TwitterItem *p = m_itemList.takeAt(index);
+    if(!p->read()){
+        m_unreadCount--;
+        emit unreadCountChanged(m_unreadCount);
+    }
     Twitter::TwitterItem rv(*p);
     rv.setParent(NULL);
     delete p;
@@ -216,7 +225,10 @@ Twitter::TwitterItem TimelineModel::itemAt(int index) const
 void TimelineModel::setRead(int index, bool read){
     if(index > m_itemList.count() || index < 0) return;
     Twitter::TwitterItem *item = m_itemList.at(index);
+    if(read == item->read()) return;
     item->setRead(read);
+    m_unreadCount--;
+    emit unreadCountChanged(m_unreadCount);
     QModelIndex idx = this->index(index,0,QModelIndex());
     emit dataChanged(idx, idx);
 }

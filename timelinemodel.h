@@ -63,10 +63,11 @@ public:
         }*/
     }
     int baseIndex() const { return m_baseIndex; }
+    int unreadCount() const { return m_unreadCount; }
 //    void setData(int index, Returnables::StatusElement *newData);
 
 signals:
-
+    void unreadCountChanged(int count);
 public slots:
     void OnIconDownloaded(quint64 userid, const QIcon& icon);
 
@@ -78,6 +79,7 @@ private:
     quint64 m_myId;
     quint64 m_newestId;
     QList<Twitter::TwitterItem*> m_itemList;
+    int m_unreadCount;
 };
 
 #endif // TIMELINEMODEL_H

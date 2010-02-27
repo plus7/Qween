@@ -31,7 +31,6 @@ TimelineView::TimelineView(QWidget *parent) :
     setIconSize(QSize(size,size));
 }
 
-
 QDomElement TimelineView::saveToElement(QDomDocument& doc){
     QDomElement elm = doc.createElement("tab");
     elm.setAttribute("title", title());
@@ -76,3 +75,4 @@ void TimelineView::restoreFromElement(const QDomElement& element){
     }
     //TODO: 振り分け設定の読み込み
 }
+

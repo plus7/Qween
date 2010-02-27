@@ -39,6 +39,7 @@ void SettingDialog::updateUi(){
     ui->edtPassword->setText(m_password);
     m_id = settings->userid();
     ui->edtUserid->setText(m_id);
+    m_xauth = settings->xauth();
     ui->chkXauth->setChecked(settings->xauth());
     //Color
     m_inputBgColor = settings->inputBgColor();

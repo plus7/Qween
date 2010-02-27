@@ -233,8 +233,8 @@ void QweenMainWindow::setupTimers(){
 }
 
 void QweenMainWindow::setupTrayIcon(){
-    m_trayIcon->setIcon(QIcon(":/res/normal.png"));
-    setWindowIcon(QIcon(":/res/normal.png"));
+    m_trayIcon->setIcon(QIcon(":/res/qween_icon.png"));
+    setWindowIcon(QIcon(":/res/qween_icon.png"));
     m_trayIcon->setContextMenu(ui->menu_File);
     m_trayIcon->show();
 }
@@ -503,6 +503,10 @@ void QweenMainWindow::changeEvent(QEvent *e)
     switch (e->type()) {
     case QEvent::LanguageChange:
         ui->retranslateUi(this);
+        break;
+    case QEvent::WindowStateChange:
+        //QMessageBox::information(this,"",QString("windowstate %0").arg(windowState()));
+        qDebug() << "hogehogehoge";
         break;
     default:
         break;

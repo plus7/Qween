@@ -2,11 +2,11 @@
     <qresource prefix="/">
         <file>res/busy.png</file>
         <file>res/error.png</file>
-        <file>res/normal.png</file>
         <file>res/offline.png</file>
         <file>res/reply.png</file>
         <file>res/unread.png</file>
         <file>res/qween_icon.png</file>
         <file>res/lock.png</file>
+        <file>res/normal.png</file>
     </qresource>
 </RCC>

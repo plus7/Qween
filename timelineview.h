@@ -38,6 +38,20 @@ public:
     QString title(){return m_title;}
     void setTitle(const QString& val){m_title = val;}
     TimelineModel* model(){ return (TimelineModel*)QTreeView::model(); }
+    void setModel(QAbstractItemModel *model){
+        TimelineModel* m;
+        if(this->model()){
+            m=this->model();
+            disconnect(m,0,this,0);
+        }
+        QTreeView::setModel(model);
+        if(model){
+            m = (TimelineModel*)model;
+            connect(m,SIGNAL(unreadCountChanged(int)),
+                    this,SLOT(OnUnreadCountChanged(int)));
+        }
+    }
+
     int myId(){ return m_myId; }
     void setMyId(int id){
         m_myId = id;
@@ -69,8 +83,13 @@ protected:
 
 signals:
     void itemSelected(const Twitter::TwitterItem& item);
+    void unreadCountChanged(int count);
 
 public slots:
+    void OnUnreadCountChanged(int count){
+        emit unreadCountChanged(count);
+    }
+
 private:
     int m_myId;
     QString m_type;
