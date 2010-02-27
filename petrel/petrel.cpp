@@ -981,14 +981,14 @@ void Petrel::replyFinished(QNetworkReply *reply)
     QDomDocument doc;
     doc.setContent(replyStr);
     if(doc.documentElement().tagName()=="error"){
-        emit error(role, doc.documentElement());
+        emit error(role, getStrValue(doc.documentElement()));
         return;
     }
     if(doc.documentElement().tagName()=="hash"){
         QDomElement child = doc.documentElement().firstChildElement();
         for (; !child.isNull(); child = child.nextSiblingElement()) {
           if(child.tagName()=="error"){
-              emit error(role, doc.documentElement());
+              emit error(role, getStrValue(child));
               return;
           }
         }

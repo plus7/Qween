@@ -318,8 +318,8 @@ void QweenMainWindow::makeConnections(){
             this, SLOT(OnCreateFavoriteReceived(status_t&)));
     connect(m_petrelLib, SIGNAL(destroyFavoriteReceived(status_t&)),
             this, SLOT(OnDestroyFavoriteReceived(status_t&)));
-    connect(m_petrelLib, SIGNAL(error(int,QDomElement)),
-            this, SLOT(OnError(int,QDomElement)));
+    connect(m_petrelLib, SIGNAL(error(int,QString)),
+            this, SLOT(OnError(int,QString)));
 
     //Tab
     connect(tabWidget, SIGNAL(itemSelected(Twitter::TwitterItem)),
@@ -499,7 +499,7 @@ void QweenMainWindow::OnDestroyFavoriteReceived(status_t& status){
    tabWidget->favorited(id,false);
 }
 
-void QweenMainWindow::OnError(int role, QDomElement elm){
+void QweenMainWindow::OnError(int role, const QString& msg){
     switch(role){
     case UPDATE:
       {
@@ -508,7 +508,7 @@ void QweenMainWindow::OnError(int role, QDomElement elm){
         break;
       }
     default:
-        QMessageBox::information(this,"error",elm.toText().nodeValue());
+        QMessageBox::information(this,"error",msg);
         break;
     }
 }

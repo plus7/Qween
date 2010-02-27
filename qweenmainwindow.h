@@ -147,7 +147,7 @@ private:
     QString m_latestMyPost;
 
 public slots:
-    void OnError(int role, QDomElement elm);
+    void OnError(int role, const QString& msg);
     void OnExit();
     void OnHomeTimelineReceived(statuses_t& s);
     void OnVerifyCredentialsReceived(user_t& user);

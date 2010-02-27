@@ -204,7 +204,7 @@ signals:
     void verifyCredentialsReceived(user_t& user);
     //END auto generated signals
 
-    void error(int role, QDomElement elm);
+    void error(int role, const QString msg);
 public slots:
     void replyFinished( QNetworkReply* );
     void accessKeyReceived();
