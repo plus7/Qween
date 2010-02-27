@@ -23,6 +23,7 @@
 #include <QtGui>
 class IconManager;
 class QweenSettings;
+class QTextDocument;
 class TimelineModel : public QAbstractItemModel
 {
 Q_OBJECT
@@ -72,6 +73,7 @@ public slots:
 private:
     IconManager *m_iconMgr;
     QweenSettings *m_settings;
+    QTextDocument *m_textDoc;
     int m_baseIndex;
     quint64 m_myId;
     quint64 m_newestId;

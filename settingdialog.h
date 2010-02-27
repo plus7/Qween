@@ -54,6 +54,7 @@ private:
     QColor m_selfColor;
     QString m_password;
     QString m_id;
+    bool m_xauth;
     bool m_loginInfoChanged;
 
 private slots:

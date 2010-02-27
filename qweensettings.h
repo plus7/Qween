@@ -35,6 +35,7 @@ private:
     QString m_inputFont;
     QString m_userid;
     QString m_password;
+    bool m_xauth;
     QByteArray m_geometry;
     QByteArray m_winstate;
     QByteArray m_splitterstate;
@@ -82,9 +83,11 @@ public:
 
     QString userid() { return m_userid; }
     QString password() { return m_password; }
+    bool xauth() { return m_xauth; }
 
     void setUserid(const QString& val) { m_userid = val; }
     void setPassword(const QString& val) { m_password = val; }
+    void setXauth(bool val) { m_xauth = val; }
 
     QByteArray geometry() { return m_geometry; }
     void setGeometry(const QByteArray& val) { m_geometry = val; }

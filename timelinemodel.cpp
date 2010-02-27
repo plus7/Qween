@@ -21,7 +21,7 @@
 #include "qweensettings.h"
 
 TimelineModel::TimelineModel(IconManager *iconMgr, QObject *parent)
-     : QAbstractItemModel(parent), m_iconMgr(iconMgr), m_settings(QweenSettings::globalSettings()), m_baseIndex(-1), m_myId(0), m_newestId(0)
+     : QAbstractItemModel(parent), m_iconMgr(iconMgr), m_textDoc(new QTextDocument(this)), m_settings(QweenSettings::globalSettings()), m_baseIndex(-1), m_myId(0), m_newestId(0)
  {
     connect(m_iconMgr, SIGNAL(iconDownloaded(quint64,QIcon)),
             this, SLOT(OnIconDownloaded(quint64,QIcon)));
@@ -55,7 +55,8 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
             return item->userName();
             break;
         case 1:
-            return item->status();
+            m_textDoc->setHtml(item->status());
+            return m_textDoc->toPlainText();
             break;
         case 2:
             return item->createdAt().toLocalTime().toString(QweenSettings::globalSettings()->dateTimeFormat());

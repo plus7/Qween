@@ -39,6 +39,7 @@ void SettingDialog::updateUi(){
     ui->edtPassword->setText(m_password);
     m_id = settings->userid();
     ui->edtUserid->setText(m_id);
+    ui->chkXauth->setChecked(settings->xauth());
     //Color
     m_inputBgColor = settings->inputBgColor();
     setLineEditBgColor(ui->edtInputBgColorSample, m_inputBgColor);
@@ -86,6 +87,10 @@ void SettingDialog::accept(){
     }
     if(ui->edtUserid->text() != m_id){
         settings->setUserid(ui->edtUserid->text());
+        m_loginInfoChanged = true;
+    }
+    if(ui->chkXauth->checkState() == Qt::Checked != m_xauth){
+        settings->setXauth(ui->chkXauth->checkState() == Qt::Checked);
         m_loginInfoChanged = true;
     }
     //Color

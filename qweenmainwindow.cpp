@@ -242,7 +242,7 @@ void QweenMainWindow::setupTrayIcon(){
 void QweenMainWindow::setupTwitter(){
     m_petrelLib->abort();
     //m_twitLib->Logout(); TODO: EndSessionで置き換える
-    m_petrelLib->setLoginInfo(settings->userid(), settings->password(),true);
+    m_petrelLib->setLoginInfo(settings->userid(), settings->password(),settings->xauth());
 }
 
 void QweenMainWindow::makeConnections(){
@@ -645,69 +645,78 @@ void QweenMainWindow::OnFavTimerTimeout(){
 void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
 {
     m_detailItem = item;
+    QString status(item.status());
+    QRegExp linkrx(LINK_RX_DATA);
+    int pos=0;
+    while ((pos = linkrx.indexIn(status, pos)) != -1) {
+        QStringList list = linkrx.capturedTexts();
+        QString str;
+        QString anchor;
+        int length;
+        if (list[1] != ""){ //hashtag
+            str = list[1];
+            if (str.at(0) != '#'){
+                str.remove(0,1);
+                pos++;
+            }
+            QString str2 = str;
+            str2.remove(0,1);
+            QUrl url("http://twitter.com/");
+            url.setFragment("search?q=%23"+str2);
+            anchor = QString("<a href=\"%2\">%1</a>")
+                     .arg(str,url.toString());
+            length = str.length();
+        }
+        else if(list[2] != ""){ //reply
+            str = list[2];
+            if (str.at(0) == '@'){
+                str.remove(0,1);
+                pos++;
+            }else{
+                str.remove(0,2);
+                pos+=2;
+            }
+            anchor = QString("<a href=\"http://twitter.com/%1\">%1</a>").arg(str);
+            length = str.length();
+        }
+        else if(list[3] != ""){ //URI
+            str = list[3];
+            anchor = QString("<a href=\"%1\">%1</a>").arg(str);
+            length = str.length();
+        }
+        status.replace(pos, length, anchor);
+        pos += anchor.length();
+    }
     switch(item.type()){
     case Twitter::Status:
     {
-        QString status(item.status());
-        QRegExp linkrx(LINK_RX_DATA);
-        int pos=0;
-        while ((pos = linkrx.indexIn(status, pos)) != -1) {
-            QStringList list = linkrx.capturedTexts();
-            QString str;
-            QString anchor;
-            int length;
-            if (list[1] != ""){ //hashtag
-                str = list[1];
-                if (str.at(0) != '#'){
-                    str.remove(0,1);
-                    pos++;
-                }
-                QString str2 = str;
-                str2.remove(0,1);
-                QUrl url("http://twitter.com/");
-                url.setFragment("search?q=%23"+str2);
-                anchor = QString("<a href=\"%2\">%1</a>")
-                         .arg(str,url.toString());
-                length = str.length();
-            }
-            else if(list[2] != ""){ //reply
-                str = list[2];
-                if (str.at(0) == '@'){
-                    str.remove(0,1);
-                    pos++;
-                }else{
-                    str.remove(0,2);
-                    pos+=2;
-                }
-                anchor = QString("<a href=\"http://twitter.com/%1\">%1</a>").arg(str);
-                length = str.length();
-            }
-            else if(list[3] != ""){ //URI
-                str = list[3];
-                anchor = QString("<a href=\"%1\">%1</a>").arg(str);
-                length = str.length();
-            }
-            status.replace(pos, length, anchor);
-            pos += anchor.length();
+        if(item.isProtected()){
+            status.prepend("<img src=\":/res/lock.png\">");
         }
-        ui->textBrowser->setHtml(tr("<html><body style=\"%1\">")
-                                 .arg(settings->statusViewStyle()) +
-                                 status + tr("</body></html>"));
         ui->lblNameId->setText(item.screenName() + "/" + item.userName());
         ui->lblUpdateDatetime->setText(item.createdAt().toString());
-        if(QweenApplication::iconManager()->isIconAvailable(item.userId())){
-            QIcon icon(QweenApplication::iconManager()->getIcon(item.userId()));
-            ui->userIconLabel->setPixmap(icon.pixmap(50,50,QIcon::Normal,QIcon::On));
-        }else{
-            ui->userIconLabel->setPixmap(QPixmap(50,50));
-            QweenApplication::iconManager()->fetchIcon(item.userId(), item.iconUri());
-        }
-        ui->userIconLabel->repaint();
+        break;
+    }
+    case Twitter::DirectMessage:
+    {
+        ui->lblNameId->setText("DM: " + item.screenName() + " -> " + item.replyTo());
+        ui->lblUpdateDatetime->setText(item.createdAt().toString());
         break;
     }
     default:
         break;
     }
+    ui->textBrowser->setHtml(tr("<html><body style=\"%1\">")
+                             .arg(settings->statusViewStyle()) +
+                             status + tr("</body></html>"));
+    if(QweenApplication::iconManager()->isIconAvailable(item.userId())){
+        QIcon icon(QweenApplication::iconManager()->getIcon(item.userId()));
+        ui->userIconLabel->setPixmap(icon.pixmap(50,50,QIcon::Normal,QIcon::On));
+    }else{
+        ui->userIconLabel->setPixmap(QPixmap(50,50));
+        QweenApplication::iconManager()->fetchIcon(item.userId(), item.iconUri());
+    }
+    ui->userIconLabel->repaint();
 }
 
 void QweenMainWindow::OnPostModeMenuOpen(){

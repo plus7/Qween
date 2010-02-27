@@ -227,6 +227,22 @@ namespace Twitter{
                 return 0;
             }
         }
+        QString replyTo() const {
+            switch(m_type){
+            case Twitter::Status:
+                if(m_replyToList.count() > 0){
+                    return m_replyToList.at(0);
+                }else{
+                    return QString();
+                }
+                break;
+            case Twitter::DirectMessage:
+                return m_dmPtr->recipient->screen_name;
+                break;
+            default:
+                return QString();
+            }
+        }
 
         QList<QString> replyToList(){ return m_replyToList; }
     private:
