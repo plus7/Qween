@@ -366,6 +366,7 @@ void QweenMainWindow::OnHomeTimelineReceived(statuses_t& s){
         tabWidget->addItem(item);
     }
     m_firstFetch = false;
+    updateWindowTitle();
     //TODO: dm, reply, sound
     //バルーン・サウンドは最初は抑制するようだ
     //設定項目があるのでそこを見るべし

@@ -55,22 +55,20 @@ QDomElement TimelineView::saveToElement(QDomDocument& doc){
         QDomElement ruleElm = doc.createElement("rule");
         ForwardingRule rule = forwardingRule.at(i);
         ruleElm.setAttribute("body", rule.body);
-        ruleElm.setAttribute("exbody", rule.exbody);
         ruleElm.setAttribute("name", rule.name);
-        ruleElm.setAttribute("exname", rule.exname);
         ruleElm.setAttribute("cs", rule.caseSensitive);
+        ruleElm.setAttribute("useboth", rule.useBoth);
+        ruleElm.setAttribute("userx", rule.useRegex);
+        ruleElm.setAttribute("exbody", rule.exbody);
+        ruleElm.setAttribute("exname", rule.exname);
         ruleElm.setAttribute("excs", rule.exCaseSensitive);
+        ruleElm.setAttribute("exuseboth", rule.exUseBoth);
+        ruleElm.setAttribute("exuserx", rule.exUseRegex);
         /*
-        bool useBoth;
-        bool exUseBoth;
         bool moveFromRecent;
         bool setMark;
         bool searchUrl;
-        bool exSearchUrl;
-        bool caseSensitive;
-        bool exCaseSensitive;
-        bool useRegex;
-        bool exUseRegex;*/
+        bool exSearchUrl;*/
     }
     elm.appendChild(forward);
     return elm;

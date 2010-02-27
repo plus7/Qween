@@ -34,19 +34,21 @@ class ForwardingRule
 {
 public:
     ForwardingRule();
-    QString name;
-    QString exname;
-    QString body;
-    QString exbody;
-    bool useBoth;
-    bool exUseBoth;
     bool moveFromRecent;
     bool setMark;
+
+    QString name;
+    QString body;
+    bool useBoth;
     bool searchUrl;
-    bool exSearchUrl;
     bool caseSensitive;
-    bool exCaseSensitive;
     bool useRegex;
+
+    QString exbody;
+    QString exname;
+    bool exUseBoth;
+    bool exSearchUrl;
+    bool exCaseSensitive;
     bool exUseRegex;
 };
 
