@@ -215,8 +215,6 @@ private:
     QString m_pass;
     bool m_useXAuth;
     XAuth *m_xauth;
-    int m_xauth_limit;
-    int m_xauth_remaining;
 };
 
 #endif // PETREL_H
