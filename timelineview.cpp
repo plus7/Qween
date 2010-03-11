@@ -29,6 +29,7 @@
 #include "timelineview.h"
 #include "qweensettings.h"
 #include <QtXml>
+#include <QKeyEvent>
 TimelineView::TimelineView(QWidget *parent) :
     QTreeView(parent),m_myId(0)
 {
@@ -39,6 +40,9 @@ TimelineView::TimelineView(QWidget *parent) :
     int size = QweenSettings::globalSettings()->iconSize()*8 + 8;
     if(size==8) size=0;
     setIconSize(QSize(size,size));
+}
+
+void TimelineView::keyPressEvent(QKeyEvent *event){
 }
 
 QDomElement TimelineView::saveToElement(QDomDocument& doc){
