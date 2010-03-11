@@ -133,6 +133,8 @@ void QweenMainWindow::makeWidgets(){
     ui->statusText->setCompleter(m_completer);
 
     m_networkMan = new QNetworkAccessManager(this);
+
+    ui->lblNameId->setOpenExternalLinks(true);
 }
 
 void QweenMainWindow::applySettings(){
