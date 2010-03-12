@@ -57,10 +57,10 @@ bool TimelineView::isRelatedPost(int idx, int baseIdx){
 }
 
 void TimelineView::keyPressEvent(QKeyEvent *event){
+    int i, next;
     if(!event->modifiers().testFlag(Qt::ShiftModifier) &&
        !event->modifiers().testFlag(Qt::ControlModifier) &&
        !event->modifiers().testFlag(Qt::AltModifier)){
-        int i, next;
         switch(event->key()){
         case Qt::Key_M:
             next = -1;
@@ -128,6 +128,33 @@ void TimelineView::keyPressEvent(QKeyEvent *event){
             break;
         }
     }
+    if(event->modifiers().testFlag(Qt::ShiftModifier) &&
+       !event->modifiers().testFlag(Qt::ControlModifier) &&
+       !event->modifiers().testFlag(Qt::AltModifier)){
+        switch(event->key()){
+       case Qt::Key_M:
+           next = -1;
+           for(i=model()->baseIndex()-1; i>=0; i--){
+               if(model()->itemAt(i).favorited()){
+                   next = i;
+                   break;
+               }
+           }
+           if(next>=0) setCurrentIndex(model()->index(next,currentIndex().column()));
+           return;
+       case Qt::Key_N:
+           next = -1;
+           for(i=model()->baseIndex()+1; i<model()->count(); i++){
+               if(model()->itemAt(i).favorited()){
+                   next = i;
+                   break;
+               }
+           }
+           if(next>=0) setCurrentIndex(model()->index(next,currentIndex().column()));
+           return;
+       }
+    }
+
     QTreeView::keyPressEvent(event);
 }
 
