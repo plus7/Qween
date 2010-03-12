@@ -68,6 +68,7 @@ signals:
     void tabSelected(const QString& tabName, int tabType);
     void favorite();
     void reply();
+    void dm();
 
 public slots:
     void OnItemSelected(const Twitter::TwitterItem& item);

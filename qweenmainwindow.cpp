@@ -332,6 +332,8 @@ void QweenMainWindow::makeConnections(){
             this, SLOT(on_actFavorite_triggered()));
     connect(tabWidget, SIGNAL(reply()),
             this, SLOT(on_actAtReply_triggered()));
+    connect(tabWidget, SIGNAL(dm()),
+            this, SLOT(on_actSendDM_triggered()));
     //StatusText
     connect(ui->statusText, SIGNAL(uriShorteningFinished()),
             this, SLOT(OnUriShorteningFinished()));
@@ -1027,6 +1029,7 @@ void QweenMainWindow::on_actAtReply_triggered()
     //TODO: なにやら複雑な処理
     ui->statusText->setCursorPosition(0);
     ui->statusText->insert("@"+tabWidget->currentItem().screenName()+" ");
+    ui->statusText->setFocus();
     m_in_reply_to_status_id = tabWidget->currentItem().id();
 }
 
@@ -1035,6 +1038,7 @@ void QweenMainWindow::on_actSendDM_triggered()
     //stub.
     ui->statusText->setCursorPosition(0);
     ui->statusText->insert("D "+tabWidget->currentItem().screenName()+" ");
+    ui->statusText->setFocus();
 }
 
 void QweenMainWindow::on_actReTweet_triggered()

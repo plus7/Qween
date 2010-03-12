@@ -330,7 +330,12 @@ void QweenTabCtrl::OnFavorite(){
 }
 
 void QweenTabCtrl::OnReply(){
-    emit reply();
+    TimelineView* v = qobject_cast<TimelineView*>(sender());
+    if(v == m_dmView){
+        emit dm();
+    }else{
+        emit reply();
+    }
 }
 
 void QweenTabCtrl::makeConnection(TimelineView *view){

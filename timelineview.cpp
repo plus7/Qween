@@ -87,7 +87,7 @@ void TimelineView::keyPressEvent(QKeyEvent *event){
             }
             if(next>0) setCurrentIndex(model()->index(next,currentIndex().column()));
             return;
-        case Qt::Key_Enter:
+        case Qt::Key_Return:
             emit reply();
             return;
         default:
