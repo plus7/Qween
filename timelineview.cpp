@@ -28,6 +28,7 @@
 
 #include "timelineview.h"
 #include "qweensettings.h"
+#include "twitter.h"
 #include <QtXml>
 #include <QKeyEvent>
 TimelineView::TimelineView(QWidget *parent) :
@@ -42,12 +43,45 @@ TimelineView::TimelineView(QWidget *parent) :
     setIconSize(QSize(size,size));
 }
 
+bool TimelineView::isRelatedPost(int idx, int baseIdx){
+    Twitter::TwitterItem baseItem = model()->itemAt(baseIdx);
+    Twitter::TwitterItem item = model()->itemAt(idx);
+    if(item.id() == baseItem.inReplyToId() ||
+       baseItem.userId() == item.userId() ||
+       item.replyToList().indexOf(QweenSettings::globalSettings()->userid())>=0 ||
+       baseItem.replyToList().indexOf(item.screenName())>=0 ||
+       item.replyToList().indexOf(baseItem.screenName())>=0 ){
+        return true;
+    }
+    return false;
+}
+
 void TimelineView::keyPressEvent(QKeyEvent *event){
     if(!event->modifiers().testFlag(Qt::ShiftModifier) &&
        !event->modifiers().testFlag(Qt::ControlModifier) &&
        !event->modifiers().testFlag(Qt::AltModifier)){
         int i, next;
         switch(event->key()){
+        case Qt::Key_M:
+            next = -1;
+            for(i=model()->baseIndex()-1; i>=0; i--){
+                if(isRelatedPost(i, model()->baseIndex())){
+                    next = i;
+                    break;
+                }
+            }
+            if(next>=0) setCurrentIndex(model()->index(next,currentIndex().column()));
+            return;
+        case Qt::Key_N:
+            next = -1;
+            for(i=model()->baseIndex()+1; i<model()->count(); i++){
+                if(isRelatedPost(i, model()->baseIndex())){
+                    next = i;
+                    break;
+                }
+            }
+            if(next>=0) setCurrentIndex(model()->index(next,currentIndex().column()));
+            return;
         case Qt::Key_I:
             emit favorite();
             return;
@@ -59,7 +93,7 @@ void TimelineView::keyPressEvent(QKeyEvent *event){
                     break;
                 }
             }
-            if(next>0) setCurrentIndex(model()->index(next,currentIndex().column()));
+            if(next>=0) setCurrentIndex(model()->index(next,currentIndex().column()));
             return;
         case Qt::Key_J:
             QApplication::sendEvent(this, &QKeyEvent(QEvent::KeyPress, Qt::Key_Down, Qt::NoModifier));
@@ -75,7 +109,7 @@ void TimelineView::keyPressEvent(QKeyEvent *event){
                     break;
                 }
             }
-            if(next>0) setCurrentIndex(model()->index(next,currentIndex().column()));
+            if(next>=0) setCurrentIndex(model()->index(next,currentIndex().column()));
             return;
         case Qt::Key_Space:
             next = -1;
@@ -85,7 +119,7 @@ void TimelineView::keyPressEvent(QKeyEvent *event){
                     break;
                 }
             }
-            if(next>0) setCurrentIndex(model()->index(next,currentIndex().column()));
+            if(next>=0) setCurrentIndex(model()->index(next,currentIndex().column()));
             return;
         case Qt::Key_Return:
             emit reply();

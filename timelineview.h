@@ -105,6 +105,7 @@ protected:
     void keyPressEvent(QKeyEvent *event);
 
 private:
+    bool isRelatedPost(int idx, int baseIdx);
     int m_myId;
     QString m_type;
     QString m_title;
