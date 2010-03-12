@@ -68,7 +68,7 @@ void QweenSettings::load(){
     //startup/dmpages
     //startup/markread
     //startup/versioncheck
-    //startup/wedata? いらないよね
+    //startup/wedata? nmいらないよね
     //startup/checkoneway
     //tinyurl/
     m_uriAutoShorten = ini.value("input/auto_shorten", QVariant(false)).toBool();
@@ -90,7 +90,7 @@ void QweenSettings::load(){
 void QweenSettings::save(){
     QSettings ini(QSettings::IniFormat, QSettings::UserScope, "Qween", "Qween");
     ini.setValue("input/background", m_inputBgColor);
-    ini.setValue("input/reqire_ctrl", m_requireCtrlOnEnter);
+    ini.setValue("input/require_ctrl", m_requireCtrlOnEnter);
     ini.setValue("input/suffix", m_statusSuffix);
     ini.setValue("user/id", m_userid);
     ini.setValue("user/password", m_password);
