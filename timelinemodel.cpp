@@ -66,8 +66,7 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
             return item->userName();
             break;
         case 1:
-            m_textDoc->setHtml(item->status());
-            return m_textDoc->toPlainText();
+            return item->plainStatus();
             break;
         case 2:
             return item->createdAt().toLocalTime().toString(QweenSettings::globalSettings()->dateTimeFormat());

@@ -34,6 +34,9 @@
 #include "petrel/petrel.h"
 class TimelineModel;
 namespace Twitter{
+
+    QString html2plainText(const QString& html);
+
     enum ItemType
     {
         Undefined, Status, DirectMessage, BasicUserInfo, ExtUserInfo
@@ -59,17 +62,22 @@ namespace Twitter{
                 }
                 pos += rx.matchedLength();
             }
+            m_plainStatus = html2plainText(m_statusPtr->text);
         }
 
         TwitterItem(ItemType type, QSharedPointer<direct_message_t> ptr, enum ROLE_TYPE origin,
                     bool read, TimelineModel *parent = 0)
             :m_type(type), m_dmPtr(ptr), m_origin(origin), m_read(read),m_parent(parent)
-        {}
+        {
+            m_plainStatus = html2plainText(m_dmPtr->text);
+        }
 
         TwitterItem(ItemType type, QSharedPointer<user_t> ptr, enum ROLE_TYPE origin,
                     bool read, TimelineModel *parent = 0)
             :m_type(type), m_userPtr(ptr), m_origin(origin), m_read(read),m_parent(parent)
-        {}
+        {
+            m_plainStatus = html2plainText(m_userPtr->status->text);
+        }
 
         QString userName() const {
             switch(m_type){
@@ -133,6 +141,10 @@ namespace Twitter{
             default:
                 return QString();
             }
+        }
+
+        QString plainStatus() const{
+            return m_plainStatus;
         }
 
         quint64 id()const {
@@ -264,8 +276,10 @@ namespace Twitter{
         enum ROLE_TYPE m_origin;
         bool m_read;
         TimelineModel *m_parent;
+        QString m_plainStatus;
     };
 };
+
 
 
 #endif // TWITTER_H
