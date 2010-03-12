@@ -40,7 +40,7 @@
         <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+        <enum>QFrame::Sunken</enum>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
         <property name="sizeConstraint">
@@ -182,6 +182,9 @@
                <property name="focusPolicy">
                 <enum>Qt::ClickFocus</enum>
                </property>
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
+               </property>
                <property name="openExternalLinks">
                 <bool>true</bool>
                </property>
@@ -247,7 +250,7 @@
      <x>0</x>
      <y>0</y>
      <width>444</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
