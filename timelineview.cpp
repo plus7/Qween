@@ -46,12 +46,34 @@ void TimelineView::keyPressEvent(QKeyEvent *event){
     if(!event->modifiers().testFlag(Qt::ShiftModifier) &&
        !event->modifiers().testFlag(Qt::ControlModifier) &&
        !event->modifiers().testFlag(Qt::AltModifier)){
+        int i, next;
         switch(event->key()){
+        case Qt::Key_H:
+            next = -1;
+            for(i=model()->baseIndex()+1; i<model()->count(); i++){
+                if(model()->itemAt(i).userId() == model()->itemAt(model()->baseIndex()).userId()){
+                    next = i;
+                    break;
+                }
+            }
+            if(next>0) setCurrentIndex(model()->index(next,currentIndex().column()));
+            return;
         case Qt::Key_J:
             QApplication::sendEvent(this, &QKeyEvent(QEvent::KeyPress, Qt::Key_Down, Qt::NoModifier));
             return;
         case Qt::Key_K:
             QApplication::sendEvent(this, &QKeyEvent(QEvent::KeyPress, Qt::Key_Up, Qt::NoModifier));
+            return;
+        case Qt::Key_L:
+            next = -1;
+            for(i=model()->baseIndex()-1; i>=0; i--){
+                if(model()->itemAt(i).userId() == model()->itemAt(model()->baseIndex()).userId()){
+                    next = i;
+                    break;
+                }
+            }
+            if(next>0) setCurrentIndex(model()->index(next,currentIndex().column()));
+            return;
             return;
         default:
             break;
