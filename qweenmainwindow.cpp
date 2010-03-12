@@ -582,7 +582,7 @@ void QweenMainWindow::on_actOptions_triggered()
 
         if(dlg.loginInfoChanged()){
             setupTwitter();
-            m_petrelLib->verifyCredentials();
+            //m_petrelLib->verifyCredentials();
         }
     }
 }
