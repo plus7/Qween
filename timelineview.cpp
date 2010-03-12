@@ -43,6 +43,21 @@ TimelineView::TimelineView(QWidget *parent) :
 }
 
 void TimelineView::keyPressEvent(QKeyEvent *event){
+    if(!event->modifiers().testFlag(Qt::ShiftModifier) &&
+       !event->modifiers().testFlag(Qt::ControlModifier) &&
+       !event->modifiers().testFlag(Qt::AltModifier)){
+        switch(event->key()){
+        case Qt::Key_J:
+            QApplication::sendEvent(this, &QKeyEvent(QEvent::KeyPress, Qt::Key_Down, Qt::NoModifier));
+            return;
+        case Qt::Key_K:
+            QApplication::sendEvent(this, &QKeyEvent(QEvent::KeyPress, Qt::Key_Up, Qt::NoModifier));
+            return;
+        default:
+            break;
+        }
+    }
+    QTreeView::keyPressEvent(event);
 }
 
 QDomElement TimelineView::saveToElement(QDomDocument& doc){
