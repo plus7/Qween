@@ -133,6 +133,8 @@ void QweenMainWindow::makeWidgets(){
     ui->statusText->setCompleter(m_completer);
 
     m_networkMan = new QNetworkAccessManager(this);
+
+    ui->lblNameId->setOpenExternalLinks(true);
 }
 
 void QweenMainWindow::applySettings(){
@@ -719,7 +721,7 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
         if(item.isProtected()){
             status.prepend("<img src=\":/res/lock.png\">");
         }
-        ui->lblNameId->setText(item.screenName() + "/" + item.userName());
+        ui->lblNameId->setText(QString("<a href=\"http://twitter.com/%0\">%0</a>/%1").arg(item.screenName()).arg(item.userName()));
         ui->lblUpdateDatetime->setText(item.createdAt().toString());
         break;
     }

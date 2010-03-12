@@ -99,6 +99,8 @@ public slots:
     void OnUnreadCountChanged(int count){
         emit unreadCountChanged(count);
     }
+protected:
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     int m_myId;

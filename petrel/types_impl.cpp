@@ -93,6 +93,8 @@ QDateTime getDateTimeValue(QDomElement elm){
     if((pos = rx.indexIn(str, pos)) != -1){
       QString hoge = QString("%1 %2 %3 %4").arg(getMonthByEngStr(rx.cap(2))).arg(rx.cap(3), rx.cap(4), rx.cap(6));
       QDateTime dt = QDateTime::fromString(hoge, "M dd hh:mm:ss yyyy");
+      dt.setTimeSpec(Qt::UTC);
+      dt = dt.toLocalTime();
       //qDebug() << QDate::shortMonthName(2);
       //qDebug() << dt.isValid();
       //qDebug() << dt.toString();
