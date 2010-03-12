@@ -94,6 +94,7 @@ protected:
 signals:
     void itemSelected(const Twitter::TwitterItem& item);
     void unreadCountChanged(int count);
+    void favorite();
 
 public slots:
     void OnUnreadCountChanged(int count){

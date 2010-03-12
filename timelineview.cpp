@@ -48,6 +48,9 @@ void TimelineView::keyPressEvent(QKeyEvent *event){
        !event->modifiers().testFlag(Qt::AltModifier)){
         int i, next;
         switch(event->key()){
+        case Qt::Key_I:
+            emit favorite();
+            return;
         case Qt::Key_H:
             next = -1;
             for(i=model()->baseIndex()+1; i<model()->count(); i++){

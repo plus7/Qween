@@ -110,6 +110,8 @@ void QweenTabCtrl::restoreState(QIODevice* device){
                 this, SLOT(OnItemSelected(Twitter::TwitterItem)));
         connect(view, SIGNAL(unreadCountChanged(int)),
                 this, SLOT(OnUnreadCountChanged(int)));
+        connect(view, SIGNAL(favorite()),
+                this, SLOT(OnFavorite()));
         this->addTab(view, QIcon(), view->title());
         tabelm = tabelm.nextSiblingElement("tab");
     }
@@ -131,6 +133,8 @@ void QweenTabCtrl::fixLackingTabs(){
                 this, SLOT(OnItemSelected(Twitter::TwitterItem)));
         connect(view, SIGNAL(unreadCountChanged(int)),
                 this, SLOT(OnUnreadCountChanged(int)));
+        connect(view, SIGNAL(favorite()),
+                this, SLOT(OnFavorite()));
         this->addTab(view,QIcon(),view->title());
         m_homeView = view;
     }
@@ -146,6 +150,8 @@ void QweenTabCtrl::fixLackingTabs(){
                 this, SLOT(OnItemSelected(Twitter::TwitterItem)));
         connect(view, SIGNAL(unreadCountChanged(int)),
                 this, SLOT(OnUnreadCountChanged(int)));
+        connect(view, SIGNAL(favorite()),
+                this, SLOT(OnFavorite()));
         this->addTab(view,QIcon(),view->title());
         m_replyView = view;
     }
@@ -161,6 +167,8 @@ void QweenTabCtrl::fixLackingTabs(){
                 this, SLOT(OnItemSelected(Twitter::TwitterItem)));
         connect(view, SIGNAL(unreadCountChanged(int)),
                 this, SLOT(OnUnreadCountChanged(int)));
+        connect(view, SIGNAL(favorite()),
+                this, SLOT(OnFavorite()));
         this->addTab(view,QIcon(),view->title());
         m_dmView = view;
     }
@@ -176,6 +184,8 @@ void QweenTabCtrl::fixLackingTabs(){
                 this, SLOT(OnItemSelected(Twitter::TwitterItem)));
         connect(view, SIGNAL(unreadCountChanged(int)),
                 this, SLOT(OnUnreadCountChanged(int)));
+        connect(view, SIGNAL(favorite()),
+                this, SLOT(OnFavorite()));
         this->addTab(view,QIcon(),view->title());
         m_favView = view;
     }
@@ -235,6 +245,10 @@ TimelineView *QweenTabCtrl::insertTimelineView(int index, const QString& title){
     view->header()->resizeSection(1, 400);
     connect(view, SIGNAL(itemSelected(Twitter::TwitterItem)),
             this, SLOT(OnItemSelected(Twitter::TwitterItem)));
+    connect(view, SIGNAL(unreadCountChanged(int)),
+            this, SLOT(OnUnreadCountChanged(int)));
+    connect(view, SIGNAL(favorite()),
+            this, SLOT(OnFavorite()));
     this->insertTab(index, view, QIcon(), view->title());
     return view;
 }
@@ -339,4 +353,8 @@ void QweenTabCtrl::setManageUnread(bool val){
             }
         }
     }
+}
+
+void QweenTabCtrl::OnFavorite(){
+    emit favorite();
 }

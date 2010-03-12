@@ -66,11 +66,13 @@ public:
 signals:
     void itemSelected(const Twitter::TwitterItem& item);
     void tabSelected(const QString& tabName, int tabType);
+    void favorite();
 
 public slots:
     void OnItemSelected(const Twitter::TwitterItem& item);
     void favorited(quint64 id, bool faved);
     void OnUnreadCountChanged(int count);
+    void OnFavorite();
 private:
     TimelineView* m_homeView;
     TimelineView* m_replyView;

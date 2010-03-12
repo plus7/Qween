@@ -328,6 +328,8 @@ void QweenMainWindow::makeConnections(){
     //Tab
     connect(tabWidget, SIGNAL(itemSelected(Twitter::TwitterItem)),
             this, SLOT(OnItemSelected(Twitter::TwitterItem)));
+    connect(tabWidget, SIGNAL(favorite()),
+            this, SLOT(on_actFavorite_triggered()));
     //StatusText
     connect(ui->statusText, SIGNAL(uriShorteningFinished()),
             this, SLOT(OnUriShorteningFinished()));
