@@ -10,14 +10,9 @@ TARGET = Qween
 TEMPLATE = app
 INCLUDEPATH += ./shorturi
 DEPENDPATH += ./shorturi
-win32 { 
-    LIBS += -lssl32 \
-			-leay32
-}
-unix { 
-	LIBS += -lssl
-}
-
+win32:LIBS += -lssl32 \
+    -leay32
+unix:LIBS += -lssl
 
 # Kilroy was here
 SOURCES += main.cpp \
@@ -49,7 +44,8 @@ SOURCES += main.cpp \
     shorturi/shorturicache.cpp \
     xauth.cpp \
     util.cpp \
-    statusbrowser.cpp
+    statusbrowser.cpp \
+    twitter.cpp
 HEADERS += qweenmainwindow.h \
     twitter.h \
     qweensettings.h \
