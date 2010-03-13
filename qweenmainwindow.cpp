@@ -324,6 +324,8 @@ void QweenMainWindow::makeConnections(){
             this, SLOT(OnCreateFavoriteReceived(status_t&)));
     connect(m_petrelLib, SIGNAL(destroyFavoriteReceived(status_t&)),
             this, SLOT(OnDestroyFavoriteReceived(status_t&)));
+    connect(m_petrelLib, SIGNAL(favoritesReceived(statuses_t&)),
+            this, SLOT(OnFavoritesReceived(statuses_t&)));
     connect(m_petrelLib, SIGNAL(error(int,QString)),
             this, SLOT(OnError(int,QString)));
 
@@ -448,7 +450,7 @@ void QweenMainWindow::OnMentionsReceived(statuses_t& s){
 
 void QweenMainWindow::OnFavoritesReceived(statuses_t& s){
     foreach(QSharedPointer<status_t> ptr, s.status){
-        Twitter::TwitterItem item(Twitter::Status, ptr, MENTIONS, false);
+        Twitter::TwitterItem item(Twitter::Status, ptr, FAVORITES, false);
         if(m_newestFav < item.id()) m_newestFav = item.id();
         if(!m_usersModel->userExists(item.userId()))
             m_usersModel->appendItem(item);
