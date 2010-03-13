@@ -1220,3 +1220,20 @@ void QweenMainWindow::updateTrayIconTitle(){
     t.append("Qween");
     m_trayIcon->setToolTip(t);
 }
+
+void QweenMainWindow::on_actReTweetUnofficial_triggered()
+{
+    ui->statusText->setText("RT @"+tabWidget->currentItem().screenName()+": "+tabWidget->currentItem().status());
+    ui->statusText->setCursorPosition(0);
+    ui->statusText->setFocus();
+}
+
+void QweenMainWindow::on_actSetSelUnread_triggered()
+{
+    tabWidget->setRead(false);
+}
+
+void QweenMainWindow::on_actSetSelRead_triggered()
+{
+    tabWidget->setRead(true);
+}

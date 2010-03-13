@@ -62,6 +62,7 @@ public:
     TimelineView* replyView(){ return m_replyView; }
     TimelineView* dmView(){ return m_dmView; }
     TimelineView* favView(){ return m_favView; }
+    void setRead(bool read);
 
 signals:
     void itemSelected(const Twitter::TwitterItem& item);

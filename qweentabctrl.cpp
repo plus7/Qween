@@ -166,6 +166,16 @@ void QweenTabCtrl::fixLackingTabs(){
     }
 }
 
+void QweenTabCtrl::setRead(bool read){
+    TimelineView *v = currentTimelineView();
+    if(!v) return;
+    QModelIndex idx;
+    QModelIndexList indexes = v->selectionModel()->selectedIndexes();
+    foreach(idx, indexes){
+        v->model()->setRead(idx.row(), read);
+    }
+}
+
 void QweenTabCtrl::addItem(Twitter::TwitterItem item){
     if(settings->setReadMyPost() &&
        item.screenName() == settings->userid()) item.setRead(true);

@@ -309,14 +309,14 @@
      <property name="title">
       <string>未読状態変更</string>
      </property>
-     <addaction name="action_8"/>
-     <addaction name="action_11"/>
+     <addaction name="actSetSelUnread"/>
+     <addaction name="actSetSelRead"/>
     </widget>
     <addaction name="actAtReply"/>
     <addaction name="action_ALL"/>
     <addaction name="actSendDM"/>
     <addaction name="actReTweet"/>
-    <addaction name="actionReTweet_unofficial"/>
+    <addaction name="actReTweetUnofficial"/>
     <addaction name="separator"/>
     <addaction name="actFavorite"/>
     <addaction name="actUnFavorite"/>
@@ -548,9 +548,9 @@
     <string>Alt+R</string>
    </property>
   </action>
-  <action name="actionReTweet_unofficial">
+  <action name="actReTweetUnofficial">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>ReTweet(unofficial)</string>
@@ -844,17 +844,17 @@
     <string>ID振り分けルールを作成</string>
    </property>
   </action>
-  <action name="action_8">
+  <action name="actSetSelUnread">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>未読にする</string>
    </property>
   </action>
-  <action name="action_11">
+  <action name="actSetSelRead">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>既読にする</string>

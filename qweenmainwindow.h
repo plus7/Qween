@@ -187,6 +187,9 @@ public slots:
     void OnFriendshipCommand(const QString& name);
 
 private slots:
+    void on_actSetSelRead_triggered();
+    void on_actSetSelUnread_triggered();
+    void on_actReTweetUnofficial_triggered();
     void on_actionTest_xauth_triggered();
     void on_actUnu_triggered();
     void on_actTwurl_triggered();

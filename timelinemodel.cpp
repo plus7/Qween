@@ -236,7 +236,8 @@ void TimelineModel::setRead(int index, bool read){
     Twitter::TwitterItem *item = m_itemList.at(index);
     if(read == item->read()) return;
     item->setRead(read);
-    m_unreadCount--;
+    if(read) m_unreadCount--;
+    else m_unreadCount++;
     emit unreadCountChanged(m_unreadCount);
     QModelIndex idx = this->index(index,0,QModelIndex());
     emit dataChanged(idx, idx);
