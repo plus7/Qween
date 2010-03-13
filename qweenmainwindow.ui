@@ -324,7 +324,7 @@
     <addaction name="menu_2"/>
     <addaction name="separator"/>
     <addaction name="menu_3"/>
-    <addaction name="action_13"/>
+    <addaction name="actJumpToUnread"/>
     <addaction name="separator"/>
     <addaction name="action_A"/>
     <addaction name="action_D"/>
@@ -578,9 +578,9 @@
     <string>Ctrl+Shift+S</string>
    </property>
   </action>
-  <action name="action_13">
+  <action name="actJumpToUnread">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>未読へジャンプ</string>

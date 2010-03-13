@@ -55,6 +55,17 @@ bool TimelineView::isRelatedPost(int idx, int baseIdx){
     }
     return false;
 }
+void TimelineView::jumpToUnread(){
+    int i;
+    int next = -1;
+    for(i=model()->baseIndex()+1; i<model()->count(); i++){
+        if(!model()->itemAt(i).read()){
+            next = i;
+            break;
+        }
+    }
+    if(next>=0) setCurrentIndex(model()->index(next,currentIndex().column()));
+}
 
 void TimelineView::keyPressEvent(QKeyEvent *event){
     int i, next;
@@ -112,14 +123,7 @@ void TimelineView::keyPressEvent(QKeyEvent *event){
             if(next>=0) setCurrentIndex(model()->index(next,currentIndex().column()));
             return;
         case Qt::Key_Space:
-            next = -1;
-            for(i=model()->baseIndex()+1; i<model()->count(); i++){
-                if(!model()->itemAt(i).read()){
-                    next = i;
-                    break;
-                }
-            }
-            if(next>=0) setCurrentIndex(model()->index(next,currentIndex().column()));
+            jumpToUnread();
             return;
         case Qt::Key_Return:
             emit reply();

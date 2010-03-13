@@ -76,6 +76,8 @@ public slots:
     void OnUnreadCountChanged(int count);
     void OnFavorite();
     void OnReply();
+    void jumpToUnread();
+
 private:
     void makeConnection(TimelineView *view);
     TimelineView* m_homeView;

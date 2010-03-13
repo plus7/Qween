@@ -117,7 +117,7 @@ void QweenMainWindow::makeWidgets(){
 
     tabWidget = new QweenTabCtrl(ui->splitter);
     tabWidget->setTabPosition(QTabWidget::South);
-    tabWidget->setFocusPolicy(Qt::ClickFocus);
+    tabWidget->setFocusPolicy(Qt::NoFocus);
     ui->splitter->insertWidget(0,tabWidget);
     ui->splitter->setStretchFactor(0, 1);
     ui->splitter->setStretchFactor(1, 0);
@@ -267,6 +267,8 @@ void QweenMainWindow::makeConnections(){
     //MainMenu
     connect(ui->actExit, SIGNAL(triggered()),
             this, SLOT(OnExit()));
+    connect(ui->actJumpToUnread, SIGNAL(triggered()),
+            tabWidget, SLOT(jumpToUnread()));
     //PostMode
     connect(m_postModeMenu, SIGNAL(aboutToShow()),
             this, SLOT(OnPostModeMenuOpen()));
@@ -925,6 +927,7 @@ void QweenMainWindow::on_actionTest_icon_triggered()
 void QweenMainWindow::on_actUpdate_triggered()
 {
     m_petrelLib->homeTimeline(m_newestFriendsStatus,0,20,0);
+    //TODO: DM だったら SentDM/ReceivedDMを更新, Favも同様
 }
 
 void QweenMainWindow::on_actCopyStot_triggered()

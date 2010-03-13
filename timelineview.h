@@ -98,6 +98,7 @@ signals:
     void reply();
 
 public slots:
+    void jumpToUnread();
     void OnUnreadCountChanged(int count){
         emit unreadCountChanged(count);
     }
