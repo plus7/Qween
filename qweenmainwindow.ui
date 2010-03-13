@@ -291,12 +291,12 @@
      <property name="title">
       <string>開く</string>
      </property>
-     <addaction name="action"/>
-     <addaction name="actionFav_2"/>
-     <addaction name="action_2"/>
-     <addaction name="action_4"/>
-     <addaction name="action_5"/>
-     <addaction name="action_URI"/>
+     <addaction name="actOpenHome"/>
+     <addaction name="actOpenFav"/>
+     <addaction name="actOpenStatus"/>
+     <addaction name="actOpenReply"/>
+     <addaction name="actOpenFavotter"/>
+     <addaction name="actOpenURIs"/>
     </widget>
     <widget class="QMenu" name="menu_2">
      <property name="title">
@@ -780,49 +780,49 @@
     <string>P2Pモード起動</string>
    </property>
   </action>
-  <action name="action">
+  <action name="actOpenHome">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>ホームを開く</string>
    </property>
   </action>
-  <action name="actionFav_2">
+  <action name="actOpenFav">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Favを開く</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="actOpenStatus">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>ステータスを開く</string>
    </property>
   </action>
-  <action name="action_4">
+  <action name="actOpenReply">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>返信元ステータスを開く</string>
    </property>
   </action>
-  <action name="action_5">
+  <action name="actOpenFavotter">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>ふぁぼられを開く</string>
    </property>
   </action>
-  <action name="action_URI">
+  <action name="actOpenURIs">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>発言内URIを開く</string>

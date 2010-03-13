@@ -1237,3 +1237,40 @@ void QweenMainWindow::on_actSetSelRead_triggered()
 {
     tabWidget->setRead(true);
 }
+
+void QweenMainWindow::on_actOpenHome_triggered()
+{
+    QDesktopServices::openUrl(QUrl(QString("http://twitter.com/%1").arg(tabWidget->currentItem().screenName())));
+}
+
+void QweenMainWindow::on_actOpenFav_triggered()
+{
+    QDesktopServices::openUrl(QUrl(QString("http://twitter.com/%1/favorites").arg(tabWidget->currentItem().screenName())));
+}
+
+void QweenMainWindow::on_actOpenStatus_triggered()
+{
+    QDesktopServices::openUrl(QUrl(QString("http://twitter.com/%1/status/%2").arg(tabWidget->currentItem().screenName()).arg(tabWidget->currentItem().id())));
+}
+
+void QweenMainWindow::on_actOpenFavotter_triggered()
+{
+    QDesktopServices::openUrl(QUrl(QString("http://favotter.net/user.php?user=%1").arg(tabWidget->currentItem().screenName())));
+}
+
+void QweenMainWindow::on_actOpenURIs_triggered()
+{
+    QString status(tabWidget->currentItem().status());
+    QRegExp linkrx(URLRXDATA);
+    int pos=0;
+    while ((pos = linkrx.indexIn(status, pos)) != -1) {
+        QDesktopServices::openUrl(QUrl(linkrx.cap(0)));
+        pos += linkrx.cap(0).length();
+    }
+}
+
+void QweenMainWindow::on_actOpenReply_triggered()
+{
+    if(tabWidget->currentItem().inReplyToId()>0)
+        QDesktopServices::openUrl(QUrl(QString("http://twitter.com/%1/status/%2").arg(tabWidget->currentItem().replyTo()).arg(tabWidget->currentItem().inReplyToId())));
+}
