@@ -1,0 +1,126 @@
+<changelog xmlns:h="http://www.w3.org/1999/xhtml">
+<entry>
+<date>2010-03-13</date>  <version>v0.0.7</version>
+<content>
+	<ul>
+	<li>詳細表示欄の名前のところをhttp://twitter.com/&lt;screen_name&gt;にリンクするようにした。</li>
+	<li>Twitter側のrate_limit_statusの不具合が直ったようなので、アドホックな対処を削除。</li>
+	<li>時間の表示がUTCになっていたのを修正。</li>
+	<li>一文字ショートカットを一部実装。実装済みのショートカットは以下のとおり。基本的にはTweenとlivedoor Readerの組み合わせと思ってください。</li>
+	<li>Tweenと同じショートカット
+		<ul>
+		<li>↑ 上のステータスへ移動</li>
+		<li>↓ 下のステータスへ移動</li>
+		<li>k 上のステータスへ移動(↑キーと同じ)</li>
+		<li>j 下のステータスへ移動(↓キーと同じ)</li>
+		<li>h 選択中の人の投稿した上のステータスへ移動</li>
+		<li>l 選択中の人の投稿した下のステータスへ移動</li>
+		<li>Space 未読にジャンプ</li>
+		<li>Enter Reply補助 (DMに対してはDM送信、それ以外のステータスに対しては＠返信 @IDを先頭へ付加)</li>
+		</ul>
+	</li>
+	<li>Qween独自のショートカット
+		<ul>
+		<li>i favる</li>
+		<li>m アンカー＆上の関連ステータスへ移動</li>
+		<li>n アンカー＆下の関連ステータスへ移動</li>
+		<li>SHIFT+m 上のFavorite追加済み発言へ移動</li>
+		<li>SHIFT+n 下のFavorite追加済み発言へ移動</li>
+		</ul>
+	</li>
+	</ul>
+</content>
+</entry>
+
+<entry>
+<date>2010-02-27</date>  <version>v0.0.6</version>
+<content>
+	<ul>
+	<li>xAuthとBasic認証を切り替えられるようにした</li>
+	<li>リスト中で文字参照を解決するようになった</li>
+	<li>未読数の管理を実装した</li>
+	<li>Protectedユーザの発言には詳細表示画面でも鍵をつけることにした</li>
+	<li>起動時に取得したPostを既読にするオプションを追加した</li>
+	<li>最小化したときタスクトレイに格納できるようにした</li>
+	<li>タイトルバーに表示できるものの種類を増やした</li>
+	<li>xAuthのアクセストークンを保存するようにした</li>
+	<li>OpenSSL例外を各ソースコードのライセンスブロックに補完した</li>
+	<li>ダイレクトメッセージを選択した時に詳細表示画面を更新するようにした</li>
+	</ul>
+</content>
+</entry>
+
+<entry>
+<date>2010-02-25</date>  <version>v0.0.5</version>
+<content>
+	<ul>
+	<li>xAuthに対応した。現在はデバッグのため強制的にxAuth認証を使います。</li>
+	<li>リスト中のアイテムの色を設定できるようになった。</li>
+	<li>新着バルーンのユーザー名をカスタマイズできるようになった。</li>
+	<li>タイトルバーとツールチップにユーザー名を表示するか選べるようになった。</li>
+	<li>バルーン表示制限の設定を実装した。</li>
+	<li>タイトルバーに何を表示するかの設定を実装した。</li>
+	<li>リストの日時フォーマットのカスタマイズを実装した。</li>
+	<li>リストのアイコンのサイズが設定できるようになった。</li>
+	<li>自分の発言は自動的に既読にする設定を実装した。</li>
+	<li>ステータス詳細表示画面の右クリックメニューを実装した。</li>
+	<li>URI短縮サービスを選べるようになった。</li>
+	</ul>
+</content>
+</entry>
+
+<entry>
+<date>2010-02-22</date>  <version>v0.0.4</version>
+<content>
+	<ul>
+	<li>設定画面の動作タブのチェックボックスが一部の環境で重なっていたのを修正。</li>
+	<li>friendships/exists のかわりに friendships/show を使うようにした。</li>
+	<li>tweet詳細表示ペインの無駄な線を消した。</li>
+	<li>詳細しているtweetのアイコンを保存するメニューを追加。</li>
+	<li>詳細しているtweetのアイコンをブラウザで開くメニューを追加。</li>
+	<li>新着がゼロでも構わず新着ポップアップが出てきて鬱陶しいのを修正。</li>
+	<li>'+'が半角スペース扱いで投稿されるのを修正。</li>
+	<li>GPLライセンスブロックが足りてなかったのでいくつかのファイルに追加。</li>
+	<li>リストの色分けに対応。設定はまだできない。</li>
+	<li>プロテクトされているユーザのtweetに鍵アイコンを表示するようにした。</li>
+	<li>デバッグメニューが…</li>
+	</ul>
+</content>
+</entry>
+
+<entry>
+<date>2010-02-21</date>  <version>v0.0.3</version>
+<content>
+	<ul>
+	<li>QTwitLibへの依存を完全になくした。不安定になってる可能性大</li>
+	<li>スプリッタの位置を保存／復元するようにした</li>
+	<li>閉じたときタスクトレイに格納するオプションをつけた</li>
+	<li>公式ReTweetに対応</li>
+	<li>Favoriteの追加／削除に対応</li>
+	</ul>
+</content>
+</entry>
+
+<entry>
+<date>2010-02-02</date>  <version>v0.0.2</version>
+<content>
+	<ul>
+	<li>gitのコミットIDをAbout画面で表示できるようにした</li>
+	<li>自分自身のPostを赤く塗るようにした（暫定）</li>
+	<li>Ctrl+Qを終了に割り当て</li>
+	<li>ソースコードをUTF-8に移行</li>
+	<li>URI, ReplyとHashtagをリンクするようにした</li>
+	</ul>
+</content>
+</entry>
+
+<entry>
+<date>2010-01-02</date>  <version>v0.0.1</version>
+<content>
+	<ul>
+	<li>初公開</li>
+	</ul>
+</content>
+</entry>
+
+</changelog>
