@@ -1,5 +1,18 @@
 <changelog xmlns:h="http://www.w3.org/1999/xhtml">
 <entry>
+<date>2010-03-15</date>  <version>v0.0.8</version>
+<content>
+<ul>
+<li>タブ振り分け設定を一部実装した。</li>
+<li>「開く」以下のメニューにショートカットキーを割り振った。</li>
+<li>「未読にジャンプ」メニューを実装した。</li>
+<li>非公式RTを実装した。</li>
+<li>Favoritesタブが正常に働いていなかったのを修正した。</li>
+</ul>
+</content>
+</entry>
+
+<entry>
 <date>2010-03-13</date>  <version>v0.0.7</version>
 <content>
 	<ul>
