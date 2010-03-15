@@ -77,6 +77,8 @@ public:
              }
         }
     }
+    bool match(Twitter::TwitterItem &item, bool *copy);
+    bool match(Twitter::TwitterItem &item, const ForwardingRule &rule);
 
 protected:
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected){

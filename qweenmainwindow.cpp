@@ -612,10 +612,39 @@ void QweenMainWindow::on_actAboutQween_triggered()
 
 void QweenMainWindow::doPost(){
     QString postText = ui->statusText->text().trimmed();
+
+    //空なら戻る
     if(postText.isEmpty()){
         //TODO: refresh();
         return;
     }
+
+    //整形
+    //avoid API command
+    QRegExp apirx("^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#""<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)");
+
+    //divide between Zenkaku and URI
+    QRegExp("https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\@&=+\\$,%#]+");
+
+    //Replace a Zenkaku space with two spaces
+
+    //フッタを付加するか？
+    bool isRemoveFooter;
+    isRemoveFooter = false;
+    //TODO: 複数行かつEnterで投稿する場合，Ctrlが押されていたらfooterをつけない
+    if(!isRemoveFooter && postText.startsWith("RT @")){
+        isRemoveFooter = true;
+    }
+    /*If (StatusText.Text.StartsWith("D ")) OrElse isRemoveFooter Then
+        args.status = StatusText.Text.Trim
+    ElseIf SettingDialog.UseRecommendStatus() Then
+        ' 推奨ステータスを使用する
+        args.status = StatusText.Text.Trim() + SettingDialog.RecommendStatusText
+    Else
+        ' テキストボックスに入力されている文字列を使用する
+        args.status = StatusText.Text.Trim() + " " + SettingDialog.Status.Trim()
+    End If*/
+
     ui->statusText->setEnabled(false);
     ui->postButton->setEnabled(false);
     m_petrelLib->update(postText + tr(" ") + settings->statusSuffix(),m_in_reply_to_status_id,"",""); // TODO:クライアント名"Qween"を付加 OAuth対応後
@@ -655,7 +684,6 @@ void QweenMainWindow::on_postButton_clicked()
     }else{
         doPost();
     }
-
 }
 
 void QweenMainWindow::OnTimelineTimerTimeout()
@@ -826,9 +854,10 @@ void QweenMainWindow::OnIconActivated(QSystemTrayIcon::ActivationReason reason)
   switch (reason) {
      case QSystemTrayIcon::Trigger:
      case QSystemTrayIcon::DoubleClick:
-        if(!this->isVisible())
+      if(!this->isVisible()){
             this->setWindowState(windowState() & ~Qt::WindowMinimized | Qt::WindowActive);
             this->show();
+        }
          break;
      case QSystemTrayIcon::MiddleClick:
          break;
@@ -1127,7 +1156,6 @@ void QweenMainWindow::on_actUnu_triggered()
 
 void QweenMainWindow::on_actionTest_xauth_triggered()
 {
-    //残骸 TODO:削除?
 }
 
 void QweenMainWindow::OnFollowCommand(const QString& name){
@@ -1273,4 +1301,11 @@ void QweenMainWindow::on_actOpenReply_triggered()
 {
     if(tabWidget->currentItem().inReplyToId()>0)
         QDesktopServices::openUrl(QUrl(QString("http://twitter.com/%1/status/%2").arg(tabWidget->currentItem().replyTo()).arg(tabWidget->currentItem().inReplyToId())));
+}
+
+void QweenMainWindow::on_actDeleteTab_triggered()
+{
+    if(tabWidget->currentTimelineView()->type() != "userdefined") return;
+    if(QMessageBox::question(this, tr("タブの削除"), tr("本当にタブを削除しますか？"), QMessageBox::Yes, QMessageBox::No) != QMessageBox::Yes) return;
+    tabWidget->removeTimelineView(tabWidget->currentIndex());
 }

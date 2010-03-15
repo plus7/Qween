@@ -63,6 +63,7 @@ public:
     TimelineView* dmView(){ return m_dmView; }
     TimelineView* favView(){ return m_favView; }
     void setRead(bool read);
+    TimelineView* findMatchingView(Twitter::TwitterItem &item, bool *copy);
 
 signals:
     void itemSelected(const Twitter::TwitterItem& item);

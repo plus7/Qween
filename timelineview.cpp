@@ -31,6 +31,7 @@
 #include "twitter.h"
 #include <QtXml>
 #include <QKeyEvent>
+#include <QRegExp>
 TimelineView::TimelineView(QWidget *parent) :
     QTreeView(parent),m_myId(0)
 {
@@ -171,27 +172,33 @@ QDomElement TimelineView::saveToElement(QDomDocument& doc){
     header.setAttribute("state", peHeaderState);
     elm.appendChild(header);
     QDomElement forward = doc.createElement("forward");
+    elm.appendChild(forward);
     //TODO: 振り分け設定の書き出し
-    for(int i;i<forwardingRule.count();i++){
+    for(int i=0;i<forwardingRule.count();i++){
         QDomElement ruleElm = doc.createElement("rule");
         ForwardingRule rule = forwardingRule.at(i);
-        ruleElm.setAttribute("body", rule.body);
+
+        ruleElm.setAttribute("move", rule.moveFromRecent);
+
         ruleElm.setAttribute("name", rule.name);
+        ruleElm.setAttribute("content", rule.content);
+        ruleElm.setAttribute("nameOrContent", rule.nameOrContent);
+        ruleElm.setAttribute("uri", rule.searchUri);
         ruleElm.setAttribute("cs", rule.caseSensitive);
-        ruleElm.setAttribute("useboth", rule.useBoth);
+        ruleElm.setAttribute("complex", rule.complex);
         ruleElm.setAttribute("userx", rule.useRegex);
-        ruleElm.setAttribute("exbody", rule.exbody);
-        ruleElm.setAttribute("exname", rule.exname);
+        ruleElm.setAttribute("rt", rule.retweet);
+
+        ruleElm.setAttribute("exname", rule.exName);
+        ruleElm.setAttribute("excontent", rule.exContent);
+        ruleElm.setAttribute("exNameOrContent", rule.exNameOrContent);
+        ruleElm.setAttribute("exuri", rule.exSearchUri);
         ruleElm.setAttribute("excs", rule.exCaseSensitive);
-        ruleElm.setAttribute("exuseboth", rule.exUseBoth);
+        ruleElm.setAttribute("excomplex", rule.exComplex);
         ruleElm.setAttribute("exuserx", rule.exUseRegex);
-        /*
-        bool moveFromRecent;
-        bool setMark;
-        bool searchUrl;
-        bool exSearchUrl;*/
+        ruleElm.setAttribute("exrt", rule.exRetweet);
+        forward.appendChild(ruleElm);
     }
-    elm.appendChild(forward);
     return elm;
 }
 
@@ -203,5 +210,98 @@ void TimelineView::restoreFromElement(const QDomElement& element){
         this->header()->restoreState(arr.fromPercentEncoding(headerStateStr.toAscii()));
     }
     //TODO: 振り分け設定の読み込み
+    QDomElement forward = element.firstChildElement("forward");
+    if(forward.isNull()) return;
+    QDomElement ruleElm = forward.firstChildElement("rule");
+    while (!ruleElm.isNull()) {
+        ForwardingRule rule;
+        rule.moveFromRecent = (ruleElm.attribute("move", "0") == "1");
+
+        rule.name = ruleElm.attribute("name", "");
+        rule.content = ruleElm.attribute("content", "");
+        rule.nameOrContent = ruleElm.attribute("nameOrContent", "");
+        rule.searchUri = (ruleElm.attribute("uri", "0") == "1");
+        rule.caseSensitive = (ruleElm.attribute("cs", "0") == "1");
+        rule.complex = (ruleElm.attribute("complex", "0") == "1");
+        rule.useRegex = (ruleElm.attribute("userx", "0") == "1");
+        rule.retweet = (ruleElm.attribute("rt", "0") == "1");
+
+        rule.exName = ruleElm.attribute("exname", "");
+        rule.exContent = ruleElm.attribute("excontent", "");
+        rule.exNameOrContent = ruleElm.attribute("exNameOrContent", "");
+        rule.exSearchUri = (ruleElm.attribute("exuri", "0") == "1");
+        rule.exCaseSensitive = (ruleElm.attribute("excs", "0") == "1");
+        rule.exComplex = (ruleElm.attribute("excomplex", "0") == "1");
+        rule.exUseRegex = (ruleElm.attribute("exuserx", "0") == "1");
+        rule.exRetweet = (ruleElm.attribute("exrt", "0") == "1");
+
+        forwardingRule.append(rule);
+
+        ruleElm = ruleElm.nextSiblingElement("rule");
+    }
 }
 
+bool TimelineView::match(Twitter::TwitterItem &item, bool *copy){
+    for(int i=0;i<forwardingRule.count();i++){
+        if(match(item, forwardingRule.at(i))){
+            *copy = !forwardingRule.at(i).moveFromRecent;
+            return true;
+        }
+    }
+    *copy = false;
+    return false;
+}
+
+bool TimelineView::match(Twitter::TwitterItem &item, const ForwardingRule &rule){
+    QRegExp::PatternSyntax pat;
+    Qt::CaseSensitivity cs;
+
+    if(rule.useRegex) pat = QRegExp::RegExp;
+    else pat = QRegExp::FixedString;
+
+    if(rule.caseSensitive) cs = Qt::CaseSensitive;
+    else cs = Qt::CaseInsensitive;
+
+    QRegExp namerx(rule.name, cs, pat);
+    QRegExp contrx(rule.content, cs, pat);
+    QRegExp bothrx(rule.nameOrContent, cs, pat);
+
+    bool matched = false;
+    if(rule.complex){
+        if((!rule.name.isEmpty()    && namerx.indexIn(item.screenName(),0) != -1) &&
+           (!rule.content.isEmpty() && contrx.indexIn(item.status(),0) != -1)){
+            matched = true;
+        }
+    }else{
+        if(!rule.nameOrContent.isEmpty() &&
+           (bothrx.indexIn(item.screenName(),0) != -1 ||
+            bothrx.indexIn(item.status(),0) != -1)){
+            matched = true;
+        }
+    }
+    if(!matched) return false;
+
+    if(rule.exUseRegex) pat = QRegExp::RegExp;
+    else pat = QRegExp::FixedString;
+
+    if(rule.exCaseSensitive) cs = Qt::CaseSensitive;
+    else cs = Qt::CaseInsensitive;
+
+    QRegExp exnamerx(rule.exName, cs, pat);
+    QRegExp excontrx(rule.exContent, cs, pat);
+    QRegExp exbothrx(rule.exNameOrContent, cs, pat);
+    bool exmatched = false;
+    if(rule.exComplex){
+        if((!rule.exName.isEmpty() && exnamerx.indexIn(item.screenName(),0) != -1) &&
+           (!rule.exContent.isEmpty() && excontrx.indexIn(item.status(),0) != -1)){
+            exmatched = true;
+        }
+    }else{
+        if(!rule.exNameOrContent.isEmpty() &&
+           (exbothrx.indexIn(item.screenName(),0) != -1 ||
+            exbothrx.indexIn(item.status(),0) != -1)){
+            exmatched = true;
+        }
+    }
+    return !exmatched;
+}

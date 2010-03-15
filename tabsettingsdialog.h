@@ -36,6 +36,8 @@ namespace Ui {
     class TabSettingsDialog;
 }
 class QweenTabCtrl;
+class TimelineView;
+class ForwardingRule;
 class TabSettingsDialog : public QDialog {
     Q_OBJECT
 public:
@@ -43,6 +45,7 @@ public:
     ~TabSettingsDialog();
 
     void makeConnections();
+    QString getItemText(const ForwardingRule &rule);
 public slots:
     void OnTabListItemChanged(QListWidgetItem*,QListWidgetItem*);
 
@@ -53,6 +56,15 @@ protected:
 private:
     Ui::TabSettingsDialog *ui;
     QweenTabCtrl *m_tabCtrl;
+    TimelineView *m_view;
+
+private slots:
+    void on_btnTabDelete_clicked();
+    void on_btnTabRename_clicked();
+    void on_btnTabCreate_clicked();
+    void on_btnDeleteRule_clicked();
+    void on_btnEditRule_clicked();
+    void on_btnNewRule_clicked();
 };
 
 #endif // TABSETTINGSDIALOG_H

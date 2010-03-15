@@ -30,16 +30,18 @@
 #define FORWARDRULEDIALOG_H
 
 #include <QDialog>
-
+#include "forwardingrule.h"
 namespace Ui {
     class ForwardRuleDialog;
 }
-
+class ForwardingRule;
 class ForwardRuleDialog : public QDialog {
     Q_OBJECT
 public:
-    ForwardRuleDialog(QWidget *parent = 0);
+    ForwardRuleDialog(const ForwardingRule &rule, QWidget *parent = 0);
     ~ForwardRuleDialog();
+
+    ForwardingRule getRule();
 
 protected:
     void changeEvent(QEvent *e);

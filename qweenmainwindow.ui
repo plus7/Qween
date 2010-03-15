@@ -253,7 +253,7 @@
      <x>0</x>
      <y>0</y>
      <width>444</width>
-     <height>22</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -345,7 +345,7 @@
     <addaction name="separator"/>
     <addaction name="action_20"/>
     <addaction name="separator"/>
-    <addaction name="action_D_2"/>
+    <addaction name="actDeleteTab"/>
    </widget>
    <widget class="QMenu" name="menu_C">
     <property name="title">
@@ -666,9 +666,9 @@
     <string>このタブの発言をクリア</string>
    </property>
   </action>
-  <action name="action_D_2">
+  <action name="actDeleteTab">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>タブ削除(&amp;D)</string>
@@ -787,6 +787,9 @@
    <property name="text">
     <string>ホームを開く</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
+   </property>
   </action>
   <action name="actOpenFav">
    <property name="enabled">
@@ -794,6 +797,9 @@
    </property>
    <property name="text">
     <string>Favを開く</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
    </property>
   </action>
   <action name="actOpenStatus">
@@ -803,6 +809,9 @@
    <property name="text">
     <string>ステータスを開く</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
   <action name="actOpenReply">
    <property name="enabled">
@@ -810,6 +819,9 @@
    </property>
    <property name="text">
     <string>返信元ステータスを開く</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
    </property>
   </action>
   <action name="actOpenFavotter">
@@ -819,6 +831,9 @@
    <property name="text">
     <string>ふぁぼられを開く</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+O</string>
+   </property>
   </action>
   <action name="actOpenURIs">
    <property name="enabled">
@@ -826,6 +841,9 @@
    </property>
    <property name="text">
     <string>発言内URIを開く</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
    </property>
   </action>
   <action name="action_6">

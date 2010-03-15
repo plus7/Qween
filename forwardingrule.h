@@ -35,21 +35,25 @@ class ForwardingRule
 public:
     ForwardingRule();
     bool moveFromRecent;
-    bool setMark;
+    //bool setMark;
 
     QString name;
-    QString body;
-    bool useBoth;
-    bool searchUrl;
+    QString content;
+    QString nameOrContent;
+    bool complex;
+    bool searchUri;
     bool caseSensitive;
     bool useRegex;
+    bool retweet;
 
-    QString exbody;
-    QString exname;
-    bool exUseBoth;
-    bool exSearchUrl;
+    QString exName;
+    QString exContent;
+    QString exNameOrContent;
+    bool exComplex;
+    bool exSearchUri;
     bool exCaseSensitive;
     bool exUseRegex;
+    bool exRetweet;
 };
 
 #endif // FORWARDINGRULE_H

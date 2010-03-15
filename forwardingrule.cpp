@@ -28,6 +28,9 @@
 
 #include "forwardingrule.h"
 
-ForwardingRule::ForwardingRule()
+ForwardingRule::ForwardingRule():
+        moveFromRecent(false),
+        complex(false), searchUri(false), caseSensitive(false), useRegex(false), retweet(false),
+        exComplex(false), exSearchUri(false), exCaseSensitive(false), exUseRegex(false), exRetweet(false)
 {
 }

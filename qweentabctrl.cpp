@@ -176,12 +176,32 @@ void QweenTabCtrl::setRead(bool read){
     }
 }
 
+TimelineView* QweenTabCtrl::findMatchingView(Twitter::TwitterItem &item, bool *copy){
+    TimelineView* v;
+    int i;
+    for(i=0;i<count();i++){
+        v = timelineView(i);
+        if(v->type() == "userdefined"){
+            if(v->match(item, copy)) return v;
+        }
+    }
+    *copy = false;
+    return NULL;
+}
+
 void QweenTabCtrl::addItem(Twitter::TwitterItem item){
     if(settings->setReadMyPost() &&
        item.screenName() == settings->userid()) item.setRead(true);
+    TimelineView *view;
+    bool copy;
     switch(item.origin()){
     case HOME_TIMELINE:
-        if(m_homeView) {
+        view = findMatchingView(item, &copy);
+        if(view){
+            view->model()->appendItem(item);
+            if(copy && m_homeView) m_homeView->model()->appendItem(item);
+        }
+        else if(m_homeView) {
             m_homeView->model()->appendItem(item);
         }
         break;
@@ -235,7 +255,7 @@ TimelineView *QweenTabCtrl::insertTimelineView(int index, const QString& title){
 
 void QweenTabCtrl::removeTimelineView(int index){
     TimelineView *view = timelineView(index);
-    if(view == m_homeView || view == m_dmView || view == m_favView || view || m_replyView) return;
+    if(view == m_homeView || view == m_dmView || view == m_favView || view == m_replyView) return;
     delete view;
 }
 
