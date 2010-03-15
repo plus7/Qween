@@ -45,7 +45,8 @@ SOURCES += main.cpp \
     xauth.cpp \
     util.cpp \
     statusbrowser.cpp \
-    twitter.cpp
+    twitter.cpp \
+    placeholderedit46.cpp
 HEADERS += qweenmainwindow.h \
     twitter.h \
     qweensettings.h \
@@ -81,7 +82,8 @@ HEADERS += qweenmainwindow.h \
     shorturi/shorturicache.h \
     xauth.h \
     util.h \
-    statusbrowser.h
+    statusbrowser.h \
+    placeholderedit46.h
 FORMS += qweenmainwindow.ui \
     aboutdialog.ui \
     settingdialog.ui \
