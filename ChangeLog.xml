@@ -1,5 +1,14 @@
 <changelog xmlns:h="http://www.w3.org/1999/xhtml">
 <entry>
+
+<date>2010-03-20</date>  <version>v0.1.0</version>
+<content>
+<ul>
+	<li>発言欄の複数行入力に対応．同時に，入力欄のレスポンスが悪かった問題(QLineEdit自体に起因する問題のため，こちらでは修正不可能)を回避．</li>
+</ul>
+</content>
+</entry>
+
 <date>2010-03-20</date>  <version>v0.0.9</version>
 <content>
 <ul>
