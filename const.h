@@ -30,8 +30,8 @@
 #define CONST_H
 
 #define QWEEN_VERSION_MAJOR 0
-#define QWEEN_VERSION_MINOR 0
-#define QWEEN_VERSION_REV   9
+#define QWEEN_VERSION_MINOR 1
+#define QWEEN_VERSION_REV   0
 
 #define URLRXDATA "http://(?:(?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9])\\."\
            ")*(?:[a-zA-Z]|[a-zA-Z][-a-zA-Z0-9]*[a-zA-Z0-9])\\.?|[0-9]+\\.[0-9]+\\"\
