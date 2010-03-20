@@ -1,0 +1,32 @@
+Windows:
+	1. Qt 4.6 SDKをnokiaより取得，インストール
+	2. OpenSSLをインストールし，include/opensslフォルダとライブラリファイルをQtのmingwにコピー
+	3. Cygwinでgitとpythonを導入
+	4. Cygwinでgit clone git://github.com/plus7/Qween
+	5. Qt Command Promptでqmake
+	6. Qt Command Promptでmingw32-make release
+
+DebianやUbuntu 9.10以前:
+	1. experimentalのリポジトリを使えるようにする
+	2. sudo aptitude -t experimental install libqt4-core libqt4-gui libqt4-dev libssl-dev git-core
+	3. git clone git://github.com/plus7/Qween
+	4. qmake
+	5. make release
+
+Ubuntu 10.04以後
+	1. sudo aptitude install libqt4-core libqt4-gui libqt4-dev libssl-dev git-core
+	2. git clone git://github.com/plus7/Qween
+	3. qmake
+	4. make release
+
+FreeBSD 8.0
+	1. portsからQt4.6とOpenSSLとgitを導入
+	2. git clone git://github.com/plus7/Qween
+	3. qt4-qmake
+	4. make release
+
+Mac OS X
+	N/A
+
+Solaris
+	N/A
