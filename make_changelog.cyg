@@ -1,0 +1,2 @@
+#!/bin/sh
+./make_changelog.py | perl -p -e 's/\n/\r\n/' > dist/ChangeLog.txt
