@@ -17,10 +17,15 @@
 PATH=/bin:$PATH
 export PATH
 
-DIFFS=`git diff|wc -l`
-if [ $DIFFS -eq 0 ]
-then
-git log|head -n 1 > $1/commit.txt
+if [ -d '.git' ]; then
+  DIFFS=`git diff|wc -l`
+  if [ $DIFFS -eq 0 ]
+  then
+    git log|head -n 1 > $1/commit.txt
+  else
+    echo "Working copy" > $1/commit.txt
+  fi
 else
-echo "Working copy" > $1/commit.txt
+  # TODO: get version w/o git command
+  echo "Tarball" > $1/commit.txt
 fi
