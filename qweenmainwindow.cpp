@@ -48,6 +48,7 @@
 #include "statusbrowser.h"
 #include "tabselectdialog.h"
 #include "thumbmanager.h"
+#include "testingdialog.h"
 
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -137,11 +138,14 @@ void QweenMainWindow::makeWidgets(){
     m_networkMan = new QNetworkAccessManager(this);
 
     ui->lblNameId->setOpenExternalLinks(true);
+
 }
 
 void QweenMainWindow::applySettings(){
     ui->statusText->setStyleSheet(settings->inputStyle());
     ui->statusText->setRequireCtrlOnEnter(settings->requireCtrlOnEnter());
+    ui->actMultipleLine->setChecked(settings->multipleLine());
+    ui->statusText->setMultipleLine(settings->multipleLine());
     int size = settings->iconSize()*8 + 8;
     if(size==8) size=0;
     for(int i=0;i<tabWidget->count();i++){
@@ -169,6 +173,7 @@ void QweenMainWindow::save(){
   tabSettings.open(QFile::WriteOnly);
   tabWidget->saveState(&tabSettings);
 
+  settings->setMultipleLine(ui->statusText->multipleLine());
   settings->setGeometry(saveGeometry());
   settings->setWindowState(saveState());
   settings->setSplitterState(ui->splitter->saveState());
@@ -425,7 +430,7 @@ void QweenMainWindow::OnDirectMessagesReceived(direct_messages_t& direct_message
 }
 
 void QweenMainWindow::OnUpdateReceived(status_t& status){
-    ui->statusText->setText("");
+    ui->statusText->setPlainText("");
     ui->statusText->setEnabled(true);
     ui->postButton->setEnabled(true);
     m_in_reply_to_status_id = 0;
@@ -572,7 +577,7 @@ void QweenMainWindow::dragEnterEvent(QDragEnterEvent *event)
 
 void QweenMainWindow::dropEvent(QDropEvent *event)
 {
-    ui->statusText->setText(ui->statusText->text() + event->mimeData()->text());
+    ui->statusText->setPlainText(ui->statusText->toPlainText() + event->mimeData()->text());
     event->acceptProposedAction();
 }
 
@@ -617,7 +622,7 @@ void QweenMainWindow::on_actAboutQween_triggered()
 }
 
 void QweenMainWindow::doPost(){
-    QString postText = ui->statusText->text().trimmed();
+    QString postText = ui->statusText->toPlainText().trimmed();
 
     //空なら戻る
     if(postText.isEmpty()){
@@ -884,7 +889,7 @@ void QweenMainWindow::OnIconActivated(QSystemTrayIcon::ActivationReason reason)
 void QweenMainWindow::on_statusText_textChanged(QString string)
 {
     Q_UNUSED(string)
-    int rest = getRestStatusCount(ui->statusText->text().trimmed());
+    int rest = getRestStatusCount(ui->statusText->toPlainText().trimmed());
     ui->lblStatusLength->setText(QString("%1").arg(rest));
     if(rest < 0){ 
         ui->statusText->setStyleSheet(settings->inputStyle()+" *{color:rgb(255,0,0);}");
@@ -1076,8 +1081,8 @@ void QweenMainWindow::on_actAtReply_triggered()
 {
     //stub.
     //TODO: なにやら複雑な処理
-    ui->statusText->setCursorPosition(0);
-    ui->statusText->insert("@"+tabWidget->currentItem().screenName()+" ");
+    ui->statusText->moveCursor(QTextCursor::Start);
+    ui->statusText->insertPlainText("@"+tabWidget->currentItem().screenName()+" ");
     ui->statusText->setFocus();
     m_in_reply_to_status_id = tabWidget->currentItem().id();
 }
@@ -1085,8 +1090,8 @@ void QweenMainWindow::on_actAtReply_triggered()
 void QweenMainWindow::on_actSendDM_triggered()
 {
     //stub.
-    ui->statusText->setCursorPosition(0);
-    ui->statusText->insert("D "+tabWidget->currentItem().screenName()+" ");
+    ui->statusText->moveCursor(QTextCursor::Start);
+    ui->statusText->insertPlainText("D "+tabWidget->currentItem().screenName()+" ");
     ui->statusText->setFocus();
 }
 
@@ -1123,12 +1128,8 @@ void QweenMainWindow::on_actionTest_network_triggered()
 
 void QweenMainWindow::on_actionTest_url_triggered()
 {
-    QUrl url("http://mozilla.org/query.cgi");
-    url.addQueryItem("numa",tr("++++と&と のテスト"));
-    QMessageBox::information(this,"",url.encodedQuery());
-    QString tmp(url.encodedQuery());
-    tmp.replace('+',"%2B");
-    QMessageBox::information(this,"",tmp.toAscii());
+    TestingDialog dlg;
+    dlg.exec();
 }
 
 void QweenMainWindow::on_actionTest_rx_triggered()
@@ -1266,8 +1267,8 @@ void QweenMainWindow::updateTrayIconTitle(){
 
 void QweenMainWindow::on_actReTweetUnofficial_triggered()
 {
-    ui->statusText->setText("RT @"+tabWidget->currentItem().screenName()+": "+tabWidget->currentItem().status());
-    ui->statusText->setCursorPosition(0);
+    ui->statusText->setPlainText("RT @"+tabWidget->currentItem().screenName()+": "+tabWidget->currentItem().status());
+    ui->statusText->moveCursor(QTextCursor::Start);
     ui->statusText->setFocus();
 }
 
@@ -1362,4 +1363,9 @@ void QweenMainWindow::on_actIdFwdRule_triggered()
     if(dlg.exec() == QDialog::Accepted){
         QMessageBox::information(this, "", list[dlg.index()]);
     }
+}
+
+void QweenMainWindow::on_actMultipleLine_toggled(bool val)
+{
+    ui->statusText->setMultipleLine(val);
 }

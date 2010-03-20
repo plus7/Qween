@@ -38,6 +38,8 @@ void QweenSettings::load(){
     QSettings ini(QSettings::IniFormat, QSettings::UserScope, "Qween", "Qween");
     m_inputBgColor = ini.value("input/background",
                                QColor(255,255,0)).value<QColor>();
+    m_multipleLine = ini.value("input/multiple_line",
+                               QVariant(false)).toBool();
     m_requireCtrlOnEnter = ini.value("input/require_ctrl", QVariant(false)).toBool();
     m_statusSuffix = ini.value("input/suffix", "").toString();
     m_userid = ini.value("user/id", "").toString();
@@ -90,6 +92,7 @@ void QweenSettings::load(){
 void QweenSettings::save(){
     QSettings ini(QSettings::IniFormat, QSettings::UserScope, "Qween", "Qween");
     ini.setValue("input/background", m_inputBgColor);
+    ini.setValue("input/multiple_line", m_multipleLine);
     ini.setValue("input/require_ctrl", m_requireCtrlOnEnter);
     ini.setValue("input/suffix", m_statusSuffix);
     ini.setValue("user/id", m_userid);

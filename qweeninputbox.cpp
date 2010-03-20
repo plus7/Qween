@@ -31,7 +31,7 @@
 #include "const.h"
 #include <QtGui>
 QweenInputBox::QweenInputBox(QWidget *parent) :
-    QLineEdit(parent), m_pos(0), m_completer(new QCompleter(this)), m_shortenSvcName("bitly"),
+    MultipleLineEdit(parent), m_pos(0), m_completer(new QCompleter(this)), m_shortenSvcName("bitly"),
     m_uriShortenSvc(getUriShortenService(m_shortenSvcName, this))
 {
     connect(m_uriShortenSvc, SIGNAL(uriShortened(QString,QString)),
@@ -79,15 +79,22 @@ void QweenInputBox::insertCompletion(const QString& completion)
 {
     if (m_completer->widget() != this)
         return;
-    int tc = this->cursorPosition();
+    /*int tc = this->textCursor();
     int extra = completion.length() - m_completer->completionPrefix().length();
-    this->insert(completion.right(extra));/*
-    //QTextCursor tc = textCursor();
-
+    this->insert(completion.right(extra));*/
+    QTextCursor tc = textCursor();
+    int extra = completion.length() - m_completer->completionPrefix().length();
     tc.movePosition(QTextCursor::Left);
     tc.movePosition(QTextCursor::EndOfWord);
     tc.insertText(completion.right(extra));
-    setTextCursor(tc);*/
+    setTextCursor(tc);
+}
+
+QString QweenInputBox::textUnderCursor() const
+{
+    QTextCursor tc = textCursor();
+    tc.select(QTextCursor::WordUnderCursor);
+    return tc.selectedText();
 }
 
 void QweenInputBox::keyPressEvent(QKeyEvent *event)
@@ -104,9 +111,7 @@ void QweenInputBox::keyPressEvent(QKeyEvent *event)
        case Qt::Key_Backspace:
        case Qt::Key_Left:
        {
-            int pos = this->cursorPosition();
-            QString left = text().left(pos);
-            if(left.endsWith('@')){
+            if(textUnderCursor().endsWith('@')){
                 m_completer->popup()->hide();
             }
             break;
@@ -120,8 +125,8 @@ void QweenInputBox::keyPressEvent(QKeyEvent *event)
        !event->modifiers().testFlag(Qt::ControlModifier) &&
        !event->modifiers().testFlag(Qt::AltModifier)){
         if(event->key() == Qt::Key_Space){
-            if(text() == " " || text() == "　"){
-                setText("");
+            if(toPlainText() == " " || toPlainText() == "　"){
+                setPlainText("");
                 return;
                 //TODO:JumpUnreadMenuItem_Click(Nothing, Nothing);
             }
@@ -150,15 +155,12 @@ void QweenInputBox::keyPressEvent(QKeyEvent *event)
             }
         }
     }
+    MultipleLineEdit::keyPressEvent(event);
 
-    QLineEdit::keyPressEvent(event);
-
-    QString completionPrefix;
-    int pos = this->cursorPosition();
+    QString completionPrefix = textUnderCursor();
     int begin;
-    QString txt = text().left(pos);
-    begin = txt.lastIndexOf('@',pos-1);
-    completionPrefix = text().mid(begin+1, pos);
+    begin = completionPrefix.lastIndexOf('@');
+    completionPrefix = completionPrefix.mid(begin+1, completionPrefix.length());
     if (completionPrefix != m_completer->completionPrefix()) {
         m_completer->setCompletionPrefix(completionPrefix);
         m_completer->popup()->setCurrentIndex(m_completer->completionModel()->index(0, 0));
@@ -183,7 +185,7 @@ void QweenInputBox::doShorten(){
     QRegExp rx(URLRXDATA);
     int begin;
     if(!m_uriShortenSvc) return;
-    if((begin=rx.indexIn(text(),m_pos))!=-1){
+    if((begin=rx.indexIn(toPlainText(),m_pos))!=-1){
         m_pos = begin;
         m_uriShortenSvc->shortenAsync(rx.capturedTexts().at(0));
     }else{
@@ -203,9 +205,9 @@ void QweenInputBox::shortenUri(const QString& svcName){
 }
 
 void QweenInputBox::OnUriShortened(const QString& src, const QString& dest){
-    QString newstr = text().mid(0,m_pos) + dest + text().mid(m_pos+src.length(),text().length()-m_pos+src.length());
+    QString newstr = toPlainText().mid(0,m_pos) + dest + toPlainText().mid(m_pos+src.length(),toPlainText().length()-m_pos+src.length());
     m_pos += dest.length();
-    setText(newstr);
+    setPlainText(newstr);
     doShorten();
 }
 

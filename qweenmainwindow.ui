@@ -202,14 +202,20 @@
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
            <widget class="QweenInputBox" name="statusText">
-            <property name="focusPolicy">
-             <enum>Qt::StrongFocus</enum>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
             </property>
-            <property name="styleSheet">
-             <string notr="true"/>
+            <property name="tabChangesFocus">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -268,7 +274,7 @@
     <addaction name="action_3"/>
     <addaction name="action_L"/>
     <addaction name="separator"/>
-    <addaction name="action_M"/>
+    <addaction name="actMultipleLine"/>
     <addaction name="separator"/>
     <addaction name="actExit"/>
    </widget>
@@ -457,9 +463,12 @@
     <string>新着時リスト固定(&amp;L)</string>
    </property>
   </action>
-  <action name="action_M">
+  <action name="actMultipleLine">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>発言欄複数行入力(&amp;M)</string>
@@ -935,14 +944,14 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>QweenInputBox</class>
-   <extends>QLineEdit</extends>
-   <header>qweeninputbox.h</header>
-  </customwidget>
-  <customwidget>
    <class>StatusBrowser</class>
    <extends>QTextBrowser</extends>
    <header>statusbrowser.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QweenInputBox</class>
+   <extends>QPlainTextEdit</extends>
+   <header>qweeninputbox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

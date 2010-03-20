@@ -26,49 +26,39 @@
   so, delete this exception statement from your version.
 */
 
-#ifndef QWEENINPUTBOX_H
-#define QWEENINPUTBOX_H
+#include "testingdialog.h"
+#include "ui_testingdialog.h"
 
-#include "multiplelineedit.h"
-class AbstractUriShortener;
-class QCompleter;
-class QweenInputBox : public MultipleLineEdit
+TestingDialog::TestingDialog(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::TestingDialog)
 {
-Q_OBJECT
-public:
-    explicit QweenInputBox(QWidget *parent = 0);
-    void keyPressEvent(QKeyEvent *event );
+    ui->setupUi(this);
+}
 
-    bool requireCtrlOnEnter() const { return m_requireCtrlOnEnter; }
-    void setRequireCtrlOnEnter(bool val) { m_requireCtrlOnEnter = val; }
+TestingDialog::~TestingDialog()
+{
+    delete ui;
+}
 
-    quint64 replyToId(){ return m_reply_to_id; }
-    void setReplyToId(quint64 val){ m_reply_to_id = val; }
+void TestingDialog::changeEvent(QEvent *e)
+{
+    QDialog::changeEvent(e);
+    switch (e->type()) {
+    case QEvent::LanguageChange:
+        ui->retranslateUi(this);
+        break;
+    default:
+        break;
+    }
+}
 
-    void setCompleter(QCompleter *completer);
-    QCompleter* completer() const;
-    void setUriShortenSvc(const QString& name);
-    QString getUriShortenSvc(){ return m_shortenSvcName; }
-    QString textUnderCursor() const;
+void TestingDialog::on_pushButton_clicked()
+{
+    ui->plainTextEdit->setMultipleLine(true);
+}
 
-    void shortenUri(const QString& svcName = "");
-    void doShorten();
-signals:
-    void uriShorteningFinished();
-
-public slots:
-    void OnUriShortened(const QString& src, const QString& dest);
-    void OnUriShorteningFailed(const QString& src, int status);
-    void insertCompletion(const QString &completion);
-
-private:
-    quint64 m_reply_to_id;
-    QString m_reply_to_name;
-    bool m_requireCtrlOnEnter;
-    int m_pos;
-    QCompleter *m_completer;
-    QString m_shortenSvcName;
-    AbstractUriShortener* m_uriShortenSvc;
-};
-
-#endif // QWEENINPUTBOX_H
+void TestingDialog::on_pushButton_2_clicked()
+{
+    ui->plainTextEdit->setMultipleLine(false);
+}

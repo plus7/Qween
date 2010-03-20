@@ -26,49 +26,30 @@
   so, delete this exception statement from your version.
 */
 
-#ifndef QWEENINPUTBOX_H
-#define QWEENINPUTBOX_H
+#ifndef TESTINGDIALOG_H
+#define TESTINGDIALOG_H
 
-#include "multiplelineedit.h"
-class AbstractUriShortener;
-class QCompleter;
-class QweenInputBox : public MultipleLineEdit
-{
-Q_OBJECT
+#include <QDialog>
+
+namespace Ui {
+    class TestingDialog;
+}
+
+class TestingDialog : public QDialog {
+    Q_OBJECT
 public:
-    explicit QweenInputBox(QWidget *parent = 0);
-    void keyPressEvent(QKeyEvent *event );
+    TestingDialog(QWidget *parent = 0);
+    ~TestingDialog();
 
-    bool requireCtrlOnEnter() const { return m_requireCtrlOnEnter; }
-    void setRequireCtrlOnEnter(bool val) { m_requireCtrlOnEnter = val; }
-
-    quint64 replyToId(){ return m_reply_to_id; }
-    void setReplyToId(quint64 val){ m_reply_to_id = val; }
-
-    void setCompleter(QCompleter *completer);
-    QCompleter* completer() const;
-    void setUriShortenSvc(const QString& name);
-    QString getUriShortenSvc(){ return m_shortenSvcName; }
-    QString textUnderCursor() const;
-
-    void shortenUri(const QString& svcName = "");
-    void doShorten();
-signals:
-    void uriShorteningFinished();
-
-public slots:
-    void OnUriShortened(const QString& src, const QString& dest);
-    void OnUriShorteningFailed(const QString& src, int status);
-    void insertCompletion(const QString &completion);
+protected:
+    void changeEvent(QEvent *e);
 
 private:
-    quint64 m_reply_to_id;
-    QString m_reply_to_name;
-    bool m_requireCtrlOnEnter;
-    int m_pos;
-    QCompleter *m_completer;
-    QString m_shortenSvcName;
-    AbstractUriShortener* m_uriShortenSvc;
+    Ui::TestingDialog *ui;
+
+private slots:
+    void on_pushButton_2_clicked();
+    void on_pushButton_clicked();
 };
 
-#endif // QWEENINPUTBOX_H
+#endif // TESTINGDIALOG_H

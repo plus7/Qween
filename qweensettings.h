@@ -81,6 +81,7 @@ private:
     int m_iconSize;
     bool m_showUnreadIconInTab;
     bool m_setReadMyPost;
+    bool m_multipleLine;
 
 public:
     explicit QweenSettings(QObject *parent = 0);
@@ -95,6 +96,9 @@ public:
     void setInputBgColor(QColor color);
     void setInputColor(QColor color);
     void setInputFont(QString font);
+
+    bool multipleLine() const { return m_multipleLine; }
+    void setMultipleLine(bool val) { m_multipleLine = val; }
 
     QString userid() { return m_userid; }
     QString password() { return m_password; }
