@@ -13,6 +13,7 @@ DEPENDPATH += ./shorturi
 win32:LIBS += -lssl32 \
     -leay32
 unix:LIBS += -lssl
+macx:LIBS += -lcrypto
 
 # Kilroy was here
 SOURCES += main.cpp \
