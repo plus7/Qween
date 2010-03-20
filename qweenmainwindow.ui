@@ -253,7 +253,7 @@
      <x>0</x>
      <y>0</y>
      <width>444</width>
-     <height>17</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -299,11 +299,14 @@
      <addaction name="actOpenURIs"/>
     </widget>
     <widget class="QMenu" name="menu_2">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="title">
       <string>振り分けルール作成</string>
      </property>
-     <addaction name="action_6"/>
-     <addaction name="actionID"/>
+     <addaction name="actCreateTabFwdRule"/>
+     <addaction name="actIdFwdRule"/>
     </widget>
     <widget class="QMenu" name="menu_3">
      <property name="title">
@@ -846,7 +849,7 @@
     <string>Ctrl+E</string>
    </property>
   </action>
-  <action name="action_6">
+  <action name="actCreateTabFwdRule">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -854,7 +857,7 @@
     <string>タブ振り分けルールを作成</string>
    </property>
   </action>
-  <action name="actionID">
+  <action name="actIdFwdRule">
    <property name="enabled">
     <bool>false</bool>
    </property>

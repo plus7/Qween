@@ -46,7 +46,9 @@ SOURCES += main.cpp \
     util.cpp \
     statusbrowser.cpp \
     twitter.cpp \
-    placeholderedit46.cpp
+    placeholderedit46.cpp \
+    tabselectdialog.cpp \
+    thumbmanager.cpp
 HEADERS += qweenmainwindow.h \
     twitter.h \
     qweensettings.h \
@@ -83,12 +85,15 @@ HEADERS += qweenmainwindow.h \
     xauth.h \
     util.h \
     statusbrowser.h \
-    placeholderedit46.h
+    placeholderedit46.h \
+    tabselectdialog.h \
+    thumbmanager.h
 FORMS += qweenmainwindow.ui \
     aboutdialog.ui \
     settingdialog.ui \
     forwardruledialog.ui \
-    tabsettingsdialog.ui
+    tabsettingsdialog.ui \
+    tabselectdialog.ui
 OTHER_FILES += memo.txt \
     LICENSE.txt \
     get_git_info.sh

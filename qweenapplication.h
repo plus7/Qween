@@ -31,6 +31,7 @@
 
 #include <QApplication>
 class IconManager;
+class ThumbManager;
 class QweenApplication : public QApplication
 {
 Q_OBJECT
@@ -40,9 +41,11 @@ public:
     void setupDB();
     static QString profileDir();
     //static QSettings *settings();
+    static ThumbManager *thumbManager();
     static IconManager *iconManager();
 private:
     static IconManager *s_iconManager;
+    static ThumbManager *s_thumbManager;
 };
 
 #endif // QWEENAPPLICATION_H

@@ -47,6 +47,7 @@ public slots:
     void followClicked();
     void removeClicked();
     void friendshipClicked();
+    void thumbFetched(const QString& uri);
 
 private:
     QString m_selectedName;

@@ -26,47 +26,35 @@
   so, delete this exception statement from your version.
 */
 
-#include "qweenapplication.h"
-#include "iconmanager.h"
-#include "thumbmanager.h"
-#include <QDir>
+#ifndef THUMBMANAGER_H
+#define THUMBMANAGER_H
 
-IconManager *s_iconMgr = 0;
-ThumbManager *s_thumbMgr = 0;
+#include <QObject>
+#include <QtGui>
+#include <QtNetwork>
 
-QweenApplication::QweenApplication(int & argc, char ** argv)
-        : QApplication(argc, argv)
+class ThumbManager : public QObject
 {
-    //QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
-    QDir dir(QweenApplication::profileDir() + "/icons");
-    if(!dir.exists())
-        dir.mkpath(dir.path());
-}
+Q_OBJECT
+public:
+    explicit ThumbManager(QObject *parent = 0);
 
-QweenApplication::~QweenApplication()
-{
-//    if(m_settings) {
-//        m_settings-
-//    }
-}
+    void fetchThumb(const QString& uri);
+    bool isThumbAvailable(const QString& uri);
+    QString getThumbFilePath(const QString& uri);
+    QString getFetchUri(const QString& uri);
 
-IconManager *QweenApplication::iconManager()
-{
-    if (!s_iconMgr) {
-        s_iconMgr = new IconManager;
-    }
-    return s_iconMgr;
-}
 
-ThumbManager *QweenApplication::thumbManager()
-{
-    if (!s_thumbMgr) {
-        s_thumbMgr = new ThumbManager;
-    }
-    return s_thumbMgr;
-}
+signals:
+    void thumbDownloaded(const QString& uri);
 
-QString QweenApplication::profileDir()
-{
-    return QDir::homePath() + "/Qween";
-}
+public slots:
+
+private:
+    QNetworkAccessManager* m_manager;
+    QMap<QString, QNetworkReply*> m_connections;
+private slots:
+    void replyFinished(QNetworkReply*);
+};
+
+#endif // THUMBMANAGER_H

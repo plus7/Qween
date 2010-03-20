@@ -28,6 +28,8 @@
 
 #include "statusbrowser.h"
 #include <QtGui>
+#include "qweenapplication.h"
+#include "thumbmanager.h"
 StatusBrowser::StatusBrowser(QWidget *parent) :
     QTextBrowser(parent)
 {
@@ -64,4 +66,13 @@ void StatusBrowser::removeClicked(){
 
 void StatusBrowser::friendshipClicked(){
     emit friendshipCommand(m_selectedName);
+}
+
+void StatusBrowser::thumbFetched(const QString& uri){
+    QString before(">%1<");
+    before = before.arg(uri);
+    QString after("><img src=\"%1\"><");
+    after = after.arg(QweenApplication::thumbManager()->getThumbFilePath(uri));
+    QString hoge = toHtml().replace(before, after);
+    setHtml(hoge);
 }

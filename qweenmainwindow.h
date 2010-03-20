@@ -187,6 +187,8 @@ public slots:
     void OnFriendshipCommand(const QString& name);
 
 private slots:
+    void on_actIdFwdRule_triggered();
+    void on_actCreateTabFwdRule_triggered();
     void on_actDeleteTab_triggered();
     void on_actOpenReply_triggered();
     void on_actOpenURIs_triggered();

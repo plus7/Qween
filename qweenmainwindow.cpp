@@ -46,6 +46,8 @@
 #include "const.h"
 #include "xauth.h"
 #include "statusbrowser.h"
+#include "tabselectdialog.h"
+#include "thumbmanager.h"
 
 QweenMainWindow::QweenMainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -341,6 +343,10 @@ void QweenMainWindow::makeConnections(){
     //StatusText
     connect(ui->statusText, SIGNAL(uriShorteningFinished()),
             this, SLOT(OnUriShorteningFinished()));
+
+    //StatusBrowser
+    connect(QweenApplication::thumbManager(), SIGNAL(thumbDownloaded(QString)),
+            ui->textBrowser, SLOT(thumbFetched(QString)));
 
     //Icon
     connect(m_networkMan, SIGNAL(finished(QNetworkReply*)),
@@ -747,7 +753,16 @@ void QweenMainWindow::OnItemSelected(const Twitter::TwitterItem &item)
         }
         else if(list[3] != ""){ //URI
             str = list[3];
-            anchor = QString("<a href=\"%1\">%1</a>").arg(str);
+            QString content(str);
+            if(QweenApplication::thumbManager()->isThumbAvailable(str)){
+                content = QString("<img src=\"%1\">").arg(
+                        QUrl::fromLocalFile(
+                                QweenApplication::thumbManager()->getThumbFilePath(str))
+                        .toString());
+            }else{
+                QweenApplication::thumbManager()->fetchThumb(str);
+            }
+            anchor = QString("<a href=\"%1\">%2</a>").arg(str,content);
             length = str.length();
         }
         status.replace(pos, length, anchor);
@@ -1308,4 +1323,43 @@ void QweenMainWindow::on_actDeleteTab_triggered()
     if(tabWidget->currentTimelineView()->type() != "userdefined") return;
     if(QMessageBox::question(this, tr("タブの削除"), tr("本当にタブを削除しますか？"), QMessageBox::Yes, QMessageBox::No) != QMessageBox::Yes) return;
     tabWidget->removeTimelineView(tabWidget->currentIndex());
+}
+
+void QweenMainWindow::on_actCreateTabFwdRule_triggered()
+{
+    return;
+    //TODO: kopipebokumetu
+    QStringList list;
+    list << tr("(新規タブ)");
+    for(int i=0;i<tabWidget->count();i++){
+        list << tabWidget->timelineView(i)->title();
+    }
+    TabSelectDialog dlg(list ,this);
+    /*if(dlg.exec() == QDialog::Accepted){
+        TimelineView *v = 0;
+        if(dlg.index()!=0) v = tabWidget->timelineView(dlg.index()-1);
+        if(dlg.index() > 0 && !v) return;
+        if(v && v->type() != "userdefined") return;
+        ForwardRuleDialog dlg(ForwardingRule(), this);
+        if(dlg.exec() == QDialog::Accepted){
+            ForwardingRule rule(dlg.getRule());
+            if(dlg.index() == 0){}
+            v->forwardingRule.append(rule);
+            ui->ruleList->addItem(getItemText(rule));
+        }
+    }*/
+}
+
+void QweenMainWindow::on_actIdFwdRule_triggered()
+{
+    return;
+    QStringList list;
+    list << tr("(新規タブ)");
+    for(int i=0;i<tabWidget->count();i++){
+        list << tabWidget->timelineView(i)->title();
+    }
+    TabSelectDialog dlg(list ,this);
+    if(dlg.exec() == QDialog::Accepted){
+        QMessageBox::information(this, "", list[dlg.index()]);
+    }
 }
