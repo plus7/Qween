@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="B6A98E5F-D6A7-46FB-9E9D-1F7BF443491C" Name="Qween"
+           Version="1.00.0000" Manufacturer="plus7"
+           UpgradeCode="1EAE0DDC-C06B-4575-A347-3E8BFFC60E99"
+           Language="1041" Codepage="932">
+    <Package Id="*"
+           Description="Qween"
+           Comments="Qween installer DB" InstallerVersion="200"
+           Platform="x86" Manufacturer="plus7"
+           Keywords="Installer,MSI,Database" Languages="1041"
+           SummaryCodepage="932"/>
+    <Media Id="1" Cabinet="Product.cab" EmbedCab="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="plus7" Name="plus7">
+          <Directory Id="INSTALLLOCATION" Name="Qween">
+            <Component Id="Component1"
+                       Guid="960E5941-FE2A-4384-A96F-8AED231DB301">
+              <File Id="File1" Name="Readme.txt" KeyPath="yes"
+                Compressed="yes" DiskId="1" Source="Qween\Readme.txt"/>
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="Qween">
+          <Component Id="ApplicationShortcut" Guid="0BDC1155-A181-457c-8469-33F2702ED6DF">
+                <Shortcut Id="ApplicationStartMenuShortcut"
+                Name="Readme"
+                Description="Qween Readme"
+                Target="[INSTALLLOCATION]Readme.txt"
+                WorkingDirectory="INSTALLLOCATION"/>
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+<!--    アンインストールに必要なレジストリ登録 makerに作者名 softnameにソフト名 -->
+<!--                 <RegistryValue Root="HKCU" Key="Software\plus7\Qween" Name="installed" Type="integer" Value="1" KeyPath="yes"/>-->
+           </Component>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="Feature1" Level="1">
+      <ComponentRef Id="Component1" />
+      <ComponentRef Id="ApplicationShortcut" />
+    </Feature>
+    <UIRef Id="WixUI_InstallDir" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION" />
+    <WixVariable Id="WixUILicenseRtf" Value="LICENSE.rtf"/>
+  </Product>
+</Wix>
