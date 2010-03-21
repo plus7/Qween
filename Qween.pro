@@ -15,6 +15,7 @@ win32:LIBS += -lssl32 \
 unix:LIBS += -lssl
 macx:LIBS += -lcrypto
 
+win32:RC_FILE = res/windows.rc
 # Kilroy was here
 SOURCES += main.cpp \
     qweenmainwindow.cpp \
