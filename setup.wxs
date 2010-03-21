@@ -18,8 +18,34 @@
           <Directory Id="INSTALLLOCATION" Name="Qween">
             <Component Id="Component1"
                        Guid="960E5941-FE2A-4384-A96F-8AED231DB301">
-              <File Id="File1" Name="Readme.txt" KeyPath="yes"
-                Compressed="yes" DiskId="1" Source="Qween\Readme.txt"/>
+              <File Id="File1" Name="Readme.txt"
+                Compressed="yes" DiskId="1" Source="dist\README.txt"/>
+              <File Id="File2" Name="Qween.exe" KeyPath="yes"
+                Compressed="yes" DiskId="1" Source="dist\Qween.exe"/>
+              <File Id="File3" Name="ChangeLog.txt"
+                Compressed="yes" DiskId="1" Source="dist\ChangeLog.txt"/>
+              <File Id="File4" Name="LICENSE.openssl"
+                Compressed="yes" DiskId="1" Source="dist\LICENSE.openssl"/>
+              <File Id="File5" Name="LICENSE.txt"
+                Compressed="yes" DiskId="1" Source="dist\LICENSE.txt"/>
+              <File Id="File6" Name="QtCore4.dll"
+                Compressed="yes" DiskId="1" Source="dist\QtCore4.dll"/>
+              <File Id="File7" Name="QtGui4.dll"
+                Compressed="yes" DiskId="1" Source="dist\QtGui4.dll"/>
+              <File Id="File8" Name="QtNetwork4.dll"
+                Compressed="yes" DiskId="1" Source="dist\QtNetwork4.dll"/>
+              <File Id="File9" Name="QtXml4.dll"
+                Compressed="yes" DiskId="1" Source="dist\QtXml4.dll"/>
+              <File Id="File10" Name="libeay32.dll"
+                Compressed="yes" DiskId="1" Source="dist\libeay32.dll"/>
+              <File Id="File11" Name="libgcc_s_dw2-1.dll"
+                Compressed="yes" DiskId="1" Source="dist\libgcc_s_dw2-1.dll"/>
+              <File Id="File12" Name="libssl32.dll"
+                Compressed="yes" DiskId="1" Source="dist\libssl32.dll"/>
+              <File Id="File13" Name="mingwm10.dll"
+                Compressed="yes" DiskId="1" Source="dist\mingwm10.dll"/>
+              <File Id="File14" Name="ssleay32.dll"
+                Compressed="yes" DiskId="1" Source="dist\ssleay32.dll"/>
             </Component>
           </Directory>
         </Directory>
@@ -28,13 +54,18 @@
         <Directory Id="ApplicationProgramsFolder" Name="Qween">
           <Component Id="ApplicationShortcut" Guid="0BDC1155-A181-457c-8469-33F2702ED6DF">
                 <Shortcut Id="ApplicationStartMenuShortcut"
+                Name="Qween"
+                Description="Qween"
+                Target="[INSTALLLOCATION]Qween.exe"
+                WorkingDirectory="INSTALLLOCATION"/>
+                <Shortcut Id="ApplicationStartMenuReadmeShortcut"
                 Name="Readme"
                 Description="Qween Readme"
                 Target="[INSTALLLOCATION]Readme.txt"
                 WorkingDirectory="INSTALLLOCATION"/>
                 <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
 <!--    アンインストールに必要なレジストリ登録 makerに作者名 softnameにソフト名 -->
-<!--                 <RegistryValue Root="HKCU" Key="Software\plus7\Qween" Name="installed" Type="integer" Value="1" KeyPath="yes"/>-->
+                 <RegistryValue Root="HKCU" Key="Software\plus7\Qween" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
            </Component>
         </Directory>
       </Directory>
