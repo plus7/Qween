@@ -1,2 +1,2 @@
-candle setup.wxs
-light -ext WixUIExtension -loc "C:\Program Files\Windows Installer XML v3\bin\WixUI_ja-jp.wxl" setup.wixobj
+"%WIXPATH%\candle" setup.wxs
+"%WIXPATH%\light" -ext WixUIExtension -loc "%WIXPATH%\WixUI_ja-jp.wxl" setup.wixobj
