@@ -28,6 +28,7 @@
 
 #include "statusbrowser.h"
 #include <QtGui>
+#include <QtCore>
 #include "qweenapplication.h"
 #include "thumbmanager.h"
 StatusBrowser::StatusBrowser(QWidget *parent) :
@@ -37,7 +38,7 @@ StatusBrowser::StatusBrowser(QWidget *parent) :
 
 void StatusBrowser::contextMenuEvent(QContextMenuEvent *event)
 {
-    QMenu *menu = createStandardContextMenu();
+    QMenu *menu = createStandardContextMenu(event->pos());
     m_selectedName.clear();
     if(!event->pos().isNull()){
         QString tmp = anchorAt(event->pos());
@@ -45,6 +46,15 @@ void StatusBrowser::contextMenuEvent(QContextMenuEvent *event)
         if(tmp.indexOf(rx)>=0){
             m_selectedName = rx.cap(1);
         }
+    }
+    if(this->textCursor().hasSelection()){
+        QAction *a = menu->actions().at(2);
+        QMenu *m = new QMenu(tr("Web Search"),menu);
+        m->addAction(tr("Google"), this, SLOT(searchGoogleClicked()));
+        m->addAction(tr("Wikipedia"), this, SLOT(searchWpClicked()));
+        m->addAction(tr("twitter検索(公式)"), this, SLOT(searchTwitterClicked()));
+        m->addAction(tr("twitter検索(yats)"), this, SLOT(searchYatsClicked()));
+        menu->insertMenu(a, m);
     }
     if(!m_selectedName.isEmpty()){
         menu->addSeparator();
@@ -54,6 +64,30 @@ void StatusBrowser::contextMenuEvent(QContextMenuEvent *event)
     }
     menu->exec(event->globalPos());
     delete menu;
+}
+
+void StatusBrowser::searchGoogleClicked(){
+    QDesktopServices::openUrl(
+            QUrl(QString("http://www.google.co.jp/search?hl=ja&q=%1")
+                 .arg(textCursor().selection().toPlainText())));
+}
+
+void StatusBrowser::searchYatsClicked(){
+    QDesktopServices::openUrl(
+            QUrl(QString("http://pcod.no-ip.org/yats/search?query=%1")
+                 .arg(textCursor().selection().toPlainText())));
+}
+
+void StatusBrowser::searchTwitterClicked(){
+    QDesktopServices::openUrl(
+            QUrl(QString("http://search.twitter.com/search?q=%1")
+                 .arg(textCursor().selection().toPlainText())));
+}
+
+void StatusBrowser::searchWpClicked(){
+    QDesktopServices::openUrl(
+            QUrl(QString("http://ja.wikipedia.org/w/index.php?search=%1&fulltext=%E6%A4%9C%E7%B4%A2")
+                 .arg(textCursor().selection().toPlainText())));
 }
 
 void StatusBrowser::followClicked(){

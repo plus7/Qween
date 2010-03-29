@@ -47,6 +47,10 @@ public slots:
     void followClicked();
     void removeClicked();
     void friendshipClicked();
+    void searchGoogleClicked();
+    void searchYatsClicked();
+    void searchTwitterClicked();
+    void searchWpClicked();
     void thumbFetched(const QString& uri);
 
 private:
