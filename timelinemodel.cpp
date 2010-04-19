@@ -66,8 +66,16 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
             return item->userName();
             break;
         case 1:
-            return item->plainStatus();
-            break;
+            {
+                QString s(item->plainStatus());
+                /*int cur=50;//TODO: 
+                while(cur < s.length()){
+                    s.insert(cur, "\n");
+                    cur += 50;
+                }*/
+                return s;
+                break;
+            }
         case 2:
             return item->createdAt().toLocalTime().toString(QweenSettings::globalSettings()->dateTimeFormat());
             break;
