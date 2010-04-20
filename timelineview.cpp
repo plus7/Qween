@@ -49,7 +49,7 @@ bool TimelineView::isRelatedPost(int idx, int baseIdx){
     Twitter::TwitterItem item = model()->itemAt(idx);
     if(item.id() == baseItem.inReplyToId() ||
        baseItem.userId() == item.userId() ||
-       item.replyToList().indexOf(QweenSettings::globalSettings()->userid())>=0 ||
+       //item.replyToList().indexOf(QweenSettings::globalSettings()->userid())>=0 ||
        baseItem.replyToList().indexOf(item.screenName())>=0 ||
        item.replyToList().indexOf(baseItem.screenName())>=0 ){
         return true;
