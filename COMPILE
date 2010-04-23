@@ -1,26 +1,26 @@
 Windows:
-	1. Qt 4.6 SDK‚ğnokia‚æ‚èæ“¾CƒCƒ“ƒXƒg[ƒ‹
-	2. OpenSSL‚ğƒCƒ“ƒXƒg[ƒ‹‚µCinclude/opensslƒtƒHƒ‹ƒ_‚Æƒ‰ƒCƒuƒ‰ƒŠƒtƒ@ƒCƒ‹‚ğQt‚Ìmingw‚ÉƒRƒs[
-	3. Cygwin‚Ågit‚Æpython‚ğ“±“ü
-	4. Cygwin‚Ågit clone git://github.com/plus7/Qween
-	5. Qt Command Prompt‚Åqmake
-	6. Qt Command Prompt‚Åmingw32-make release
+	1. Qt 4.6 SDKã‚’nokiaã‚ˆã‚Šå–å¾—ï¼Œã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
+	2. OpenSSLã‚’ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã—ï¼Œinclude/opensslãƒ•ã‚©ãƒ«ãƒ€ã¨ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãƒ•ã‚¡ã‚¤ãƒ«ã‚’Qtã®mingwã«ã‚³ãƒ”ãƒ¼
+	3. Cygwinã§gitã¨pythonã‚’å°å…¥
+	4. Cygwinã§git clone git://github.com/plus7/Qween
+	5. Qt Command Promptã§qmake
+	6. Qt Command Promptã§mingw32-make release
 
-Debian‚âUbuntu 9.10ˆÈ‘O:
-	1. experimental‚ÌƒŠƒ|ƒWƒgƒŠ‚ğg‚¦‚é‚æ‚¤‚É‚·‚é
+Debianã‚„Ubuntu 9.10ä»¥å‰:
+	1. experimentalã®ãƒªãƒã‚¸ãƒˆãƒªã‚’ä½¿ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹
 	2. sudo aptitude -t experimental install libqt4-core libqt4-gui libqt4-dev libssl-dev git-core
 	3. git clone git://github.com/plus7/Qween
 	4. qmake
 	5. make release
 
-Ubuntu 10.04ˆÈŒã
+Ubuntu 10.04ä»¥å¾Œ
 	1. sudo aptitude install libqt4-core libqt4-gui libqt4-dev libssl-dev git-core
 	2. git clone git://github.com/plus7/Qween
 	3. qmake
 	4. make release
 
 FreeBSD 8.0
-	1. ports‚©‚çQt4.6‚ÆOpenSSL‚Ægit‚ğ“±“ü
+	1. portsã‹ã‚‰Qt4.6ã¨OpenSSLã¨gitã‚’å°å…¥
 	2. git clone git://github.com/plus7/Qween
 	3. qt4-qmake
 	4. make release
