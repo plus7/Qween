@@ -118,17 +118,17 @@ private:
     QCompleter *m_completer;
 
     //flags:
-    //最初�showEventかどぁ�を判断するフラグ
+    //最初のshowEventか判定するFlag
     bool m_firstShow;
-    //短縮URI機�はEnterで発動する�合と、メニューから発動する�合がある�
-    //Enterの時�Postしなければぁ�な�で、その判断をするフラグ
+    //短縮URI機能はEnterで発動する場合とメニューから発動する場合がある
+    //EnterのときはPostしないといけないので，その判定をするFlag
     bool m_postAfterShorten;
 
     //DEBUG
     AbstractUriShortener *m_urisvc;
     XAuth *m_xauth;
 
-    //アイコンのダウンロードに使�
+    //アイコンのダウンロードに使う
     QNetworkAccessManager *m_networkMan;
 
     //最新のIDたち
@@ -140,12 +140,12 @@ private:
     quint64 m_newestReply;
     quint64 m_newestFav;
 
-    //詳細表示してあ�item
+    //詳細表示しているItem
     Twitter::TwitterItem m_detailItem;
 
-    //最新の自発言
+    //最新の自分のTweet
     QString m_latestMyPost;
-    //ログインして最初�取得か
+    //ログインして最初の取得か？
     bool m_firstFetch;
 
 public slots:
