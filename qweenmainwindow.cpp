@@ -649,7 +649,7 @@ void QweenMainWindow::doPost(){
     QRegExp apirx("^[+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#""<>?]*(get|g|fav|follow|f|on|off|stop|quit|leave|l|whois|w|nudge|n|stats|invite|track|untrack|tracks|tracking|\\*)([+\\-\\[\\]\\s\\\\.,*/(){}^~|='&%$#\"<>?]+|$)");
 
     //divide between Zenkaku and URI
-    QRegExp("https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\@&=+\\$,%#]+");
+    QRegExp("https?:\\/\\/[-_.!~*'()a-zA-Z0-9;\\/?:\\@&=+\\$,%#]+");
 
     //Replace a Zenkaku space with two spaces
 
