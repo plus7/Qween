@@ -210,6 +210,8 @@ void QweenMainWindow::setupMenus()
 
     ui->postButton->setMenu(m_postModeMenu);
 
+    //ui->hashTagButton->addAction(new QAction(QIcon(), tr("test"), this));
+
     m_actShowIconInBrowser = new QAction(QIcon(), tr("画像をブラウザで表示"), this);
     connect(m_actShowIconInBrowser, SIGNAL(triggered()),
             this, SLOT(OnShowIconInBrowser()));
@@ -262,7 +264,7 @@ void QweenMainWindow::setupTrayIcon(){
 void QweenMainWindow::setupTwitter(){
     m_petrelLib->abort();
     //m_twitLib->Logout(); TODO: EndSessionで置き換える
-    m_firstFetch = settings->markAsRead1stFetch();
+    m_firstFetchFav = m_firstFetchDmSent = m_firstFetchDmRecv = m_firstFetchReply = m_firstFetch = settings->markAsRead1stFetch();
     if(settings->useXAuth() && !settings->token().isEmpty()){
         m_petrelLib->setToken(settings->token(),settings->tokenSecret());
     }else{
@@ -276,6 +278,8 @@ void QweenMainWindow::makeConnections(){
             this, SLOT(OnExit()));
     connect(ui->actJumpToUnread, SIGNAL(triggered()),
             tabWidget, SLOT(jumpToUnread()));
+    connect(ui->actSetReadAll, SIGNAL(triggered()),
+            tabWidget, SLOT(setReadAll()));
     //PostMode
     connect(m_postModeMenu, SIGNAL(aboutToShow()),
             this, SLOT(OnPostModeMenuOpen()));
@@ -348,6 +352,8 @@ void QweenMainWindow::makeConnections(){
     //StatusText
     connect(ui->statusText, SIGNAL(uriShorteningFinished()),
             this, SLOT(OnUriShorteningFinished()));
+    connect(ui->statusText, SIGNAL(textChanged()),
+            this, SLOT(on_statusText_textChanged(QString)));
 
     //StatusBrowser
     connect(QweenApplication::thumbManager(), SIGNAL(thumbDownloaded(QString)),
@@ -414,19 +420,23 @@ void QweenMainWindow::OnVerifyCredentialsReceived(user_t& user){
 void QweenMainWindow::OnSentDirectMessagesReceived(direct_messages_t& direct_messages){
     foreach(QSharedPointer<direct_message_t> ptr, direct_messages.direct_message){
         Twitter::TwitterItem item(Twitter::DirectMessage, ptr, SENT_DIRECT_MESSAGES, false);
+        if(m_firstFetchDmSent) item.setRead(true);
         if(m_newestSentDM < item.id()) m_newestSentDM = item.id();
         tabWidget->addItem(item);
     }
+    m_firstFetchDmSent = false;
 }
 
 void QweenMainWindow::OnDirectMessagesReceived(direct_messages_t& direct_messages){
     foreach(QSharedPointer<direct_message_t> ptr, direct_messages.direct_message){
         Twitter::TwitterItem item(Twitter::DirectMessage, ptr, DIRECT_MESSAGES, false);
+        if(m_firstFetchDmRecv) item.setRead(true);
         if(m_newestRecvDM < item.id()) m_newestRecvDM = item.id();
         if(!m_usersModel->userExists(item.userId()))
             m_usersModel->appendItem(item);
         tabWidget->addItem(item);
     }
+    m_firstFetchDmRecv = false;
 }
 
 void QweenMainWindow::OnUpdateReceived(status_t& status){
@@ -452,21 +462,25 @@ void QweenMainWindow::OnRateLimitStatusReceived(hash_t& hash){
 void QweenMainWindow::OnMentionsReceived(statuses_t& s){
     foreach(QSharedPointer<status_t> ptr, s.status){
         Twitter::TwitterItem item(Twitter::Status, ptr, MENTIONS, false);
+        if(m_firstFetchReply) item.setRead(true);
         if(m_newestReply < item.id()) m_newestReply = item.id();
         if(!m_usersModel->userExists(item.userId()))
             m_usersModel->appendItem(item);
         tabWidget->addItem(item);
     }
+    m_firstFetchReply = false;
 }
 
 void QweenMainWindow::OnFavoritesReceived(statuses_t& s){
     foreach(QSharedPointer<status_t> ptr, s.status){
         Twitter::TwitterItem item(Twitter::Status, ptr, FAVORITES, false);
+        if(m_firstFetchFav) item.setRead(true);
         if(m_newestFav < item.id()) m_newestFav = item.id();
         if(!m_usersModel->userExists(item.userId()))
             m_usersModel->appendItem(item);
         tabWidget->addItem(item);
     }
+    m_firstFetchFav = false;
 }
 
 void QweenMainWindow::OnUserTimelineReceived(statuses_t& s){
@@ -886,9 +900,9 @@ void QweenMainWindow::OnIconActivated(QSystemTrayIcon::ActivationReason reason)
   }
 }
 
-void QweenMainWindow::on_statusText_textChanged(QString string)
+void QweenMainWindow::on_statusText_textChanged()
 {
-    Q_UNUSED(string)
+    //Q_UNUSED(string)
     int rest = getRestStatusCount(ui->statusText->toPlainText().trimmed());
     ui->lblStatusLength->setText(QString("%1").arg(rest));
     if(rest < 0){ 
@@ -1369,3 +1383,4 @@ void QweenMainWindow::on_actMultipleLine_toggled(bool val)
 {
     ui->statusText->setMultipleLine(val);
 }
+

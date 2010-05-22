@@ -81,6 +81,7 @@ signals:
     void unreadCountChanged(int count);
 public slots:
     void OnIconDownloaded(quint64 userid, const QIcon& icon);
+    void setReadAll();
 
 private:
     IconManager *m_iconMgr;

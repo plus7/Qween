@@ -68,6 +68,10 @@ void TimelineView::jumpToUnread(){
     if(next>=0) setCurrentIndex(model()->index(next,currentIndex().column()));
 }
 
+void TimelineView::setReadAll(){
+    model()->setReadAll();
+}
+
 void TimelineView::keyPressEvent(QKeyEvent *event){
     int i, next;
     if(!event->modifiers().testFlag(Qt::ShiftModifier) &&

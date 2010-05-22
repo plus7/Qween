@@ -220,6 +220,25 @@
            </widget>
           </item>
           <item>
+           <widget class="QToolButton" name="hashTagButton">
+            <property name="text">
+             <string>#</string>
+            </property>
+            <property name="popupMode">
+             <enum>QToolButton::InstantPopup</enum>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextOnly</enum>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
+            </property>
+            <property name="arrowType">
+             <enum>Qt::DownArrow</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QLabel" name="lblStatusLength">
             <property name="text">
              <string>140</string>
@@ -259,7 +278,7 @@
      <x>0</x>
      <y>0</y>
      <width>444</width>
-     <height>24</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -333,6 +352,7 @@
     <addaction name="menu_2"/>
     <addaction name="separator"/>
     <addaction name="menu_3"/>
+    <addaction name="actSetReadAll"/>
     <addaction name="actJumpToUnread"/>
     <addaction name="separator"/>
     <addaction name="action_A"/>
@@ -938,6 +958,11 @@
   <action name="actionTest_xauth">
    <property name="text">
     <string>凶箱</string>
+   </property>
+  </action>
+  <action name="actSetReadAll">
+   <property name="text">
+    <string>すべて既読にする</string>
    </property>
   </action>
  </widget>

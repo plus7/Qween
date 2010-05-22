@@ -72,7 +72,8 @@ QVariant TimelineModel::data(const QModelIndex &index, int role) const
                 while(cur < s.length()){
                     s.insert(cur, "\n");
                     cur += 50;
-                }*/
+                }
+*/
                 return s;
                 break;
             }
@@ -345,4 +346,16 @@ void TimelineModel::OnIconDownloaded(quint64 userid, const QIcon &icon)
             emit dataChanged(idx, idx);
         }
     }
+}
+
+void TimelineModel::setReadAll(){
+    for(int i=0;i<m_itemList.count();i++){
+        Twitter::TwitterItem *item = m_itemList.at(i);
+        if(item->read()) continue;
+        item->setRead(true);
+        QModelIndex idx = this->index(i,0,QModelIndex());
+        emit dataChanged(idx, idx);
+    }
+    m_unreadCount=0;
+    emit unreadCountChanged(0);
 }

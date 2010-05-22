@@ -147,6 +147,10 @@ private:
     QString m_latestMyPost;
     //ログインして最初の取得か？
     bool m_firstFetch;
+    bool m_firstFetchReply;
+    bool m_firstFetchDmRecv;
+    bool m_firstFetchDmSent;
+    bool m_firstFetchFav;
 
 public slots:
     void OnError(int role, const QString& msg);
@@ -232,7 +236,7 @@ private slots:
     void on_actQweenHomepage_triggered();
     void on_actApiInfo_triggered();
     void on_actShowUserStatus_triggered();
-    void on_statusText_textChanged(QString );
+    void on_statusText_textChanged();
     void on_postButton_clicked();
     void on_actAboutQween_triggered();
     void on_actAboutQt_triggered();

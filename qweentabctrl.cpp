@@ -374,6 +374,12 @@ void QweenTabCtrl::jumpToUnread(){
         v->jumpToUnread();
 }
 
+void QweenTabCtrl::setReadAll(){
+    TimelineView* v = currentTimelineView();
+    if(v)
+        v->setReadAll();
+}
+
 void QweenTabCtrl::makeConnection(TimelineView *view){
     connect(view, SIGNAL(itemSelected(Twitter::TwitterItem)),
             this, SLOT(OnItemSelected(Twitter::TwitterItem)));

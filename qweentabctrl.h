@@ -79,6 +79,7 @@ public slots:
     void OnFavorite();
     void OnReply();
     void jumpToUnread();
+    void setReadAll();
 
 private:
     void makeConnection(TimelineView *view);
